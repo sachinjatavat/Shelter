@@ -264,7 +264,7 @@
 </div>
 </div>
 <!-- Feed Container -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="driver-pickups-grid">
 <!-- Card 1 -->
 <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
 <div>
@@ -561,17 +561,73 @@
 </div>
 
 
-<script>
+  async function loadLiveDriverPickups() {
+    if (!window.SupabaseService) return;
+    try {
+      const list = await window.SupabaseService.getDonations();
+      const grid = document.getElementById('driver-pickups-grid');
+      if (!grid || !list) return;
+
+      list.forEach(item => {
+        if (!document.querySelector(`.driver-live-card[data-id="${item.id}"]`)) {
+          const card = document.createElement('div');
+          card.className = 'driver-live-card bg-emerald-50/70 border-2 border-emerald-500/40 rounded-xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between';
+          card.setAttribute('data-id', item.id);
+
+          card.innerHTML = `
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="px-2 py-0.5 rounded-full bg-emerald-600 text-white font-label-sm text-label-sm uppercase font-bold">
+                  NEW DISPATCH
+                </span>
+                <span class="font-label-sm text-label-sm text-outline font-medium flex items-center gap-1">
+                  <span class="material-symbols-outlined text-[14px]">timer</span> ${item.pickup_window || 'Next 2 Hours'}
+                </span>
+              </div>
+              <div class="flex items-baseline justify-between mb-1">
+                <h3 class="font-headline-md text-headline-md text-on-surface font-semibold">${item.title}</h3>
+                <span class="font-headline-md text-headline-md font-bold text-primary-container">${item.quantity_kg || 25} kg</span>
+              </div>
+              <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mb-3">
+                <span class="material-symbols-outlined text-[16px] text-outline">store</span>
+                <span class="font-medium text-on-surface">${item.donor_name || 'Restaurant Partner'}</span>
+              </p>
+              <div class="space-y-1.5 py-3 px-3 rounded-lg bg-surface text-on-surface-variant font-body-sm text-body-sm mb-4">
+                <div class="flex items-center justify-between">
+                  <span>Pickup Source:</span>
+                  <strong class="text-on-surface">${item.donor_address || 'C-Scheme, Jaipur'}</strong>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span>Shelter Destination:</span>
+                  <strong class="text-on-surface">${item.recipient_ngo || 'Hope Shelter'}</strong>
+                </div>
+              </div>
+            </div>
+            <button class="w-full py-2.5 rounded-lg bg-primary-container text-on-primary hover:bg-primary font-label-lg text-label-lg transition-colors flex items-center justify-center gap-2 shadow-sm" onclick="openAcceptModal('${item.title}', '${item.quantity_kg || 25} kg', '${item.donor_name || 'Restaurant Partner'}', '${item.recipient_ngo || 'Hope Shelter'}', '2.1 km (~8 min)')" type="button">
+              <span class="material-symbols-outlined text-[18px]">add_task</span>
+              <span>Accept Pickup</span>
+            </button>
+          `;
+          grid.prepend(card);
+        }
+      });
+    } catch (e) {
+      console.warn('Driver live pickup load error:', e);
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
+    loadLiveDriverPickups();
+    setInterval(loadLiveDriverPickups, 2500);
+    window.addEventListener('storage', loadLiveDriverPickups);
+
     const savedName = localStorage.getItem('user_name');
     if (savedName) {
-      // Find top header user name elements and replace static 'Rahul Sharma' or 'ABC Restaurant'
       document.querySelectorAll('.font-label-lg, .text-label-md, .user-name-display').forEach(el => {
         if (el.textContent.includes('Rahul Sharma') || el.textContent.includes('ABC Restaurant') || el.textContent.includes('System Administrator') || el.textContent.includes('User Name')) {
           el.textContent = savedName;
         }
       });
-      // Replace greeting if any
       document.querySelectorAll('h1').forEach(el => {
         if (el.textContent.includes('Good morning, Rahul') || el.textContent.includes('Good morning,')) {
           el.textContent = `Good morning, ${savedName}`;
@@ -582,5 +638,4 @@
 </script>
 
   <script src="/js/motion.js"></script>
-  <script src="/js/demo-bar.js"></script>
 </body></html>

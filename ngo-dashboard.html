@@ -1590,7 +1590,7 @@
         const gridContainer = document.getElementById('donations-grid-container');
         const tableBody = document.querySelector('#donations-tab tbody');
 
-        const available = donations.filter(d => !d.status || d.status === 'AVAILABLE' || d.status === 'PENDING');
+        const available = donations.filter(d => !d.status || d.status === 'AVAILABLE' || d.status === 'PENDING' || d.status === 'DISPATCHED' || d.recipient_ngo === 'Hope Shelter');
 
         available.forEach(don => {
           // 1. Grid Card rendering
@@ -1726,5 +1726,4 @@
 </script>
 
   <script src="/js/motion.js"></script>
-  <script src="/js/demo-bar.js"></script>
 </body></html>

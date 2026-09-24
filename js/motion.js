@@ -15,18 +15,36 @@ window.triggerSendDonation = function(btn) {
     }
   }
 
+  const donationItem = {
+    id: 'DON-' + Math.floor(1000 + Math.random() * 9000),
+    title: 'Surplus Food Batch (' + ngoName + ')',
+    category: 'Cooked Meals',
+    quantity_kg: 25,
+    portions: 40,
+    donor_name: localStorage.getItem('user_name') || 'Fresh Harvest Bistro',
+    donor_address: 'C-Scheme, Jaipur',
+    recipient_ngo: ngoName,
+    driver_name: 'Rahul Sharma',
+    status: 'AVAILABLE',
+    pickup_window: 'Next 2 Hours',
+    created_at: new Date().toISOString()
+  };
+
   alert(`DONATION DISPATCH CONFIRMED!\n\nYour surplus food donation has been assigned to ${ngoName}.\n\nCourier Driver Rahul Sharma (+91 98290-XXXXX) has been dispatched for immediate pickup.\nTracking details are live on your Pickups dashboard.`);
 
   if (window.SupabaseService && typeof window.SupabaseService.createDonation === 'function') {
     try {
-      window.SupabaseService.createDonation({
-        title: 'Surplus Food Batch',
-        recipient_ngo: ngoName,
-        status: 'DISPATCHED'
-      });
+      window.SupabaseService.createDonation(donationItem);
     } catch (e) {
       console.warn('Supabase createDonation warning:', e);
     }
+  } else {
+    try {
+      const list = JSON.parse(localStorage.getItem('local_donations') || '[]');
+      list.unshift(donationItem);
+      localStorage.setItem('local_donations', JSON.stringify(list));
+      localStorage.setItem('last_donation_event', JSON.stringify({ donation: donationItem, time: Date.now() }));
+    } catch (e) {}
   }
 
   setTimeout(() => {

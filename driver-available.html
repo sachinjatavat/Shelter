@@ -899,6 +899,9 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     loadLiveDonations();
+    setInterval(loadLiveDonations, 2500);
+    window.addEventListener('storage', loadLiveDonations);
+
     const savedName = localStorage.getItem('user_name');
     if (savedName) {
       // Find top header user name elements and replace static 'Rahul Sharma' or 'ABC Restaurant'
@@ -918,5 +921,4 @@
 </script>
 
   <script src="/js/motion.js"></script>
-  <script src="/js/demo-bar.js"></script>
 </body></html>

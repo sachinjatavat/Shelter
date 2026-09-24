@@ -124,9 +124,9 @@ window.SupabaseService = {
       temp_requirement: donationData.temp_requirement || 'Ambient',
       donor_name: donationData.donor_name || localStorage.getItem('user_name') || 'Fresh Harvest Bistro',
       donor_address: donationData.donor_address || 'C-Scheme, Jaipur',
-      recipient_ngo: donationData.recipient_ngo || 'Unassigned',
+      recipient_ngo: donationData.recipient_ngo || 'Hope Shelter',
       driver_name: donationData.driver_name || 'Unassigned',
-      status: 'AVAILABLE',
+      status: donationData.status || 'AVAILABLE',
       pickup_window: donationData.pickup_window || 'Next 2 Hours',
       pin_code: donationData.pin_code || `${Math.floor(1000 + Math.random() * 9000)}`,
       created_at: new Date().toISOString()
@@ -135,7 +135,12 @@ window.SupabaseService = {
     // 1. Save to local storage immediately
     saveLocalDonation(newDonation);
 
-    // 2. Post to API backend
+    // 2. Broadcast multi-tab update event
+    try {
+      localStorage.setItem('last_donation_event', JSON.stringify({ donation: newDonation, time: Date.now() }));
+    } catch (e) {}
+
+    // 3. Post to API backend
     try {
       const res = await fetch(`${API_BASE_URL}/donations`, {
         method: 'POST',
