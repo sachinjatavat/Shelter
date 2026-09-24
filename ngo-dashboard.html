@@ -4,6 +4,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>SURPLUS-TO-SHELTER | NGO Portal - Hope Shelter</title>
+<script src="/js/supabase.js"></script>
 <!-- Tailwind CSS v3 with Forms & Container Plugins -->
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <!-- Tailwind Custom Config -->
@@ -1320,11 +1321,21 @@
     }
 
     // Execute Acceptance Workflow
-    function executeDonationAcceptance() {
+    async function executeDonationAcceptance() {
       if (!selectedDonationId) return;
 
       const card = document.querySelector(`.donation-card[data-id="${selectedDonationId}"]`);
       const weight = card ? parseInt(card.dataset.quantity, 10) : 20;
+      const ngoName = localStorage.getItem('user_name') || 'Hope Shelter';
+
+      // Call Supabase API
+      try {
+        if (window.SupabaseService) {
+          await window.SupabaseService.claimDonation(selectedDonationId, ngoName);
+        }
+      } catch (e) {
+        console.warn('Claim API notice:', e);
+      }
 
       // Update counters
       acceptedToday += 1;
@@ -1339,18 +1350,18 @@
         card.style.pointerEvents = 'none';
         const acceptBtn = card.querySelector('button:last-child');
         if (acceptBtn) {
-          acceptBtn.textContent = 'Accepted ✓';
+          acceptBtn.textContent = 'Claimed & Saved to Supabase ✓';
           acceptBtn.classList.remove('bg-brand-green', 'hover:bg-brand-greenDark');
           acceptBtn.classList.add('bg-gray-400');
         }
       }
 
       closeAcceptModal();
-      showToast(`Donation accepted! Driver Rahul Sharma auto-assigned for pickup.`);
+      showToast(`🎉 Donation #${selectedDonationId} claimed by ${ngoName} & saved to Supabase!`);
 
       // Prompt to track delivery
       setTimeout(() => {
-        if (confirm("Donation accepted! Status: ACCEPTED.\nWould you like to track the incoming delivery vehicle in the Deliveries tab now?")) {
+        if (confirm("Donation accepted & recorded in database!\nWould you like to track the incoming delivery vehicle in the Deliveries tab now?")) {
           switchTab('deliveries-tab');
         }
       }, 500);

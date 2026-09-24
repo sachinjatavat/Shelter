@@ -190,12 +190,7 @@ CREATE TABLE IF NOT EXISTS public.donations (
       if (activeTable === 'donations') {
         data = await SupabaseService.getDonations();
       } else if (activeTable === 'users') {
-        data = [
-          { id: 'usr-1', email: 'manager@freshharvest.org', role: 'restaurant', name: 'Fresh Harvest Bistro' },
-          { id: 'usr-2', email: 'coordinator@hopeshelter.org', role: 'ngo', name: 'Hope Shelter' },
-          { id: 'usr-3', email: 'driver402@surplusrescue.org', role: 'driver', name: 'Rahul Sharma' },
-          { id: 'usr-4', email: 'admin@surplusrescue.org', role: 'admin', name: 'System Administrator' }
-        ];
+        data = await SupabaseService.getUsers();
       } else if (activeTable === 'pickups') {
         data = [
           { id: 'PU-101', donation_id: 'DON-9482', driver_name: 'Rahul Sharma', vehicle_number: 'RJ-14-EV-9401', eta_minutes: 12, status: 'EN_ROUTE' },

@@ -78,6 +78,18 @@ const memoryDb = {
   }
 };
 
+// Helper to normalize food category to match SQL constraint
+function normalizeCategory(cat) {
+  if (!cat) return 'Cooked Meals';
+  const c = cat.toString().trim();
+  if (['Cooked Meals', 'Bakery', 'Fresh Produce', 'Dairy & Chilled'].includes(c)) return c;
+  if (c.includes('Rice') || c.includes('Grain') || c.includes('Cooked') || c.includes('Pasta')) return 'Cooked Meals';
+  if (c.includes('Bread') || c.includes('Bakery') || c.includes('Pastry')) return 'Bakery';
+  if (c.includes('Fruit') || c.includes('Vegetable') || c.includes('Produce')) return 'Fresh Produce';
+  if (c.includes('Dairy') || c.includes('Milk') || c.includes('Cheese')) return 'Dairy & Chilled';
+  return 'Cooked Meals';
+}
+
 // ============================================================================
 // API ROUTES
 // ============================================================================
@@ -112,13 +124,23 @@ app.post('/api/auth/login', async (req, res) => {
 
 // 2b. Get All Users Endpoint
 app.get('/api/users', async (req, res) => {
+  let supabaseUsers = [];
   if (isSupabaseConfigured && supabase) {
     try {
       const { data, error } = await supabase.from('users').select('*').order('created_at', { ascending: false });
-      if (!error && data) return res.json({ success: true, users: data });
+      if (!error && data) supabaseUsers = data;
     } catch (e) {}
   }
-  res.json({ success: true, users: memoryDb.users });
+
+  const combined = [...supabaseUsers];
+  const existingEmails = new Set(supabaseUsers.map(u => u.email));
+  for (const item of memoryDb.users) {
+    if (!existingEmails.has(item.email)) {
+      combined.push(item);
+    }
+  }
+
+  res.json({ success: true, users: combined });
 });
 
 // 2c. Register New User Endpoint (Drivers, Restaurants, NGOs)
@@ -135,33 +157,45 @@ app.post('/api/users', async (req, res) => {
     created_at: new Date().toISOString()
   };
 
+  memoryDb.users.unshift(newUser);
+
   if (isSupabaseConfigured && supabase) {
     try {
       const { data, error } = await supabase.from('users').insert([newUser]).select();
       if (error) {
         console.warn('Supabase user insert notice:', error.message);
-      } else if (data) {
+      } else if (data && data.length > 0) {
         console.log('✅ New User Saved to Supabase:', data[0]);
-        return res.json({ success: true, user: data[0] });
+        return res.json({ success: true, user: data[0], storage: 'supabase' });
       }
     } catch (e) {
       console.error('Error inserting user to Supabase:', e);
     }
   }
 
-  // Fallback storage
-  memoryDb.users.unshift(newUser);
-  res.json({ success: true, user: newUser });
+  res.json({ success: true, user: newUser, storage: 'memory' });
 });
 
 
 // 3. Get All Donations
 app.get('/api/donations', async (req, res) => {
+  let supabaseDonations = [];
   if (isSupabaseConfigured && supabase) {
-    const { data, error } = await supabase.from('donations').select('*').order('created_at', { ascending: false });
-    if (!error && data) return res.json({ success: true, donations: data });
+    try {
+      const { data, error } = await supabase.from('donations').select('*').order('created_at', { ascending: false });
+      if (!error && data) supabaseDonations = data;
+    } catch (e) {}
   }
-  res.json({ success: true, donations: memoryDb.donations });
+
+  const combined = [...supabaseDonations];
+  const existingIds = new Set(supabaseDonations.map(d => d.id));
+  for (const item of memoryDb.donations) {
+    if (!existingIds.has(item.id)) {
+      combined.push(item);
+    }
+  }
+
+  res.json({ success: true, donations: combined });
 });
 
 // 4. Create New Surplus Food Donation
@@ -169,7 +203,7 @@ app.post('/api/donations', async (req, res) => {
   const donation = {
     id: `DON-${Math.floor(1000 + Math.random() * 9000)}`,
     title: req.body.title || 'Surplus Food Batch',
-    category: req.body.category || 'Cooked Meals',
+    category: normalizeCategory(req.body.category),
     quantity_kg: Number(req.body.quantity_kg) || 20,
     portions: Number(req.body.portions) || 30,
     temp_requirement: req.body.temp_requirement || 'Ambient',
@@ -183,14 +217,24 @@ app.post('/api/donations', async (req, res) => {
     created_at: new Date().toISOString()
   };
 
-  if (isSupabaseConfigured && supabase) {
-    const { data, error } = await supabase.from('donations').insert([donation]).select();
-    if (!error && data) return res.json({ success: true, donation: data[0] });
-  }
-
   memoryDb.donations.unshift(donation);
   memoryDb.stats.meals_rescued += donation.portions;
-  res.json({ success: true, donation });
+
+  if (isSupabaseConfigured && supabase) {
+    try {
+      const { data, error } = await supabase.from('donations').insert([donation]).select();
+      if (error) {
+        console.warn('⚠️ Supabase donations insert notice:', error.message);
+      } else if (data && data.length > 0) {
+        console.log('✅ Donation saved directly to Supabase DB:', data[0].id);
+        return res.json({ success: true, donation: data[0], storage: 'supabase' });
+      }
+    } catch (e) {
+      console.warn('Supabase donation insert exception:', e.message);
+    }
+  }
+
+  res.json({ success: true, donation, storage: 'memory' });
 });
 
 // 5. NGO Claim Donation
@@ -198,20 +242,23 @@ app.post('/api/donations/:id/claim', async (req, res) => {
   const { id } = req.params;
   const { ngo_name } = req.body;
 
-  if (isSupabaseConfigured && supabase) {
-    const { data, error } = await supabase
-      .from('donations')
-      .update({ recipient_ngo: ngo_name || 'Hope Shelter', status: 'CLAIMED' })
-      .eq('id', id)
-      .select();
-    if (!error && data) return res.json({ success: true, donation: data[0] });
-  }
-
   const d = memoryDb.donations.find(item => item.id === id);
   if (d) {
     d.recipient_ngo = ngo_name || 'Hope Shelter';
     d.status = 'CLAIMED';
   }
+
+  if (isSupabaseConfigured && supabase) {
+    try {
+      const { data, error } = await supabase
+        .from('donations')
+        .update({ recipient_ngo: ngo_name || 'Hope Shelter', status: 'CLAIMED' })
+        .eq('id', id)
+        .select();
+      if (!error && data && data.length > 0) return res.json({ success: true, donation: data[0] });
+    } catch (e) {}
+  }
+
   res.json({ success: true, donation: d });
 });
 
@@ -220,20 +267,23 @@ app.post('/api/donations/:id/assign-driver', async (req, res) => {
   const { id } = req.params;
   const { driver_name } = req.body;
 
-  if (isSupabaseConfigured && supabase) {
-    const { data, error } = await supabase
-      .from('donations')
-      .update({ driver_name: driver_name || 'Rahul Sharma', status: 'EN_ROUTE' })
-      .eq('id', id)
-      .select();
-    if (!error && data) return res.json({ success: true, donation: data[0] });
-  }
-
   const d = memoryDb.donations.find(item => item.id === id);
   if (d) {
     d.driver_name = driver_name || 'Rahul Sharma';
     d.status = 'EN_ROUTE';
   }
+
+  if (isSupabaseConfigured && supabase) {
+    try {
+      const { data, error } = await supabase
+        .from('donations')
+        .update({ driver_name: driver_name || 'Rahul Sharma', status: 'EN_ROUTE' })
+        .eq('id', id)
+        .select();
+      if (!error && data && data.length > 0) return res.json({ success: true, donation: data[0] });
+    } catch (e) {}
+  }
+
   res.json({ success: true, donation: d });
 });
 
@@ -242,27 +292,32 @@ app.post('/api/donations/:id/status', async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
 
-  if (isSupabaseConfigured && supabase) {
-    const { data, error } = await supabase
-      .from('donations')
-      .update({ status: status || 'DELIVERED' })
-      .eq('id', id)
-      .select();
-    if (!error && data) return res.json({ success: true, donation: data[0] });
-  }
-
   const d = memoryDb.donations.find(item => item.id === id);
   if (d) {
     d.status = status || 'DELIVERED';
   }
+
+  if (isSupabaseConfigured && supabase) {
+    try {
+      const { data, error } = await supabase
+        .from('donations')
+        .update({ status: status || 'DELIVERED' })
+        .eq('id', id)
+        .select();
+      if (!error && data && data.length > 0) return res.json({ success: true, donation: data[0] });
+    } catch (e) {}
+  }
+
   res.json({ success: true, donation: d });
 });
 
 // 8. Get Platform Telemetry & Stats
 app.get('/api/stats', async (req, res) => {
   if (isSupabaseConfigured && supabase) {
-    const { data, error } = await supabase.from('impact_logs').select('*').single();
-    if (!error && data) return res.json({ success: true, stats: data });
+    try {
+      const { data, error } = await supabase.from('impact_logs').select('*').single();
+      if (!error && data) return res.json({ success: true, stats: data });
+    } catch (e) {}
   }
   res.json({ success: true, stats: memoryDb.stats });
 });
@@ -271,3 +326,4 @@ app.get('/api/stats', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Surplus-To-Shelter Supabase Backend Server running on http://localhost:${PORT}`);
 });
+
