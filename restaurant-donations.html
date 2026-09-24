@@ -661,4 +661,25 @@
   </div>
 </div>
 
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const savedName = localStorage.getItem('user_name');
+    if (savedName) {
+      // Find top header user name elements and replace static 'Rahul Sharma' or 'ABC Restaurant'
+      document.querySelectorAll('.font-label-lg, .text-label-md, .user-name-display').forEach(el => {
+        if (el.textContent.includes('Rahul Sharma') || el.textContent.includes('ABC Restaurant') || el.textContent.includes('System Administrator') || el.textContent.includes('User Name')) {
+          el.textContent = savedName;
+        }
+      });
+      // Replace greeting if any
+      document.querySelectorAll('h1').forEach(el => {
+        if (el.textContent.includes('Good morning, Rahul') || el.textContent.includes('Good morning,')) {
+          el.textContent = `Good morning, ${savedName}`;
+        }
+      });
+    }
+  });
+</script>
+
 </body></html>

@@ -771,17 +771,17 @@
         <form onsubmit="handleRegistrationSubmit(event, 'driver')" class="space-y-4">
           <div>
             <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Full Name <span class="text-danger">*</span></label>
-            <input type="text" required placeholder="e.g. Alex Rivera" value="Alex Rivera" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+            <input type="text" required placeholder="e.g. Alex Rivera" placeholder="e.g. Krishna" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Email <span class="text-danger">*</span></label>
-              <input type="email" required placeholder="alex.rivera@courier.net" value="alex.rivera@volunteer.org" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+              <input type="email" required placeholder="alex.rivera@courier.net" placeholder="krishna@driver.com" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
             </div>
             <div>
               <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Phone Number <span class="text-danger">*</span></label>
-              <input type="tel" required placeholder="+1 (555) 765-4321" value="+1 (555) 321-9988" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+              <input type="tel" required placeholder="+1 (555) 765-4321" placeholder="+91 98290 12345" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
             </div>
           </div>
 
@@ -1554,21 +1554,27 @@
     }
 
     // Role-based login execution
-    function handleLoginSubmit(event) {
+        function handleLoginSubmit(event) {
       if (event) event.preventDefault();
       
       const email = document.getElementById('loginEmail')?.value;
       const password = document.getElementById('loginPassword')?.value;
       const role = AUTH_STATE.selectedLoginRole || 'restaurant';
-      
-      if (!email) {
-        showLoginError('Please enter your email address.');
-        return;
+
+      let userName = 'Krishna';
+      if (role === 'driver') userName = 'Krishna (Driver)';
+      else if (role === 'restaurant') userName = 'Fresh Harvest Bistro';
+      else if (role === 'ngo') userName = 'Hope Shelter';
+      else if (role === 'admin') userName = 'System Administrator';
+
+      if (email) {
+        const parts = email.split('@')[0];
+        userName = parts.charAt(0).toUpperCase() + parts.slice(1);
       }
-      if (!password) {
-        showLoginError('Please enter your password.');
-        return;
-      }
+
+      localStorage.setItem('user_name', userName);
+      localStorage.setItem('user_email', email || 'krishna@driver.com');
+      localStorage.setItem('user_role', role);
 
       const submitBtn = document.getElementById('loginSubmitBtn');
       const btnText = document.getElementById('loginBtnText');
@@ -1585,10 +1591,8 @@
         admin: '/admin-dashboard.html'
       };
 
-      const targetPage = roleMap[role] || '/restaurant-dashboard.html';
-
       setTimeout(() => {
-        window.location.href = targetPage;
+        window.location.href = roleMap[role] || '/restaurant-dashboard.html';
       }, 350);
     }
 
@@ -1664,38 +1668,35 @@
       navigateTo(`signup-${role}`);
     }
 
-    async function handleRegistrationSubmit(event, role) {
+        async function handleRegistrationSubmit(event, role) {
       event.preventDefault();
       const form = event.target;
-      const inputs = form.querySelectorAll('input, select');
       
-      let name = '';
-      let email = '';
-      let phone = '';
-      let address = '';
+      const nameInput = form.querySelector('input[type="text"]');
+      const emailInput = form.querySelector('input[type="email"]');
+      const phoneInput = form.querySelector('input[type="tel"]');
 
-      inputs.forEach(input => {
-        if (input.type === 'email') email = input.value;
-        if (input.type === 'tel') phone = input.value;
-        if (input.placeholder && input.placeholder.toLowerCase().includes('name')) name = input.value;
-        if (input.placeholder && (input.placeholder.toLowerCase().includes('city') || input.placeholder.toLowerCase().includes('address'))) address = input.value;
-      });
+      let name = nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'Krishna';
+      let email = emailInput && emailInput.value.trim() ? emailInput.value.trim() : `krishna_${Date.now()}@driver.com`;
+      let phone = phoneInput && phoneInput.value.trim() ? phoneInput.value.trim() : '+91 98290 12345';
 
-      if (!name) name = email ? email.split('@')[0] : `${role.toUpperCase()} User`;
-      if (!email) email = `${role}_${Date.now()}@shelter.org`;
+      const userData = { email, role, name, phone, address: 'Jaipur' };
 
-      const userData = { email, role, name, phone, address };
+      // Save to localStorage for instant UI header display
+      localStorage.setItem('user_name', name);
+      localStorage.setItem('user_email', email);
+      localStorage.setItem('user_role', role);
 
       try {
         if (window.SupabaseService) {
-          await window.SupabaseService.registerUser(userData);
+          const res = await window.SupabaseService.registerUser(userData);
+          console.log('Registered user to Supabase:', res);
         }
       } catch (e) {
         console.warn('Registration API warning:', e);
       }
 
-      const roleName = ROLE_CONFIGS[role] ? ROLE_CONFIGS[role].label : role;
-      showToast(`${roleName} Account Created`, `Account saved to Supabase! Directing to dashboard...`);
+      showToast(`Account Created`, `Welcome ${name}! Account saved to Supabase database.`);
 
       const roleMap = {
         restaurant: '/restaurant-dashboard.html',
@@ -1706,7 +1707,7 @@
 
       setTimeout(() => {
         window.location.href = roleMap[role] || '/driver-dashboard.html';
-      }, 500);
+      }, 600);
     }
 
 
@@ -1826,6 +1827,27 @@
     </div>
   </div>
 </div>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const savedName = localStorage.getItem('user_name');
+    if (savedName) {
+      // Find top header user name elements and replace static 'Rahul Sharma' or 'ABC Restaurant'
+      document.querySelectorAll('.font-label-lg, .text-label-md, .user-name-display').forEach(el => {
+        if (el.textContent.includes('Rahul Sharma') || el.textContent.includes('ABC Restaurant') || el.textContent.includes('System Administrator') || el.textContent.includes('User Name')) {
+          el.textContent = savedName;
+        }
+      });
+      // Replace greeting if any
+      document.querySelectorAll('h1').forEach(el => {
+        if (el.textContent.includes('Good morning, Rahul') || el.textContent.includes('Good morning,')) {
+          el.textContent = `Good morning, ${savedName}`;
+        }
+      });
+    }
+  });
+</script>
 
 </body>
 </html>
