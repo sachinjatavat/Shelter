@@ -1,93 +1,94 @@
 /* ==========================================================================
-   SURPLUS-TO-SHELTER FUN INTERACTIVE MOTION, RIPPLES & EMERGENCY CRISIS SYNC
+   SURPLUS-TO-SHELTER UNIFIED MOTION & GLOBAL BUTTON INTERACTION ENGINE
    ========================================================================== */
 
-document.addEventListener('DOMContentLoaded', () => {
-  // 1. Attach Ripple Effect & Button Action Listeners to all Buttons
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('button, .btn, a.btn, input[type="submit"]');
-    if (!btn) return;
-
-    // Create ripple circle
-    const rect = btn.getBoundingClientRect();
-    const circle = document.createElement('span');
-    const diameter = Math.max(rect.width, rect.height);
-    const radius = diameter / 2;
-
-    circle.style.width = circle.style.height = `${diameter}px`;
-    circle.style.left = `${e.clientX - rect.left - radius}px`;
-    circle.style.top = `${e.clientY - rect.top - radius}px`;
-    circle.style.position = 'absolute';
-    circle.style.borderRadius = '50%';
-    circle.style.backgroundColor = 'rgba(255, 255, 255, 0.35)';
-    circle.style.transform = 'scale(0)';
-    circle.style.animation = 'buttonRipple 0.6s linear';
-    circle.style.pointerEvents = 'none';
-
-    // Ensure CSS animation keyframe exists
-    if (!document.getElementById('ripple-style')) {
-      const style = document.createElement('style');
-      style.id = 'ripple-style';
-      style.innerHTML = `
-        @keyframes buttonRipple {
-          to {
-            transform: scale(3.5);
-            opacity: 0;
-          }
-        }
-      `;
-      document.head.appendChild(style);
+// 1. Global Functions (Accessible Everywhere)
+window.triggerSendDonation = function(btn) {
+  if (window.triggerConfettiBurst) {
+    let x = window.innerWidth / 2;
+    let y = window.innerHeight / 2;
+    if (btn && btn.getBoundingClientRect) {
+      const rect = btn.getBoundingClientRect();
+      x = rect.left + rect.width / 2;
+      y = rect.top + rect.height / 2;
     }
+    window.triggerConfettiBurst(x, y);
+  }
 
-    btn.appendChild(circle);
-    setTimeout(() => circle.remove(), 600);
-
-    const btnText = btn.textContent.trim();
-
-    // 2. Trigger Fun Confetti Burst on Action Buttons
-    const isPrimaryAction = btnText.includes('Accept') || 
-                            btnText.includes('Claim') || 
-                            btnText.includes('Donate') || 
-                            btnText.includes('Send') ||
-                            btnText.includes('Post') ||
-                            btnText.includes('Confirm') ||
-                            btnText.includes('Save') ||
-                            btn.classList.contains('bg-brand-green') ||
-                            btn.classList.contains('bg-emerald-600') ||
-                            btn.classList.contains('bg-primary-container');
-
-    if (isPrimaryAction) {
-      triggerConfettiBurst(e.clientX, e.clientY);
+  let ngoName = 'Hope Shelter';
+  if (btn && btn.closest) {
+    const card = btn.closest('.bg-surface-container-lowest, article, .donation-card, tr, div');
+    if (card) {
+      const heading = card.querySelector('.text-headline-sm, h2, h3, .font-bold');
+      if (heading && heading.textContent) {
+        ngoName = heading.textContent.trim();
+      }
     }
+  }
 
-    // 3. Handle "Send Donation" Buttons
-    if (btnText.includes('Send Donation')) {
-      e.preventDefault();
-      const card = btn.closest('.bg-surface-container-lowest, article, .donation-card, div');
-      const ngoName = card ? (card.querySelector('.text-headline-sm, h3, .font-bold')?.textContent || 'Hope Shelter') : 'Hope Shelter';
+  alert(`🎉 DONATION DISPATCH CONFIRMED!\n\nYour surplus food donation has been assigned to ${ngoName}.\n\nCourier Driver Rahul Sharma (+91 98290-XXXXX) has been dispatched for immediate pickup.\nTracking details are live on your Pickups dashboard.`);
 
-      alert(`🎉 DONATION DISPATCH CONFIRMED!\n\nYour surplus food donation has been assigned to ${ngoName.trim()}.\n\nCourier Driver Rahul Sharma (+91 98290-XXXXX) has been dispatched for immediate pickup.\nTracking details are live on your Pickups dashboard.`);
+  if (window.SupabaseService) {
+    window.SupabaseService.createDonation({
+      title: 'Surplus Food Batch',
+      recipient_ngo: ngoName,
+      status: 'DISPATCHED'
+    });
+  }
 
-      setTimeout(() => {
-        window.location.href = '/restaurant-pickups.html';
-      }, 800);
+  setTimeout(() => {
+    window.location.href = '/restaurant-pickups.html';
+  }, 600);
+};
+
+window.triggerViewDetails = function(btn) {
+  let ngoName = 'Hope Shelter';
+  if (btn && btn.closest) {
+    const card = btn.closest('.bg-surface-container-lowest, article, .donation-card, tr, div');
+    if (card) {
+      const heading = card.querySelector('.text-headline-sm, h2, h3, .font-bold');
+      if (heading && heading.textContent) {
+        ngoName = heading.textContent.trim();
+      }
     }
+  }
 
-    // 4. Handle "View Details" Buttons
-    if (btnText.includes('View Details') && (!btn.getAttribute('onclick') || btn.getAttribute('onclick').includes('alert'))) {
-      const card = btn.closest('.bg-surface-container-lowest, article, .donation-card, div');
-      const ngoName = card ? (card.querySelector('.text-headline-sm, h3, .font-bold')?.textContent || 'Hope Shelter') : 'Hope Shelter';
+  alert(`📋 RECIPIENT SPECIFICATIONS:\n\nOrganisation: ${ngoName}\nVerification: 100% Certified NGO Partner\nAvailable Capacity: 45 meals remaining today\nDriver Vehicle: Thermal Insulated EV Van (#RJ-14-EV-9401)\nEstimated Pickup ETA: 12 minutes\nHandling Notes: Sanitary food-grade thermal containers provided.`);
+};
 
-      alert(`📋 RECIPIENT SPECIFICATIONS:\n\nOrganisation: ${ngoName.trim()}\nVerification: 100% Certified NGO Partner\nAvailable Capacity: 45 meals remaining today\nDriver Vehicle: Thermal Insulated EV Van (#RJ-14-EV-9401)\nEstimated Pickup ETA: 12 minutes\nHandling Notes: Sanitary food-grade thermal containers provided.`);
+window.quickDispatchEmergencyRelief = function() {
+  if (window.triggerConfettiBurst) {
+    window.triggerConfettiBurst(window.innerWidth / 2, window.innerHeight / 2);
+  }
+  alert('🎉 EMERGENCY DISPATCH CONFIRMED!\n\n50 Emergency Meals allocated to Hope Shelter relief operation.\nCourier Driver Rahul Sharma (+91 98290-XXXXX) has been dispatched for immediate pickup.');
+
+  if (window.dismissGlobalEmergencyBanner) {
+    window.dismissGlobalEmergencyBanner();
+  } else {
+    const banner = document.getElementById('global-emergency-alert-banner');
+    if (banner) banner.remove();
+    localStorage.removeItem('emergency_crisis_event');
+  }
+
+  setTimeout(() => {
+    window.location.href = '/restaurant-pickups.html';
+  }, 600);
+};
+
+window.dismissGlobalEmergencyBanner = function() {
+  const banner = document.getElementById('global-emergency-alert-banner');
+  if (banner) banner.remove();
+  
+  try {
+    const crisisRaw = localStorage.getItem('emergency_crisis_event');
+    if (crisisRaw) {
+      const crisis = JSON.parse(crisisRaw);
+      crisis.active = false;
+      localStorage.setItem('emergency_crisis_event', JSON.stringify(crisis));
     }
-  });
+  } catch (e) {}
+};
 
-  // Check for NGO Emergency Crisis Broadcast every 2 seconds
-  checkEmergencyCrisisState();
-  setInterval(checkEmergencyCrisisState, 2000);
-});
-
-// Fun Particle Burst Helper
 window.triggerConfettiBurst = function(x, y) {
   const colors = ['#16803C', '#059669', '#10B981', '#3B82F6', '#EAB308', '#EC4899', '#8B5CF6', '#EF4444'];
   const particleCount = 28;
@@ -132,7 +133,7 @@ window.triggerConfettiBurst = function(x, y) {
   }
 };
 
-// Emergency Crisis Cross-Portal Sync Module
+// Emergency Crisis Cross-Portal Sync Listener
 function checkEmergencyCrisisState() {
   const crisisRaw = localStorage.getItem('emergency_crisis_event');
   if (!crisisRaw) return;
@@ -141,7 +142,6 @@ function checkEmergencyCrisisState() {
     const crisis = JSON.parse(crisisRaw);
     if (!crisis || !crisis.active) return;
 
-    // 1. Inject Top Red Alert Emergency Banner if not present
     if (!document.getElementById('global-emergency-alert-banner')) {
       const banner = document.createElement('div');
       banner.id = 'global-emergency-alert-banner';
@@ -152,16 +152,15 @@ function checkEmergencyCrisisState() {
           <span class="font-bold text-sm tracking-wide">🚨 EMERGENCY RELIEF RED ALERT: ${crisis.type} (${crisis.portions}) requested by ${crisis.ngo || 'Hope Shelter'}!</span>
         </div>
         <div class="flex items-center gap-3 shrink-0">
-          <button onclick="quickDispatchEmergencyRelief()" class="px-3.5 py-1.5 bg-white text-red-700 text-xs font-extrabold rounded-lg hover:bg-red-100 transition-colors shadow-md">
+          <button onclick="window.quickDispatchEmergencyRelief()" class="px-3.5 py-1.5 bg-white text-red-700 text-xs font-extrabold rounded-lg hover:bg-red-100 transition-colors shadow-md cursor-pointer">
             ⚡ Quick Respond (50 Meals)
           </button>
-          <button onclick="dismissGlobalEmergencyBanner()" class="text-white hover:text-red-200 text-xs font-bold px-2">✕</button>
+          <button onclick="window.dismissGlobalEmergencyBanner()" class="text-white hover:text-red-200 text-xs font-bold px-2 cursor-pointer">✕</button>
         </div>
       `;
       document.body.prepend(banner);
     }
 
-    // 2. Add Red Dot Badge to Notifications Icon in sidebar/header
     document.querySelectorAll('button, a').forEach(el => {
       const text = el.textContent.toLowerCase();
       if (text.includes('notification')) {
@@ -178,26 +177,60 @@ function checkEmergencyCrisisState() {
   }
 }
 
-window.quickDispatchEmergencyRelief = function() {
-  if (window.triggerConfettiBurst) {
-    window.triggerConfettiBurst(window.innerWidth / 2, window.innerHeight / 2);
-  }
-  alert('🎉 EMERGENCY DISPATCH CONFIRMED!\n\n50 Emergency Meals allocated to Hope Shelter relief operation.\nCourier Driver Rahul Sharma (+91 98290-XXXXX) has been dispatched for immediate pickup.');
-  window.dismissGlobalEmergencyBanner();
-  window.location.href = '/restaurant-pickups.html';
-};
+document.addEventListener('DOMContentLoaded', () => {
+  // Ripple effect on all clicks
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('button, .btn, a.btn, input[type="submit"]');
+    if (!btn) return;
 
-window.dismissGlobalEmergencyBanner = function() {
-  const banner = document.getElementById('global-emergency-alert-banner');
-  if (banner) banner.remove();
-  
-  // Clear active crisis
-  try {
-    const crisisRaw = localStorage.getItem('emergency_crisis_event');
-    if (crisisRaw) {
-      const crisis = JSON.parse(crisisRaw);
-      crisis.active = false;
-      localStorage.setItem('emergency_crisis_event', JSON.stringify(crisis));
+    const rect = btn.getBoundingClientRect();
+    const circle = document.createElement('span');
+    const diameter = Math.max(rect.width, rect.height);
+    const radius = diameter / 2;
+
+    circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${e.clientX - rect.left - radius}px`;
+    circle.style.top = `${e.clientY - rect.top - radius}px`;
+    circle.style.position = 'absolute';
+    circle.style.borderRadius = '50%';
+    circle.style.backgroundColor = 'rgba(255, 255, 255, 0.35)';
+    circle.style.transform = 'scale(0)';
+    circle.style.animation = 'buttonRipple 0.6s linear';
+    circle.style.pointerEvents = 'none';
+
+    if (!document.getElementById('ripple-style')) {
+      const style = document.createElement('style');
+      style.id = 'ripple-style';
+      style.innerHTML = `
+        @keyframes buttonRipple {
+          to {
+            transform: scale(3.5);
+            opacity: 0;
+          }
+        }
+      `;
+      document.head.appendChild(style);
     }
-  } catch (e) {}
-};
+
+    btn.appendChild(circle);
+    setTimeout(() => circle.remove(), 600);
+
+    const btnText = btn.textContent.trim();
+
+    if (btnText.includes('Accept') || 
+        btnText.includes('Claim') || 
+        btnText.includes('Donate') || 
+        btnText.includes('Send') ||
+        btnText.includes('Post') ||
+        btnText.includes('Confirm') ||
+        btnText.includes('Save') ||
+        btn.classList.contains('bg-brand-green') ||
+        btn.classList.contains('bg-emerald-600') ||
+        btn.classList.contains('bg-primary-container')) {
+      triggerConfettiBurst(e.clientX, e.clientY);
+    }
+  });
+
+  checkEmergencyCrisisState();
+  setInterval(checkEmergencyCrisisState, 2000);
+});
