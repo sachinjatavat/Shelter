@@ -7,7 +7,7 @@
 CREATE TABLE IF NOT EXISTS public.users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   email TEXT UNIQUE NOT NULL,
-  role TEXT NOT NULL CHECK (role IN ('restaurant', 'ngo', 'driver', 'admin')),
+  role TEXT NOT NULL CHECK (role IN ('restaurant', 'ngo', 'driver')),
   name TEXT NOT NULL,
   phone TEXT,
   address TEXT,
@@ -59,7 +59,6 @@ INSERT INTO public.users (email, role, name, phone, address) VALUES
 ('manager@freshharvest.org', 'restaurant', 'Fresh Harvest Bistro', '+91 98290 12345', 'Plot 42, C-Scheme, Jaipur'),
 ('coordinator@hopeshelter.org', 'ngo', 'Hope Shelter & Care Center', '+91 98290 67890', 'Sector 3, JLN Marg, Jaipur'),
 ('driver402@surplusrescue.org', 'driver', 'Rahul Sharma (Courier #402)', '+91 98290 88402', 'Jaipur Sector 4 Grid'),
-('admin@surplusrescue.org', 'admin', 'System Administrator', '+91 98290 00000', 'Jaipur Command Center')
 ON CONFLICT (email) DO NOTHING;
 
 INSERT INTO public.donations (id, title, category, quantity_kg, portions, temp_requirement, donor_name, donor_address, recipient_ngo, driver_name, status, pickup_window, pin_code) VALUES

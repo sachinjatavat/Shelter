@@ -34,7 +34,6 @@ const memoryDb = {
     { id: 'usr-1', email: 'manager@freshharvest.org', role: 'restaurant', name: 'Fresh Harvest Bistro' },
     { id: 'usr-2', email: 'coordinator@hopeshelter.org', role: 'ngo', name: 'Hope Shelter & Care Center' },
     { id: 'usr-3', email: 'driver402@surplusrescue.org', role: 'driver', name: 'Rahul Sharma (Courier #402)' },
-    { id: 'usr-4', email: 'admin@surplusrescue.org', role: 'admin', name: 'System Administrator' }
   ],
   donations: [
     {
