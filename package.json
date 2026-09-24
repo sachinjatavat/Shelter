@@ -1,0 +1,13 @@
+{
+  "name": "surplus-to-shelter-platform",
+  "version": "1.0.0",
+  "description": "Surplus-To-Shelter Unified Food Rescue Logistics Platform",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 3000",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^8.3.0"
+  }
+}

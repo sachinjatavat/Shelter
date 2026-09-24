@@ -1,0 +1,1800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Surplus-to-Shelter | Food Rescue Platform</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#16803C',
+              hover: '#126931',
+              light: '#EAF6EE',
+              dark: '#0e5226'
+            },
+            text: {
+              primary: '#111111',
+              secondary: '#666666',
+              muted: '#888888'
+            },
+            borderline: '#E5E5E5',
+            warning: '#C58A00',
+            danger: '#C62828'
+          },
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #FFFFFF;
+      color: #111111;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .role-card.selected {
+      border-color: #16803C !important;
+      background-color: #EAF6EE !important;
+    }
+    .role-card.selected .role-icon {
+      color: #16803C !important;
+    }
+    .role-card.selected .role-radio {
+      border-color: #16803C !important;
+      background-color: #16803C !important;
+    }
+    /* Simple smooth transitions */
+    .fade-enter {
+      animation: fadeIn 0.18s ease-out forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(3px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #16803C !important;
+      box-shadow: 0 0 0 1px #16803C;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-white text-text-primary">
+
+  <!-- TOP BRAND HEADER (Global Bar) -->
+  <header class="w-full border-b border-borderline bg-white sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('login')">
+        <div class="w-9 h-9 rounded bg-[#16803C] flex items-center justify-center text-white">
+          <i data-lucide="leaf" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <span class="font-bold text-lg tracking-tight text-text-primary block leading-none">SURPLUS-TO-SHELTER</span>
+          <span class="text-[11px] text-text-secondary tracking-wider uppercase font-medium">Community Food Rescue Logistics</span>
+        </div>
+      </div>
+      <div class="flex items-center space-x-4 text-sm" id="globalNavRight">
+        <span class="text-xs px-2.5 py-1 rounded bg-[#EAF6EE] text-[#16803C] font-medium flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-[#16803C] animate-pulse"></span> Network Active
+        </span>
+        <div id="authStatusIndicator" class="hidden items-center gap-3 pl-3 border-l border-borderline">
+          <div class="flex items-center gap-2">
+            <div id="userAvatarBadge" class="w-7 h-7 rounded-full bg-slate-100 border border-borderline text-xs font-semibold flex items-center justify-center text-text-secondary">U</div>
+            <div class="text-left hidden sm:block">
+              <span id="navUserName" class="text-xs font-semibold block leading-tight">User Name</span>
+              <span id="navUserRoleBadge" class="text-[10px] text-[#16803C] font-medium uppercase tracking-wider block">Role</span>
+            </div>
+          </div>
+          <button onclick="handleLogout()" class="text-xs text-text-secondary hover:text-text-primary px-2 py-1 rounded border border-borderline hover:bg-slate-50 flex items-center gap-1">
+            <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN VIEWPORT CONTAINER (Switches via client-side routing) -->
+  <main class="flex-1 flex flex-col justify-center" id="appContainer">
+
+    <!-- ========================================================================= -->
+    <!-- VIEW: 1 & 2 & 3 & 4. /login (Default view) -->
+    <!-- ========================================================================= -->
+    <section id="view-login" class="py-8 md:py-14 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+        
+        <!-- LEFT SIDE: Brand & Logistics Workflow (No giant illustration, clean workflow) -->
+        <div class="lg:col-span-5 pt-2 lg:pt-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EAF6EE] text-[#16803C] text-xs font-semibold mb-4">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> End-to-End Distribution
+          </div>
+          <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-text-primary leading-tight mb-3">
+            Rescue surplus food.<br>
+            <span class="text-[#16803C]">Feed your community.</span>
+          </h1>
+          <p class="text-text-secondary text-sm sm:text-base leading-relaxed mb-8">
+            A unified logistics infrastructure bridging verified commercial food donors, certified relief shelters, and distributed volunteer couriers.
+          </p>
+
+          <!-- Workflow: Restaurant -> Surplus Food -> NGO -> Driver -> Community -->
+          <div class="bg-white border border-borderline rounded-lg p-5">
+            <p class="text-xs uppercase tracking-wider text-text-muted font-bold mb-4 flex items-center justify-between">
+              <span>Rescue Lifecycle Protocol</span>
+              <span class="text-[#16803C] font-semibold text-[11px]">Real-time Tracking</span>
+            </p>
+            
+            <div class="space-y-2 relative">
+              <!-- Item 1: Restaurant -->
+              <div class="flex items-center gap-3 p-2.5 rounded border border-borderline bg-white">
+                <div class="w-8 h-8 rounded bg-[#EAF6EE] text-[#16803C] flex items-center justify-center shrink-0">
+                  <i data-lucide="store" class="w-4 h-4"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-semibold text-text-primary">1. Restaurant / Donor</p>
+                  <p class="text-[11px] text-text-secondary truncate">Packages safe surplus batches & logs shelf life</p>
+                </div>
+              </div>
+
+              <!-- Arrow -->
+              <div class="flex justify-center text-text-muted">
+                <i data-lucide="arrow-down" class="w-4 h-4 text-slate-400"></i>
+              </div>
+
+              <!-- Item 2: Surplus Food -->
+              <div class="flex items-center gap-3 p-2.5 rounded border border-borderline bg-slate-50">
+                <div class="w-8 h-8 rounded bg-white text-text-secondary border border-borderline flex items-center justify-center shrink-0">
+                  <i data-lucide="box" class="w-4 h-4"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-semibold text-text-primary">2. Verified Surplus Food</p>
+                  <p class="text-[11px] text-text-secondary truncate">Automated temperature, weight & intake verification</p>
+                </div>
+              </div>
+
+              <!-- Arrow -->
+              <div class="flex justify-center text-text-muted">
+                <i data-lucide="arrow-down" class="w-4 h-4 text-slate-400"></i>
+              </div>
+
+              <!-- Item 3: NGO / Shelter -->
+              <div class="flex items-center gap-3 p-2.5 rounded border border-borderline bg-white">
+                <div class="w-8 h-8 rounded bg-[#EAF6EE] text-[#16803C] flex items-center justify-center shrink-0">
+                  <i data-lucide="heart-handshake" class="w-4 h-4"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-semibold text-text-primary">3. NGO / Shelter</p>
+                  <p class="text-[11px] text-text-secondary truncate">Accepts allocation matching daily meal capacity</p>
+                </div>
+              </div>
+
+              <!-- Arrow -->
+              <div class="flex justify-center text-text-muted">
+                <i data-lucide="arrow-down" class="w-4 h-4 text-slate-400"></i>
+              </div>
+
+              <!-- Item 4: Driver -->
+              <div class="flex items-center gap-3 p-2.5 rounded border border-borderline bg-white">
+                <div class="w-8 h-8 rounded bg-[#EAF6EE] text-[#16803C] flex items-center justify-center shrink-0">
+                  <i data-lucide="truck" class="w-4 h-4"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-semibold text-text-primary">4. Driver / Volunteer</p>
+                  <p class="text-[11px] text-text-secondary truncate">Pick up & prompt delivery within radius</p>
+                </div>
+              </div>
+
+              <!-- Arrow -->
+              <div class="flex justify-center text-text-muted">
+                <i data-lucide="arrow-down" class="w-4 h-4 text-slate-400"></i>
+              </div>
+
+              <!-- Item 5: Community -->
+              <div class="flex items-center gap-3 p-2.5 rounded border border-emerald-200 bg-[#EAF6EE]">
+                <div class="w-8 h-8 rounded bg-[#16803C] text-white flex items-center justify-center shrink-0">
+                  <i data-lucide="users" class="w-4 h-4"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-semibold text-[#16803C]">5. Community Impact</p>
+                  <p class="text-[11px] text-[#16803C]/80 truncate">Fresh meals served with zero landfill emissions</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 flex items-center gap-4 text-xs text-text-secondary">
+            <span class="flex items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5 text-[#16803C]"></i> 100% Traceable</span>
+            <span class="flex items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5 text-[#16803C]"></i> Safe Food Handling</span>
+            <span class="flex items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5 text-[#16803C]"></i> Role-Based Privacy</span>
+          </div>
+        </div>
+
+        <!-- RIGHT SIDE: Login Panel -->
+        <div class="lg:col-span-7">
+          <div class="bg-white border border-borderline rounded-xl p-6 sm:p-8 shadow-sm">
+            
+            <div class="mb-6">
+              <h2 class="text-2xl font-bold tracking-tight text-text-primary">Login to your account</h2>
+              <p class="text-sm text-text-secondary mt-1">Select your account type and provide authorized credentials.</p>
+            </div>
+
+            <!-- Role Selection (4 roles) -->
+            <div class="mb-6">
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-2.5">
+                Select your account type <span class="text-danger">*</span>
+              </label>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="loginRoleOptions">
+                
+                <!-- Role 1: Restaurant -->
+                <div onclick="selectLoginRole('restaurant')" id="role-btn-restaurant" class="role-card selected p-3.5 rounded-lg border border-borderline bg-white cursor-pointer hover:border-slate-400 transition-all flex items-start gap-3 relative">
+                  <div class="role-icon text-text-secondary mt-0.5">
+                    <i data-lucide="store" class="w-5 h-5"></i>
+                  </div>
+                  <div class="flex-1">
+                    <div class="flex items-center justify-between">
+                      <span class="text-sm font-semibold text-text-primary">Restaurant</span>
+                      <span class="role-radio w-3.5 h-3.5 rounded-full border border-borderline flex items-center justify-center"></span>
+                    </div>
+                    <p class="text-xs text-text-secondary font-medium">Food Business</p>
+                    <p class="text-[11px] text-text-secondary/90 mt-0.5">Donate surplus food</p>
+                  </div>
+                </div>
+
+                <!-- Role 2: NGO / Shelter -->
+                <div onclick="selectLoginRole('ngo')" id="role-btn-ngo" class="role-card p-3.5 rounded-lg border border-borderline bg-white cursor-pointer hover:border-slate-400 transition-all flex items-start gap-3 relative">
+                  <div class="role-icon text-text-secondary mt-0.5">
+                    <i data-lucide="heart-handshake" class="w-5 h-5"></i>
+                  </div>
+                  <div class="flex-1">
+                    <div class="flex items-center justify-between">
+                      <span class="text-sm font-semibold text-text-primary">NGO / Shelter</span>
+                      <span class="role-radio w-3.5 h-3.5 rounded-full border border-borderline flex items-center justify-center"></span>
+                    </div>
+                    <p class="text-xs text-text-secondary font-medium">Food Rescue Org</p>
+                    <p class="text-[11px] text-text-secondary/90 mt-0.5">Receive and manage donations</p>
+                  </div>
+                </div>
+
+                <!-- Role 3: Driver / Volunteer -->
+                <div onclick="selectLoginRole('driver')" id="role-btn-driver" class="role-card p-3.5 rounded-lg border border-borderline bg-white cursor-pointer hover:border-slate-400 transition-all flex items-start gap-3 relative">
+                  <div class="role-icon text-text-secondary mt-0.5">
+                    <i data-lucide="truck" class="w-5 h-5"></i>
+                  </div>
+                  <div class="flex-1">
+                    <div class="flex items-center justify-between">
+                      <span class="text-sm font-semibold text-text-primary">Driver</span>
+                      <span class="role-radio w-3.5 h-3.5 rounded-full border border-borderline flex items-center justify-center"></span>
+                    </div>
+                    <p class="text-xs text-text-secondary font-medium">Volunteer / Courier</p>
+                    <p class="text-[11px] text-text-secondary/90 mt-0.5">Pick up and deliver food</p>
+                  </div>
+                </div>
+
+                <!-- Role 4: Admin -->
+                <div onclick="selectLoginRole('admin')" id="role-btn-admin" class="role-card p-3.5 rounded-lg border border-borderline bg-white cursor-pointer hover:border-slate-400 transition-all flex items-start gap-3 relative">
+                  <div class="role-icon text-text-secondary mt-0.5">
+                    <i data-lucide="shield" class="w-5 h-5"></i>
+                  </div>
+                  <div class="flex-1">
+                    <div class="flex items-center justify-between">
+                      <span class="text-sm font-semibold text-text-primary">Admin</span>
+                      <span class="role-radio w-3.5 h-3.5 rounded-full border border-borderline flex items-center justify-center"></span>
+                    </div>
+                    <p class="text-xs text-text-secondary font-medium">Platform Admin</p>
+                    <p class="text-[11px] text-text-secondary/90 mt-0.5">Manage the entire platform</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Role Feedback Pill -->
+            <div class="mb-5 py-2 px-3 rounded bg-slate-50 border border-borderline flex items-center justify-between text-xs">
+              <span class="text-text-secondary font-medium">Logging in as:</span>
+              <span id="selectedRoleLabel" class="font-semibold text-[#16803C] flex items-center gap-1">
+                <i data-lucide="store" class="w-3.5 h-3.5"></i> Restaurant
+              </span>
+            </div>
+
+            <!-- Inline Error Box (Clean, no browser alerts) -->
+            <div id="loginErrorAlert" class="hidden mb-4 p-3 rounded-lg border border-red-200 bg-red-50 text-danger text-xs flex items-start gap-2">
+              <i data-lucide="alert-circle" class="w-4 h-4 shrink-0 mt-0.5"></i>
+              <div id="loginErrorMessage" class="flex-1">Please enter your email and password.</div>
+            </div>
+
+            <!-- Form -->
+            <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-4">
+              <div>
+                <label for="loginEmail" class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">
+                  Email Address
+                </label>
+                <div class="relative">
+                  <input type="email" id="loginEmail" value="manager@freshharvest.org" required
+                    class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-borderline bg-white text-text-primary placeholder:text-slate-400"
+                    placeholder="name@organization.com">
+                </div>
+                <p id="emailValidationMsg" class="text-[11px] text-danger mt-1 hidden"></p>
+              </div>
+
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <label for="loginPassword" class="block text-xs font-semibold uppercase tracking-wider text-text-secondary">
+                    Password
+                  </label>
+                  <button type="button" onclick="navigateTo('forgot-password')" class="text-xs text-[#16803C] hover:underline font-medium">
+                    Forgot password?
+                  </button>
+                </div>
+                <div class="relative">
+                  <input type="password" id="loginPassword" value="password123" required
+                    class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-borderline bg-white text-text-primary placeholder:text-slate-400"
+                    placeholder="Enter your password">
+                  <button type="button" onclick="togglePasswordVisibility('loginPassword', this)" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600">
+                    <i data-lucide="eye" class="w-4 h-4"></i>
+                  </button>
+                </div>
+                <p id="passwordValidationMsg" class="text-[11px] text-danger mt-1 hidden"></p>
+              </div>
+
+              <div class="flex items-center justify-between py-1">
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" id="rememberMe" checked class="w-4 h-4 rounded text-[#16803C] accent-[#16803C] border-borderline">
+                  <span class="text-xs text-text-secondary">Remember this device</span>
+                </label>
+                <!-- Pre-fill helper buttons for easy reviewer testing -->
+                <div class="text-[11px] text-text-muted">
+                  <span class="font-mono bg-slate-100 px-1.5 py-0.5 rounded text-slate-600">Demo Ready</span>
+                </div>
+              </div>
+
+              <!-- Quick Demo Fill Helpers for testing all 4 roles -->
+              <div class="pt-1 pb-1">
+                <div class="text-[11px] text-text-muted mb-1 font-medium">Quick switch test accounts:</div>
+                <div class="flex flex-wrap gap-1.5 text-xs">
+                  <button type="button" onclick="fillTestAccount('restaurant')" class="px-2 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200 text-[11px]">Restaurant</button>
+                  <button type="button" onclick="fillTestAccount('ngo')" class="px-2 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200 text-[11px]">NGO / Shelter</button>
+                  <button type="button" onclick="fillTestAccount('driver')" class="px-2 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200 text-[11px]">Driver</button>
+                  <button type="button" onclick="fillTestAccount('admin')" class="px-2 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200 text-[11px]">Admin</button>
+                </div>
+              </div>
+
+              <!-- Submit Button with Spinner -->
+              <button type="submit" id="loginSubmitBtn"
+                class="w-full py-2.5 px-4 rounded-lg bg-[#16803C] hover:bg-[#126931] text-white font-medium text-sm transition-colors flex items-center justify-center gap-2 shadow-sm min-h-[44px]">
+                <span id="loginBtnText">Login to Dashboard</span>
+                <span id="loginBtnSpinner" class="hidden">
+                  <svg class="animate-spin h-4 w-4 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span class="ml-1 text-xs">Signing in...</span>
+                </span>
+              </button>
+            </form>
+
+            <!-- Admin Notice or Signup Callout -->
+            <div id="loginFooterNotice" class="mt-6 pt-5 border-t border-borderline text-center text-xs text-text-secondary">
+              <span id="publicSignupPrompt">
+                Don't have an account? 
+                <button onclick="navigateTo('signup')" class="text-[#16803C] font-semibold hover:underline ml-1">Create an account</button>
+              </span>
+              <div id="adminRestrictedNotice" class="hidden text-text-muted flex items-center justify-center gap-1.5">
+                <i data-lucide="lock" class="w-3.5 h-3.5 text-slate-500"></i>
+                <span>Administrator accounts are created by the platform. Public sign-up is disabled.</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW: 6 & 7. /signup (Account Type Selection - 3 roles only, NO ADMIN) -->
+    <!-- ========================================================================= -->
+    <section id="view-signup" class="hidden py-8 md:py-14 px-4 sm:px-6 lg:px-8 max-w-2xl mx-auto w-full fade-enter">
+      <div class="bg-white border border-borderline rounded-xl p-6 sm:p-8 shadow-sm">
+        
+        <div class="mb-6 text-center">
+          <button onclick="navigateTo('login')" class="inline-flex items-center gap-1 text-xs text-text-secondary hover:text-text-primary mb-3">
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Back to login
+          </button>
+          <h2 class="text-2xl font-bold tracking-tight text-text-primary">Create your account</h2>
+          <p class="text-sm text-text-secondary mt-1">Choose how you want to participate in food rescue.</p>
+        </div>
+
+        <div class="space-y-3 mb-6" id="signupRoleSelector">
+          
+          <!-- Option 1: Restaurant -->
+          <div onclick="selectSignupOption('restaurant')" id="signup-card-restaurant"
+            class="p-4 rounded-lg border border-borderline bg-white cursor-pointer hover:border-slate-400 transition-all flex items-center justify-between role-signup-card selected">
+            <div class="flex items-center gap-3.5">
+              <div class="w-10 h-10 rounded bg-[#EAF6EE] text-[#16803C] flex items-center justify-center">
+                <i data-lucide="store" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-text-primary">Restaurant</p>
+                <p class="text-xs text-text-secondary">Donate surplus food and track tax deductions & environmental impact</p>
+              </div>
+            </div>
+            <div class="role-signup-radio w-4 h-4 rounded-full border border-borderline flex items-center justify-center">
+              <div class="w-2 h-2 rounded-full bg-white"></div>
+            </div>
+          </div>
+
+          <!-- Option 2: NGO / Shelter -->
+          <div onclick="selectSignupOption('ngo')" id="signup-card-ngo"
+            class="p-4 rounded-lg border border-borderline bg-white cursor-pointer hover:border-slate-400 transition-all flex items-center justify-between role-signup-card">
+            <div class="flex items-center gap-3.5">
+              <div class="w-10 h-10 rounded bg-slate-100 text-text-secondary flex items-center justify-center">
+                <i data-lucide="heart-handshake" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-text-primary">NGO / Shelter</p>
+                <p class="text-xs text-text-secondary">Receive surplus food, manage intake capacity & direct meal distribution</p>
+              </div>
+            </div>
+            <div class="role-signup-radio w-4 h-4 rounded-full border border-borderline flex items-center justify-center">
+              <div class="w-2 h-2 rounded-full bg-white"></div>
+            </div>
+          </div>
+
+          <!-- Option 3: Driver / Volunteer -->
+          <div onclick="selectSignupOption('driver')" id="signup-card-driver"
+            class="p-4 rounded-lg border border-borderline bg-white cursor-pointer hover:border-slate-400 transition-all flex items-center justify-between role-signup-card">
+            <div class="flex items-center gap-3.5">
+              <div class="w-10 h-10 rounded bg-slate-100 text-text-secondary flex items-center justify-center">
+                <i data-lucide="truck" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-text-primary">Driver / Volunteer</p>
+                <p class="text-xs text-text-secondary">Pick up and deliver food in your city with flexible radius & shifts</p>
+              </div>
+            </div>
+            <div class="role-signup-radio w-4 h-4 rounded-full border border-borderline flex items-center justify-center">
+              <div class="w-2 h-2 rounded-full bg-white"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="p-3 bg-slate-50 border border-borderline rounded text-xs text-text-secondary mb-6 flex items-center gap-2">
+          <i data-lucide="info" class="w-4 h-4 text-slate-500 shrink-0"></i>
+          <span>Are you a platform administrator? Platform admin accounts are strictly provisioned by internal system ops.</span>
+        </div>
+
+        <button onclick="proceedToSelectedSignupForm()"
+          class="w-full py-2.5 px-4 rounded-lg bg-[#16803C] hover:bg-[#126931] text-white font-medium text-sm transition-colors flex items-center justify-center gap-2 shadow-sm min-h-[44px]">
+          <span>Continue</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+
+        <div class="mt-5 text-center text-xs text-text-secondary">
+          Already have an account? 
+          <button onclick="navigateTo('login')" class="text-[#16803C] font-semibold hover:underline">Log in</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW: 8. /signup/restaurant (Restaurant Registration) -->
+    <!-- ========================================================================= -->
+    <section id="view-signup-restaurant" class="hidden py-8 px-4 sm:px-6 lg:px-8 max-w-2xl mx-auto w-full fade-enter">
+      <div class="bg-white border border-borderline rounded-xl p-6 sm:p-8 shadow-sm">
+        
+        <div class="mb-6">
+          <button onclick="navigateTo('signup')" class="inline-flex items-center gap-1 text-xs text-text-secondary hover:text-text-primary mb-2">
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Change account type
+          </button>
+          <div class="flex items-center gap-2">
+            <span class="w-7 h-7 rounded bg-[#EAF6EE] text-[#16803C] flex items-center justify-center text-xs">
+              <i data-lucide="store" class="w-4 h-4"></i>
+            </span>
+            <h2 class="text-2xl font-bold tracking-tight text-text-primary">Create Restaurant Account</h2>
+          </div>
+          <p class="text-xs text-text-secondary mt-1">Register your culinary or food enterprise to donate inspected surplus.</p>
+        </div>
+
+        <form onsubmit="handleRegistrationSubmit(event, 'restaurant')" class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Business Name <span class="text-danger">*</span></label>
+              <input type="text" required placeholder="e.g. Green Olive Bistro" value="Green Olive Bistro" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Owner / Manager Name <span class="text-danger">*</span></label>
+              <input type="text" required placeholder="e.g. Marcus Vance" value="Marcus Vance" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Email <span class="text-danger">*</span></label>
+              <input type="email" required placeholder="manager@business.com" value="marcus@greenolive.com" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Phone Number <span class="text-danger">*</span></label>
+              <input type="tel" required placeholder="+1 (555) 019-2834" value="+1 (555) 439-1120" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Password <span class="text-danger">*</span></label>
+              <input type="password" required value="securePass2025" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Confirm Password <span class="text-danger">*</span></label>
+              <input type="password" required value="securePass2025" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Business Type <span class="text-danger">*</span></label>
+            <select class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+              <option selected>Restaurant</option>
+              <option>Cafe</option>
+              <option>Hotel</option>
+              <option>Bakery</option>
+              <option>Grocery Store</option>
+              <option>Caterer</option>
+              <option>Cloud Kitchen</option>
+              <option>Cafeteria</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Address <span class="text-danger">*</span></label>
+            <input type="text" required placeholder="Street address & suite #" value="442 Market Street, Suite 100" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">City <span class="text-danger">*</span></label>
+              <input type="text" required placeholder="San Francisco" value="San Francisco" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Pincode / Postal Code <span class="text-danger">*</span></label>
+              <input type="text" required placeholder="94105" value="94105" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Operating Hours</label>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <span class="text-[11px] text-text-secondary block mb-1">Opening Time</span>
+                <input type="time" value="09:00" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+              </div>
+              <div>
+                <span class="text-[11px] text-text-secondary block mb-1">Closing Time (Surplus Available)</span>
+                <input type="time" value="22:30" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <label class="flex items-start gap-2 cursor-pointer">
+              <input type="checkbox" required checked class="w-4 h-4 mt-0.5 rounded text-[#16803C] accent-[#16803C] border-borderline">
+              <span class="text-xs text-text-secondary leading-normal">
+                I agree to the <a href="#" class="text-[#16803C] underline">Terms and Conditions</a> and food safety declaration under regional Good Samaritan regulations.
+              </span>
+            </label>
+          </div>
+
+          <button type="submit" class="w-full py-2.5 px-4 rounded-lg bg-[#16803C] hover:bg-[#126931] text-white font-medium text-sm transition-colors shadow-sm min-h-[44px]">
+            Create Restaurant Account
+          </button>
+        </form>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW: 9. /signup/ngo (NGO / Shelter Registration) -->
+    <!-- ========================================================================= -->
+    <section id="view-signup-ngo" class="hidden py-8 px-4 sm:px-6 lg:px-8 max-w-2xl mx-auto w-full fade-enter">
+      <div class="bg-white border border-borderline rounded-xl p-6 sm:p-8 shadow-sm">
+        
+        <div class="mb-6">
+          <button onclick="navigateTo('signup')" class="inline-flex items-center gap-1 text-xs text-text-secondary hover:text-text-primary mb-2">
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Change account type
+          </button>
+          <div class="flex items-center gap-2">
+            <span class="w-7 h-7 rounded bg-[#EAF6EE] text-[#16803C] flex items-center justify-center text-xs">
+              <i data-lucide="heart-handshake" class="w-4 h-4"></i>
+            </span>
+            <h2 class="text-2xl font-bold tracking-tight text-text-primary">Create NGO / Shelter Account</h2>
+          </div>
+          <p class="text-xs text-text-secondary mt-1">Register your organization to receive surplus food matching daily meal needs.</p>
+        </div>
+
+        <form onsubmit="handleRegistrationSubmit(event, 'ngo')" class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Organization Name <span class="text-danger">*</span></label>
+              <input type="text" required placeholder="e.g. Hope Community Kitchen" value="Hope Community Kitchen" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Contact Person <span class="text-danger">*</span></label>
+              <input type="text" required placeholder="e.g. Sarah Jenkins" value="Sarah Jenkins" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Email <span class="text-danger">*</span></label>
+              <input type="email" required placeholder="intake@shelterhope.org" value="sarah@hopekitchen.org" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Phone Number <span class="text-danger">*</span></label>
+              <input type="tel" required placeholder="+1 (555) 234-5678" value="+1 (555) 884-1234" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Password <span class="text-danger">*</span></label>
+              <input type="password" required value="shelterHope2025" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Confirm Password <span class="text-danger">*</span></label>
+              <input type="password" required value="shelterHope2025" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Organization Type <span class="text-danger">*</span></label>
+              <select class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+                <option selected>NGO</option>
+                <option>Shelter</option>
+                <option>Food Bank</option>
+                <option>Community Kitchen</option>
+                <option>Community Center</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Daily Food Capacity (kg) <span class="text-danger">*</span></label>
+              <input type="text" required placeholder="e.g. 150 kg" value="150 kg" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Address <span class="text-danger">*</span></label>
+            <input type="text" required placeholder="Shelter street address" value="824 Mission Boulevard" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">City <span class="text-danger">*</span></label>
+              <input type="text" required placeholder="San Francisco" value="San Francisco" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Pincode <span class="text-danger">*</span></label>
+              <input type="text" required placeholder="94103" value="94103" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+            </div>
+          </div>
+
+          <!-- Accepted Food Categories -->
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-2">Accepted Food Categories</label>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+              <label class="flex items-center gap-1.5 p-2 rounded border border-borderline bg-slate-50 cursor-pointer">
+                <input type="checkbox" checked class="accent-[#16803C]"> Cooked Food
+              </label>
+              <label class="flex items-center gap-1.5 p-2 rounded border border-borderline bg-slate-50 cursor-pointer">
+                <input type="checkbox" checked class="accent-[#16803C]"> Rice & Grains
+              </label>
+              <label class="flex items-center gap-1.5 p-2 rounded border border-borderline bg-slate-50 cursor-pointer">
+                <input type="checkbox" checked class="accent-[#16803C]"> Bread / Bakery
+              </label>
+              <label class="flex items-center gap-1.5 p-2 rounded border border-borderline bg-slate-50 cursor-pointer">
+                <input type="checkbox" checked class="accent-[#16803C]"> Fruits
+              </label>
+              <label class="flex items-center gap-1.5 p-2 rounded border border-borderline bg-slate-50 cursor-pointer">
+                <input type="checkbox" checked class="accent-[#16803C]"> Vegetables
+              </label>
+              <label class="flex items-center gap-1.5 p-2 rounded border border-borderline bg-slate-50 cursor-pointer">
+                <input type="checkbox" class="accent-[#16803C]"> Dairy
+              </label>
+              <label class="flex items-center gap-1.5 p-2 rounded border border-borderline bg-slate-50 cursor-pointer">
+                <input type="checkbox" checked class="accent-[#16803C]"> Packaged Food
+              </label>
+              <label class="flex items-center gap-1.5 p-2 rounded border border-borderline bg-slate-50 cursor-pointer">
+                <input type="checkbox" class="accent-[#16803C]"> Snacks
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Operating Hours</label>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <span class="text-[11px] text-text-secondary block mb-1">Intake Opens</span>
+                <input type="time" value="08:00" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+              </div>
+              <div>
+                <span class="text-[11px] text-text-secondary block mb-1">Intake Closes</span>
+                <input type="time" value="20:00" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <label class="flex items-start gap-2 cursor-pointer">
+              <input type="checkbox" required checked class="w-4 h-4 mt-0.5 rounded text-[#16803C] accent-[#16803C] border-borderline">
+              <span class="text-xs text-text-secondary leading-normal">
+                I agree to the <a href="#" class="text-[#16803C] underline">Terms and Conditions</a> and food safety storage compliance checklist.
+              </span>
+            </label>
+          </div>
+
+          <button type="submit" class="w-full py-2.5 px-4 rounded-lg bg-[#16803C] hover:bg-[#126931] text-white font-medium text-sm transition-colors shadow-sm min-h-[44px]">
+            Create NGO Account
+          </button>
+        </form>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW: 10. /signup/driver (Driver / Volunteer Registration) -->
+    <!-- ========================================================================= -->
+    <section id="view-signup-driver" class="hidden py-8 px-4 sm:px-6 lg:px-8 max-w-2xl mx-auto w-full fade-enter">
+      <div class="bg-white border border-borderline rounded-xl p-6 sm:p-8 shadow-sm">
+        
+        <div class="mb-6">
+          <button onclick="navigateTo('signup')" class="inline-flex items-center gap-1 text-xs text-text-secondary hover:text-text-primary mb-2">
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Change account type
+          </button>
+          <div class="flex items-center gap-2">
+            <span class="w-7 h-7 rounded bg-[#EAF6EE] text-[#16803C] flex items-center justify-center text-xs">
+              <i data-lucide="truck" class="w-4 h-4"></i>
+            </span>
+            <h2 class="text-2xl font-bold tracking-tight text-text-primary">Create Driver Account</h2>
+          </div>
+          <p class="text-xs text-text-secondary mt-1">Join the frontline volunteer transport network to move food from donor to shelter.</p>
+        </div>
+
+        <form onsubmit="handleRegistrationSubmit(event, 'driver')" class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Full Name <span class="text-danger">*</span></label>
+            <input type="text" required placeholder="e.g. Alex Rivera" value="Alex Rivera" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Email <span class="text-danger">*</span></label>
+              <input type="email" required placeholder="alex.rivera@courier.net" value="alex.rivera@volunteer.org" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Phone Number <span class="text-danger">*</span></label>
+              <input type="tel" required placeholder="+1 (555) 765-4321" value="+1 (555) 321-9988" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Password <span class="text-danger">*</span></label>
+              <input type="password" required value="driverRoute2025" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Confirm Password <span class="text-danger">*</span></label>
+              <input type="password" required value="driverRoute2025" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">City <span class="text-danger">*</span></label>
+              <input type="text" required placeholder="San Francisco" value="San Francisco" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Vehicle Type <span class="text-danger">*</span></label>
+              <select class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+                <option>Bike</option>
+                <option selected>Car</option>
+                <option>Van</option>
+                <option>Truck</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Service Radius <span class="text-danger">*</span></label>
+              <select class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+                <option>5 km</option>
+                <option selected>10 km</option>
+                <option>20 km</option>
+                <option>30 km</option>
+                <option>50 km</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Driving Availability</label>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+              <label class="flex items-center gap-1.5 p-2 rounded border border-borderline bg-slate-50 cursor-pointer">
+                <input type="checkbox" checked class="accent-[#16803C]"> Morning
+              </label>
+              <label class="flex items-center gap-1.5 p-2 rounded border border-borderline bg-slate-50 cursor-pointer">
+                <input type="checkbox" class="accent-[#16803C]"> Afternoon
+              </label>
+              <label class="flex items-center gap-1.5 p-2 rounded border border-borderline bg-slate-50 cursor-pointer">
+                <input type="checkbox" checked class="accent-[#16803C]"> Evening
+              </label>
+              <label class="flex items-center gap-1.5 p-2 rounded border border-borderline bg-slate-50 cursor-pointer">
+                <input type="checkbox" class="accent-[#16803C]"> Night
+              </label>
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <label class="flex items-start gap-2 cursor-pointer">
+              <input type="checkbox" required checked class="w-4 h-4 mt-0.5 rounded text-[#16803C] accent-[#16803C] border-borderline">
+              <span class="text-xs text-text-secondary leading-normal">
+                I agree to the <a href="#" class="text-[#16803C] underline">Terms and Conditions</a> and affirm I hold valid operator insurance and vehicle registration.
+              </span>
+            </label>
+          </div>
+
+          <button type="submit" class="w-full py-2.5 px-4 rounded-lg bg-[#16803C] hover:bg-[#126931] text-white font-medium text-sm transition-colors shadow-sm min-h-[44px]">
+            Create Driver Account
+          </button>
+        </form>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW: 12. /forgot-password (Clean Reset View) -->
+    <!-- ========================================================================= -->
+    <section id="view-forgot-password" class="hidden py-8 md:py-14 px-4 sm:px-6 lg:px-8 max-w-md mx-auto w-full fade-enter">
+      <div class="bg-white border border-borderline rounded-xl p-6 sm:p-8 shadow-sm">
+        
+        <div class="mb-6">
+          <button onclick="navigateTo('login')" class="inline-flex items-center gap-1 text-xs text-text-secondary hover:text-text-primary mb-3">
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Back to login
+          </button>
+          <h2 class="text-2xl font-bold tracking-tight text-text-primary">Reset your password</h2>
+          <p class="text-xs text-text-secondary mt-1">Enter your verified account email to receive recovery instructions.</p>
+        </div>
+
+        <form onsubmit="handleForgotPassword(event)" class="space-y-4">
+          <div>
+            <label for="resetEmail" class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">
+              Account Email Address
+            </label>
+            <input type="email" id="resetEmail" required placeholder="name@domain.com"
+              class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-borderline bg-white text-text-primary">
+          </div>
+
+          <div id="resetSuccessMessage" class="hidden p-3 rounded-lg border border-emerald-200 bg-[#EAF6EE] text-[#16803C] text-xs leading-relaxed">
+            <div class="font-semibold mb-0.5 flex items-center gap-1">
+              <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Request Dispatched
+            </div>
+            If an account exists with this email, a password reset link will be sent.
+          </div>
+
+          <button type="submit" id="resetSubmitBtn"
+            class="w-full py-2.5 px-4 rounded-lg bg-[#16803C] hover:bg-[#126931] text-white font-medium text-sm transition-colors shadow-sm min-h-[44px]">
+            Send Reset Link
+          </button>
+        </form>
+
+        <div class="mt-6 pt-5 border-t border-borderline text-center text-xs text-text-secondary">
+          Remembered your password? 
+          <button onclick="navigateTo('login')" class="text-[#16803C] font-semibold hover:underline ml-1">Sign in</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW: 5 & 17. ROLE DASHBOARDS (Truly distinct UI & navigation per role) -->
+    <!-- ========================================================================= -->
+
+    <!-- ROLE 1 DASHBOARD: /restaurant/dashboard -->
+    <section id="view-dashboard-restaurant" class="hidden flex-1 w-full bg-[#FCFDFD] py-6 px-4 sm:px-6 lg:px-8 fade-enter">
+      <div class="max-w-7xl mx-auto space-y-6">
+        
+        <!-- Role Top Bar Navigation -->
+        <div class="bg-white border border-borderline rounded-xl p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-lg bg-[#EAF6EE] text-[#16803C] flex items-center justify-center">
+              <i data-lucide="store" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h1 class="text-xl font-bold text-text-primary" id="restaurantName">Green Olive Bistro</h1>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-100 text-[#16803C] font-semibold uppercase">Verified Donor</span>
+              </div>
+              <p class="text-xs text-text-secondary">Donor ID: <span class="font-mono">RST-8841</span> • Route: /restaurant/dashboard</p>
+            </div>
+          </div>
+          <!-- Role Navigation Actions -->
+          <div class="flex flex-wrap items-center gap-2">
+            <button class="px-3 py-1.5 rounded-lg border border-borderline bg-white text-xs font-medium hover:bg-slate-50 flex items-center gap-1.5">
+              <i data-lucide="history" class="w-3.5 h-3.5 text-text-secondary"></i> View Own Donations
+            </button>
+            <button class="px-3 py-1.5 rounded-lg border border-borderline bg-white text-xs font-medium hover:bg-slate-50 flex items-center gap-1.5">
+              <i data-lucide="heart" class="w-3.5 h-3.5 text-text-secondary"></i> Matched NGOs
+            </button>
+            <button class="px-3.5 py-1.5 rounded-lg bg-[#16803C] text-white text-xs font-medium hover:bg-[#126931] flex items-center gap-1.5">
+              <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> Post Surplus Batch
+            </button>
+          </div>
+        </div>
+
+        <!-- Role Permissions & Overview Banner -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="bg-white border border-borderline rounded-xl p-4">
+            <p class="text-xs text-text-secondary uppercase tracking-wider font-semibold">Active Pickups</p>
+            <p class="text-2xl font-bold text-text-primary mt-1">2 Pending</p>
+            <p class="text-[11px] text-[#16803C] font-medium mt-1">Driver assigned & en route</p>
+          </div>
+          <div class="bg-white border border-borderline rounded-xl p-4">
+            <p class="text-xs text-text-secondary uppercase tracking-wider font-semibold">Food Rescued (Total)</p>
+            <p class="text-2xl font-bold text-text-primary mt-1">1,420 kg</p>
+            <p class="text-[11px] text-[#16803C] font-medium mt-1">Equivalent to 3,124 meals</p>
+          </div>
+          <div class="bg-white border border-borderline rounded-xl p-4">
+            <p class="text-xs text-text-secondary uppercase tracking-wider font-semibold">Matched NGOs</p>
+            <p class="text-2xl font-bold text-text-primary mt-1">6 Shelters</p>
+            <p class="text-[11px] text-text-secondary mt-1">Within 7.5 km radius</p>
+          </div>
+          <div class="bg-white border border-borderline rounded-xl p-4">
+            <p class="text-xs text-text-secondary uppercase tracking-wider font-semibold">CO₂ Offset</p>
+            <p class="text-2xl font-bold text-[#16803C] mt-1">3.4 MT</p>
+            <p class="text-[11px] text-text-secondary mt-1">Diverted from municipal landfill</p>
+          </div>
+        </div>
+
+        <!-- Main Restaurant Operational Table -->
+        <div class="bg-white border border-borderline rounded-xl overflow-hidden shadow-sm">
+          <div class="p-4 border-b border-borderline flex items-center justify-between">
+            <div>
+              <h2 class="text-sm font-bold text-text-primary">Today's Surplus Batches & Driver Dispatch</h2>
+              <p class="text-xs text-text-secondary">Manage prepared meals awaiting volunteer couriers</p>
+            </div>
+            <span class="text-xs text-text-secondary font-medium">Auto-refreshing</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 text-text-secondary uppercase tracking-wider border-b border-borderline font-semibold">
+                <tr>
+                  <th class="p-3">Batch ID</th>
+                  <th class="p-3">Food Item / Contents</th>
+                  <th class="p-3">Quantity</th>
+                  <th class="p-3">Expiry Window</th>
+                  <th class="p-3">Matched Shelter</th>
+                  <th class="p-3">Assigned Driver</th>
+                  <th class="p-3 text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y border-borderline">
+                <tr>
+                  <td class="p-3 font-mono font-medium text-slate-900">#SUR-1049</td>
+                  <td class="p-3 font-medium text-text-primary">Steamed Basmati Rice & Roasted Vegetable Curry</td>
+                  <td class="p-3 font-semibold">32 kg (70 portions)</td>
+                  <td class="p-3 text-text-secondary">Best within 3.5 hrs</td>
+                  <td class="p-3 font-medium">Hope Community Kitchen</td>
+                  <td class="p-3 flex items-center gap-1.5 pt-4">
+                    <span class="w-5 h-5 rounded-full bg-slate-200 text-[10px] flex items-center justify-center font-bold">AR</span>
+                    <span>Alex Rivera (Van)</span>
+                  </td>
+                  <td class="p-3 text-right">
+                    <span class="px-2 py-0.5 rounded bg-amber-50 text-warning font-semibold border border-amber-200 text-[11px]">En Route to Pickup</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-mono font-medium text-slate-900">#SUR-1048</td>
+                  <td class="p-3 font-medium text-text-primary">Artisan Sourdough & Baguette Assortment</td>
+                  <td class="p-3 font-semibold">18 kg</td>
+                  <td class="p-3 text-text-secondary">Best within 12 hrs</td>
+                  <td class="p-3 font-medium">St. Jude Youth Center</td>
+                  <td class="p-3">Awaiting dispatch</td>
+                  <td class="p-3 text-right">
+                    <span class="px-2 py-0.5 rounded bg-slate-100 text-text-secondary font-semibold text-[11px]">Matching Courier</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-mono font-medium text-slate-900">#SUR-1044</td>
+                  <td class="p-3 font-medium text-text-primary">Grilled Chicken Salad Bowls (Sealed)</td>
+                  <td class="p-3 font-semibold">25 kg (45 units)</td>
+                  <td class="p-3 text-text-secondary">Completed</td>
+                  <td class="p-3 font-medium">Downtown Family Shelter</td>
+                  <td class="p-3 flex items-center gap-1.5 pt-4">
+                    <span class="w-5 h-5 rounded-full bg-emerald-100 text-[#16803C] text-[10px] flex items-center justify-center font-bold">DK</span>
+                    <span>David Kim</span>
+                  </td>
+                  <td class="p-3 text-right">
+                    <span class="px-2 py-0.5 rounded bg-[#EAF6EE] text-[#16803C] font-semibold border border-emerald-200 text-[11px]">Delivered & Confirmed</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ROLE 2 DASHBOARD: /ngo/dashboard -->
+    <section id="view-dashboard-ngo" class="hidden flex-1 w-full bg-[#FCFDFD] py-6 px-4 sm:px-6 lg:px-8 fade-enter">
+      <div class="max-w-7xl mx-auto space-y-6">
+        
+        <!-- Role Top Bar Navigation -->
+        <div class="bg-white border border-borderline rounded-xl p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-lg bg-[#EAF6EE] text-[#16803C] flex items-center justify-center">
+              <i data-lucide="heart-handshake" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h1 class="text-xl font-bold text-text-primary" id="ngoName">Hope Community Kitchen</h1>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-100 text-[#16803C] font-semibold uppercase">Certified Shelter</span>
+              </div>
+              <p class="text-xs text-text-secondary">Shelter ID: <span class="font-mono">NGO-4491</span> • Route: /ngo/dashboard</p>
+            </div>
+          </div>
+          <!-- Role Navigation Actions -->
+          <div class="flex flex-wrap items-center gap-2">
+            <button class="px-3 py-1.5 rounded-lg border border-borderline bg-white text-xs font-medium hover:bg-slate-50 flex items-center gap-1.5">
+              <i data-lucide="sliders" class="w-3.5 h-3.5 text-text-secondary"></i> Capacity Settings (150 kg/day)
+            </button>
+            <button class="px-3 py-1.5 rounded-lg border border-borderline bg-white text-xs font-medium hover:bg-slate-50 flex items-center gap-1.5">
+              <i data-lucide="check-check" class="w-3.5 h-3.5 text-text-secondary"></i> Intake History
+            </button>
+            <button class="px-3.5 py-1.5 rounded-lg bg-[#16803C] text-white text-xs font-medium hover:bg-[#126931] flex items-center gap-1.5">
+              <i data-lucide="inbox" class="w-3.5 h-3.5"></i> Claim Available Batch
+            </button>
+          </div>
+        </div>
+
+        <!-- Metric Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="bg-white border border-borderline rounded-xl p-4">
+            <p class="text-xs text-text-secondary uppercase tracking-wider font-semibold">Today's Intake Capacity</p>
+            <div class="flex items-baseline gap-2 mt-1">
+              <p class="text-2xl font-bold text-text-primary">95 / 150 kg</p>
+              <span class="text-xs text-[#16803C] font-medium">63% utilized</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-1.5 mt-2">
+              <div class="bg-[#16803C] h-1.5 rounded-full" style="width: 63%"></div>
+            </div>
+          </div>
+          <div class="bg-white border border-borderline rounded-xl p-4">
+            <p class="text-xs text-text-secondary uppercase tracking-wider font-semibold">Incoming Deliveries</p>
+            <p class="text-2xl font-bold text-text-primary mt-1">2 Shipments</p>
+            <p class="text-[11px] text-amber-700 font-medium mt-1">Expected within 45 mins</p>
+          </div>
+          <div class="bg-white border border-borderline rounded-xl p-4">
+            <p class="text-xs text-text-secondary uppercase tracking-wider font-semibold">Meals Served This Week</p>
+            <p class="text-2xl font-bold text-[#16803C] mt-1">1,840</p>
+            <p class="text-[11px] text-text-secondary mt-1">Serving 320 unhoused residents daily</p>
+          </div>
+          <div class="bg-white border border-borderline rounded-xl p-4">
+            <p class="text-xs text-text-secondary uppercase tracking-wider font-semibold">Active Donor Partners</p>
+            <p class="text-2xl font-bold text-text-primary mt-1">12 Restos</p>
+            <p class="text-[11px] text-text-secondary mt-1">Regular weekly scheduled donations</p>
+          </div>
+        </div>
+
+        <!-- NGO Incoming & Available Donations -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Incoming Shipments to Confirm -->
+          <div class="bg-white border border-borderline rounded-xl p-5 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-sm font-bold text-text-primary flex items-center gap-2">
+                <i data-lucide="truck" class="w-4 h-4 text-[#16803C]"></i> Incoming Deliveries (Confirm Food Receipt)
+              </h2>
+              <span class="text-xs px-2 py-0.5 bg-amber-50 text-warning rounded border border-amber-200">1 Arriving Now</span>
+            </div>
+            
+            <div class="border border-borderline rounded-lg p-4 bg-slate-50 space-y-3">
+              <div class="flex items-start justify-between">
+                <div>
+                  <span class="text-xs font-bold text-text-primary">Curry & Basmati Rice (32 kg)</span>
+                  <p class="text-xs text-text-secondary">From: Green Olive Bistro • Driver: Alex Rivera</p>
+                </div>
+                <span class="text-xs font-mono font-medium text-amber-700">ETA: 8 mins</span>
+              </div>
+              <div class="flex items-center justify-between pt-2 border-t border-borderline text-xs">
+                <span class="text-text-secondary">Storage required: Hot hold (>60°C)</span>
+                <button onclick="alert('Food receipt verified and recorded!')" class="px-3 py-1 rounded bg-[#16803C] text-white font-medium hover:bg-[#126931]">
+                  Confirm Receipt
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Open Nearby Donations Available to Claim -->
+          <div class="bg-white border border-borderline rounded-xl p-5 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-sm font-bold text-text-primary flex items-center gap-2">
+                <i data-lucide="map-pin" class="w-4 h-4 text-[#16803C]"></i> Available Donations In Your Zone
+              </h2>
+              <span class="text-xs text-text-secondary">Live Radar</span>
+            </div>
+
+            <div class="border border-borderline rounded-lg p-4 space-y-3">
+              <div class="flex items-start justify-between">
+                <div>
+                  <span class="text-xs font-bold text-text-primary">Wholesome Bakery • 24 kg Sourdough Bread</span>
+                  <p class="text-xs text-text-secondary">1.2 km away • Ready for immediate pickup</p>
+                </div>
+                <button class="px-3 py-1 rounded border border-[#16803C] text-[#16803C] font-semibold text-xs hover:bg-[#EAF6EE]">
+                  Accept Donation
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ROLE 3 DASHBOARD: /driver/dashboard -->
+    <section id="view-dashboard-driver" class="hidden flex-1 w-full bg-[#FCFDFD] py-6 px-4 sm:px-6 lg:px-8 fade-enter">
+      <div class="max-w-7xl mx-auto space-y-6">
+        
+        <!-- Role Top Bar Navigation -->
+        <div class="bg-white border border-borderline rounded-xl p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-lg bg-[#EAF6EE] text-[#16803C] flex items-center justify-center">
+              <i data-lucide="truck" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h1 class="text-xl font-bold text-text-primary" id="driverName">Alex Rivera</h1>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-100 text-[#16803C] font-semibold uppercase">Active Volunteer Courier</span>
+              </div>
+              <p class="text-xs text-text-secondary">Vehicle: Car / Van • Service Radius: 10 km • Route: /driver/dashboard</p>
+            </div>
+          </div>
+          <!-- Role Navigation Actions -->
+          <div class="flex flex-wrap items-center gap-2">
+            <button class="px-3 py-1.5 rounded-lg border border-borderline bg-white text-xs font-medium hover:bg-slate-50 flex items-center gap-1.5">
+              <i data-lucide="navigation" class="w-3.5 h-3.5 text-text-secondary"></i> GPS Route Mode
+            </button>
+            <button class="px-3 py-1.5 rounded-lg border border-borderline bg-white text-xs font-medium hover:bg-slate-50 flex items-center gap-1.5">
+              <i data-lucide="award" class="w-3.5 h-3.5 text-text-secondary"></i> My Impact (48 Trips)
+            </button>
+            <button class="px-3.5 py-1.5 rounded-lg bg-[#16803C] text-white text-xs font-medium hover:bg-[#126931] flex items-center gap-1.5">
+              <i data-lucide="camera" class="w-3.5 h-3.5"></i> Upload Delivery Proof
+            </button>
+          </div>
+        </div>
+
+        <!-- Active Assignment Card -->
+        <div class="bg-white border-2 border-[#16803C] rounded-xl p-6 shadow-sm relative overflow-hidden">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-borderline">
+            <div>
+              <span class="px-2 py-0.5 rounded bg-[#EAF6EE] text-[#16803C] font-bold text-xs">CURRENT ACTIVE MISSION #TSK-892</span>
+              <h2 class="text-lg font-bold text-text-primary mt-1">Green Olive Bistro ➔ Hope Community Kitchen</h2>
+              <p class="text-xs text-text-secondary">Cargo: 32 kg Prepared Meals (Insulated Food Containers)</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <button class="px-3.5 py-2 rounded-lg bg-slate-900 text-white text-xs font-medium flex items-center gap-1.5">
+                <i data-lucide="navigation-2" class="w-4 h-4"></i> Launch Navigation
+              </button>
+              <button onclick="alert('Pickup marked! Now route to Hope Community Kitchen.')" class="px-3.5 py-2 rounded-lg bg-[#16803C] text-white text-xs font-medium hover:bg-[#126931] flex items-center gap-1.5">
+                <i data-lucide="check" class="w-4 h-4"></i> Mark Picked Up
+              </button>
+              <button onclick="alert('Delivery completed successfully! Great job.')" class="px-3.5 py-2 rounded-lg border border-borderline bg-white text-xs font-medium hover:bg-slate-50 flex items-center gap-1.5">
+                <i data-lucide="flag" class="w-4 h-4 text-[#16803C]"></i> Mark Delivered
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 text-xs">
+            <div class="p-3 bg-slate-50 rounded border border-borderline">
+              <p class="font-semibold text-text-primary">Step 1: Pick Up</p>
+              <p class="text-text-secondary mt-0.5">442 Market Street, San Francisco</p>
+              <p class="text-[11px] text-[#16803C] font-semibold mt-1">Contact: Marcus (+1 555-439-1120)</p>
+            </div>
+            <div class="p-3 bg-slate-50 rounded border border-borderline">
+              <p class="font-semibold text-text-primary">Step 2: Drop Off</p>
+              <p class="text-text-secondary mt-0.5">824 Mission Boulevard, San Francisco</p>
+              <p class="text-[11px] text-[#16803C] font-semibold mt-1">Contact: Sarah (+1 555-884-1234)</p>
+            </div>
+            <div class="p-3 bg-[#EAF6EE] rounded border border-emerald-200">
+              <p class="font-semibold text-[#16803C]">Delivery Guidelines</p>
+              <p class="text-text-secondary mt-0.5 text-[11px]">Keep cold crates sealed. Sign delivery sheet or take drop-off photo proof.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Available Jobs Nearby -->
+        <div class="bg-white border border-borderline rounded-xl p-5 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-sm font-bold text-text-primary">Available Rescue Jobs (Within 10 km)</h2>
+              <p class="text-xs text-text-secondary">Claim delivery runs matching your vehicle capacity</p>
+            </div>
+            <span class="text-xs text-[#16803C] font-semibold">3 New Available</span>
+          </div>
+
+          <div class="space-y-3">
+            <div class="p-4 border border-borderline rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-slate-300">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-text-primary">Bayview Bakery Surplus</span>
+                  <span class="text-[10px] px-2 py-0.5 bg-slate-100 rounded text-slate-700">18 kg • 3.4 km away</span>
+                </div>
+                <p class="text-xs text-text-secondary mt-1">Pickup: Bayview Ave ➔ Dropoff: St. Vincent Dining Hall</p>
+              </div>
+              <button onclick="alert('Job accepted and added to your active itinerary!')" class="px-3.5 py-1.5 rounded-lg bg-[#16803C] text-white text-xs font-medium hover:bg-[#126931] shrink-0">
+                Accept Job
+              </button>
+            </div>
+
+            <div class="p-4 border border-borderline rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-slate-300">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-text-primary">Pacific Fresh Produce Market</span>
+                  <span class="text-[10px] px-2 py-0.5 bg-slate-100 rounded text-slate-700">45 kg • 5.1 km away</span>
+                </div>
+                <p class="text-xs text-text-secondary mt-1">Pickup: 9th Ave ➔ Dropoff: East Bay Community Pantry</p>
+              </div>
+              <button onclick="alert('Job accepted and added to your active itinerary!')" class="px-3.5 py-1.5 rounded-lg bg-[#16803C] text-white text-xs font-medium hover:bg-[#126931] shrink-0">
+                Accept Job
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ROLE 4 DASHBOARD: /admin/dashboard -->
+    <section id="view-dashboard-admin" class="hidden flex-1 w-full bg-[#FCFDFD] py-6 px-4 sm:px-6 lg:px-8 fade-enter">
+      <div class="max-w-7xl mx-auto space-y-6">
+        
+        <!-- Role Top Bar Navigation -->
+        <div class="bg-white border border-borderline rounded-xl p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-lg bg-slate-900 text-white flex items-center justify-center">
+              <i data-lucide="shield" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h1 class="text-xl font-bold text-text-primary">Platform Administrator Control Center</h1>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-slate-900 text-white font-semibold uppercase">Superadmin Privileges</span>
+              </div>
+              <p class="text-xs text-text-secondary">Security Scope: System Ops & Global Moderation • Route: /admin/dashboard</p>
+            </div>
+          </div>
+          <!-- Role Navigation Actions -->
+          <div class="flex flex-wrap items-center gap-2">
+            <button class="px-3 py-1.5 rounded-lg border border-borderline bg-white text-xs font-medium hover:bg-slate-50 flex items-center gap-1.5">
+              <i data-lucide="users" class="w-3.5 h-3.5 text-text-secondary"></i> Manage Users
+            </button>
+            <button class="px-3 py-1.5 rounded-lg border border-borderline bg-white text-xs font-medium hover:bg-slate-50 flex items-center gap-1.5">
+              <i data-lucide="activity" class="w-3.5 h-3.5 text-text-secondary"></i> System Logs
+            </button>
+            <button class="px-3.5 py-1.5 rounded-lg bg-[#16803C] text-white text-xs font-medium hover:bg-[#126931] flex items-center gap-1.5">
+              <i data-lucide="file-text" class="w-3.5 h-3.5"></i> Export Compliance Audit
+            </button>
+          </div>
+        </div>
+
+        <!-- Global Platform Health & Numbers -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div class="bg-white border border-borderline rounded-xl p-4">
+            <p class="text-xs text-text-secondary uppercase tracking-wider font-semibold">Active Restaurants</p>
+            <p class="text-2xl font-bold text-text-primary mt-1">142</p>
+            <p class="text-[11px] text-[#16803C] font-medium mt-1">+12 this month</p>
+          </div>
+          <div class="bg-white border border-borderline rounded-xl p-4">
+            <p class="text-xs text-text-secondary uppercase tracking-wider font-semibold">NGOs & Shelters</p>
+            <p class="text-2xl font-bold text-text-primary mt-1">86</p>
+            <p class="text-[11px] text-[#16803C] font-medium mt-1">100% capacity verified</p>
+          </div>
+          <div class="bg-white border border-borderline rounded-xl p-4">
+            <p class="text-xs text-text-secondary uppercase tracking-wider font-semibold">Registered Drivers</p>
+            <p class="text-2xl font-bold text-text-primary mt-1">319</p>
+            <p class="text-[11px] text-text-secondary mt-1">42 currently on the road</p>
+          </div>
+          <div class="bg-white border border-borderline rounded-xl p-4">
+            <p class="text-xs text-text-secondary uppercase tracking-wider font-semibold">Total Food Diverted</p>
+            <p class="text-2xl font-bold text-[#16803C] mt-1">84.2 Tons</p>
+            <p class="text-[11px] text-text-secondary mt-1">Zero safety violations</p>
+          </div>
+          <div class="bg-white border border-borderline rounded-xl p-4">
+            <p class="text-xs text-text-secondary uppercase tracking-wider font-semibold">Platform Status</p>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+              <p class="text-lg font-bold text-emerald-600">Operational</p>
+            </div>
+            <p class="text-[11px] text-text-secondary mt-1">Supabase DB sync active</p>
+          </div>
+        </div>
+
+        <!-- Admin Table: All Users & Organizations Moderation -->
+        <div class="bg-white border border-borderline rounded-xl overflow-hidden shadow-sm">
+          <div class="p-4 border-b border-borderline flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h2 class="text-sm font-bold text-text-primary">Cross-Entity Platform Directory & Permissions</h2>
+              <p class="text-xs text-text-secondary">Inspect roles, credentials, and verification status</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <input type="text" placeholder="Search entity or email..." class="px-2.5 py-1 text-xs rounded border border-borderline w-48">
+              <select class="px-2 py-1 text-xs rounded border border-borderline bg-white">
+                <option>All Roles</option>
+                <option>Restaurants</option>
+                <option>NGOs</option>
+                <option>Drivers</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 text-text-secondary uppercase tracking-wider border-b border-borderline font-semibold">
+                <tr>
+                  <th class="p-3">User / Org Name</th>
+                  <th class="p-3">Role</th>
+                  <th class="p-3">Email</th>
+                  <th class="p-3">Zone</th>
+                  <th class="p-3">Compliance Status</th>
+                  <th class="p-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y border-borderline">
+                <tr>
+                  <td class="p-3 font-medium text-text-primary flex items-center gap-2">
+                    <span class="w-6 h-6 rounded bg-[#EAF6EE] text-[#16803C] flex items-center justify-center text-[10px]"><i data-lucide="store" class="w-3.5 h-3.5"></i></span>
+                    Green Olive Bistro
+                  </td>
+                  <td class="p-3"><span class="px-2 py-0.5 rounded bg-slate-100 font-mono text-[11px]">restaurant</span></td>
+                  <td class="p-3 text-text-secondary">manager@freshharvest.org</td>
+                  <td class="p-3">Downtown SF</td>
+                  <td class="p-3"><span class="px-2 py-0.5 rounded bg-emerald-50 text-[#16803C] font-semibold border border-emerald-200 text-[10px]">Verified Safe</span></td>
+                  <td class="p-3 text-right">
+                    <button class="text-text-secondary hover:text-text-primary font-medium text-xs">Edit</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-medium text-text-primary flex items-center gap-2">
+                    <span class="w-6 h-6 rounded bg-[#EAF6EE] text-[#16803C] flex items-center justify-center text-[10px]"><i data-lucide="heart-handshake" class="w-3.5 h-3.5"></i></span>
+                    Hope Community Kitchen
+                  </td>
+                  <td class="p-3"><span class="px-2 py-0.5 rounded bg-slate-100 font-mono text-[11px]">ngo</span></td>
+                  <td class="p-3 text-text-secondary">intake@hopekitchen.org</td>
+                  <td class="p-3">Mission District</td>
+                  <td class="p-3"><span class="px-2 py-0.5 rounded bg-emerald-50 text-[#16803C] font-semibold border border-emerald-200 text-[10px]">Audited 501(c)(3)</span></td>
+                  <td class="p-3 text-right">
+                    <button class="text-text-secondary hover:text-text-primary font-medium text-xs">Edit</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-medium text-text-primary flex items-center gap-2">
+                    <span class="w-6 h-6 rounded bg-[#EAF6EE] text-[#16803C] flex items-center justify-center text-[10px]"><i data-lucide="truck" class="w-3.5 h-3.5"></i></span>
+                    Alex Rivera
+                  </td>
+                  <td class="p-3"><span class="px-2 py-0.5 rounded bg-slate-100 font-mono text-[11px]">driver</span></td>
+                  <td class="p-3 text-text-secondary">alex.driver@volunteer.org</td>
+                  <td class="p-3">Metro SF (10km)</td>
+                  <td class="p-3"><span class="px-2 py-0.5 rounded bg-emerald-50 text-[#16803C] font-semibold border border-emerald-200 text-[10px]">Background Clear</span></td>
+                  <td class="p-3 text-right">
+                    <button class="text-text-secondary hover:text-text-primary font-medium text-xs">Edit</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-medium text-text-primary flex items-center gap-2">
+                    <span class="w-6 h-6 rounded bg-slate-900 text-white flex items-center justify-center text-[10px]"><i data-lucide="shield" class="w-3.5 h-3.5"></i></span>
+                    System Admin Root
+                  </td>
+                  <td class="p-3"><span class="px-2 py-0.5 rounded bg-slate-900 text-white font-mono text-[11px]">admin</span></td>
+                  <td class="p-3 text-text-secondary">admin@surplustoshelter.org</td>
+                  <td class="p-3">Global</td>
+                  <td class="p-3"><span class="px-2 py-0.5 rounded bg-purple-50 text-purple-700 font-semibold border border-purple-200 text-[10px]">Superuser</span></td>
+                  <td class="p-3 text-right">
+                    <button class="text-text-secondary hover:text-text-primary font-medium text-xs">Manage MFA</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- SUCCESS NOTIFICATION TOAST -->
+  <div id="toastNotification" class="fixed bottom-6 right-6 max-w-sm bg-white border border-borderline rounded-lg p-4 shadow-lg flex items-start gap-3 transform translate-y-24 opacity-0 transition-all duration-300 z-50">
+    <div id="toastIcon" class="w-6 h-6 rounded-full bg-[#EAF6EE] text-[#16803C] flex items-center justify-center shrink-0">
+      <i data-lucide="check" class="w-3.5 h-3.5"></i>
+    </div>
+    <div class="flex-1">
+      <p id="toastTitle" class="text-xs font-bold text-text-primary">Success</p>
+      <p id="toastMessage" class="text-xs text-text-secondary mt-0.5">Operation finished successfully.</p>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT STATE ENGINE (Mock Authentication Architecture) -->
+  <script>
+    // State storage structured for future Supabase client integration
+    const AUTH_STATE = {
+      currentUser: null, // conceptual user object: { id, name, email, role }
+      selectedLoginRole: 'restaurant',
+      selectedSignupRole: 'restaurant',
+      currentRoute: '/login'
+    };
+
+    // Preconfigured test accounts
+    const DEMO_ACCOUNTS = {
+      restaurant: {
+        id: 'usr_rst_101',
+        name: 'Green Olive Bistro',
+        email: 'manager@freshharvest.org',
+        role: 'restaurant',
+        targetRoute: '/restaurant/dashboard'
+      },
+      ngo: {
+        id: 'usr_ngo_202',
+        name: 'Hope Community Kitchen',
+        email: 'intake@hopekitchen.org',
+        role: 'ngo',
+        targetRoute: '/ngo/dashboard'
+      },
+      driver: {
+        id: 'usr_drv_303',
+        name: 'Alex Rivera',
+        email: 'alex.driver@volunteer.org',
+        role: 'driver',
+        targetRoute: '/driver/dashboard'
+      },
+      admin: {
+        id: 'usr_adm_999',
+        name: 'Platform Ops Admin',
+        email: 'admin@surplustoshelter.org',
+        role: 'admin',
+        targetRoute: '/admin/dashboard'
+      }
+    };
+
+    // Role display configs
+    const ROLE_CONFIGS = {
+      restaurant: { label: 'Restaurant', icon: 'store' },
+      ngo: { label: 'NGO / Shelter', icon: 'heart-handshake' },
+      driver: { label: 'Driver', icon: 'truck' },
+      admin: { label: 'Admin', icon: 'shield' }
+    };
+
+    function selectLoginRole(role) {
+      AUTH_STATE.selectedLoginRole = role;
+      
+      // Update role buttons UI
+      ['restaurant', 'ngo', 'driver', 'admin'].forEach(r => {
+        const btn = document.getElementById(`role-btn-${r}`);
+        if (btn) {
+          if (r === role) {
+            btn.classList.add('selected');
+          } else {
+            btn.classList.remove('selected');
+          }
+        }
+      });
+
+      // Update feedback label
+      const labelEl = document.getElementById('selectedRoleLabel');
+      const conf = ROLE_CONFIGS[role];
+      if (labelEl && conf) {
+        labelEl.innerHTML = `<i data-lucide="${conf.icon}" class="w-3.5 h-3.5"></i> ${conf.label}`;
+      }
+
+      // Handle Admin specific requirements:
+      // "ADMIN DOES NOT HAVE A PUBLIC SIGN-UP OPTION"
+      // "Do NOT show 'Create Admin Account' or 'Sign Up as Admin'. Instead: 'Administrator accounts are created by the platform.'"
+      const publicPrompt = document.getElementById('publicSignupPrompt');
+      const adminNotice = document.getElementById('adminRestrictedNotice');
+      if (role === 'admin') {
+        if (publicPrompt) publicPrompt.classList.add('hidden');
+        if (adminNotice) adminNotice.classList.remove('hidden');
+      } else {
+        if (publicPrompt) publicPrompt.classList.remove('hidden');
+        if (adminNotice) adminNotice.classList.add('hidden');
+      }
+
+      // Hide previous errors
+      hideLoginError();
+      lucide.createIcons();
+    }
+
+    function fillTestAccount(role) {
+      selectLoginRole(role);
+      const acc = DEMO_ACCOUNTS[role];
+      if (acc) {
+        document.getElementById('loginEmail').value = acc.email;
+        document.getElementById('loginPassword').value = 'password123';
+      }
+    }
+
+    function togglePasswordVisibility(fieldId, btn) {
+      const input = document.getElementById(fieldId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.innerHTML = `<i data-lucide="eye-off" class="w-4 h-4"></i>`;
+      } else {
+        input.type = 'password';
+        btn.innerHTML = `<i data-lucide="eye" class="w-4 h-4"></i>`;
+      }
+      lucide.createIcons();
+    }
+
+    function showLoginError(msg) {
+      const alert = document.getElementById('loginErrorAlert');
+      const msgEl = document.getElementById('loginErrorMessage');
+      if (alert && msgEl) {
+        msgEl.innerText = msg;
+        alert.classList.remove('hidden');
+      }
+    }
+
+    function hideLoginError() {
+      const alert = document.getElementById('loginErrorAlert');
+      if (alert) alert.classList.add('hidden');
+    }
+
+    // Role-based login execution
+    function handleLoginSubmit(event) {
+      if (event) event.preventDefault();
+      
+      const email = document.getElementById('loginEmail')?.value;
+      const password = document.getElementById('loginPassword')?.value;
+      const role = AUTH_STATE.selectedLoginRole || 'restaurant';
+      
+      if (!email) {
+        showLoginError('Please enter your email address.');
+        return;
+      }
+      if (!password) {
+        showLoginError('Please enter your password.');
+        return;
+      }
+
+      const submitBtn = document.getElementById('loginSubmitBtn');
+      const btnText = document.getElementById('loginBtnText');
+      const btnSpinner = document.getElementById('loginBtnSpinner');
+      
+      if (submitBtn) submitBtn.disabled = true;
+      if (btnText) btnText.classList.add('hidden');
+      if (btnSpinner) btnSpinner.classList.remove('hidden');
+
+      const roleMap = {
+        restaurant: '/restaurant-dashboard.html',
+        ngo: '/ngo-dashboard.html',
+        driver: '/driver-dashboard.html',
+        admin: '/admin-dashboard.html'
+      };
+
+      const targetPage = roleMap[role] || '/restaurant-dashboard.html';
+
+      setTimeout(() => {
+        window.location.href = targetPage;
+      }, 350);
+    }
+
+
+    function navigateToDashboard(role) {
+      AUTH_STATE.currentRoute = `/${role}/dashboard`;
+      updateNavbarForAuth();
+
+      // Hide all views
+      hideAllViews();
+
+      // Show specific role dashboard
+      const targetView = document.getElementById(`view-dashboard-${role}`);
+      if (targetView) {
+        targetView.classList.remove('hidden');
+      }
+      lucide.createIcons();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function handleLogout() {
+      AUTH_STATE.currentUser = null;
+      AUTH_STATE.currentRoute = '/login';
+      updateNavbarForAuth();
+      navigateTo('login');
+      showToast('Signed Out', 'You have been logged out of your session.');
+    }
+
+    function updateNavbarForAuth() {
+      const authInd = document.getElementById('authStatusIndicator');
+      const navName = document.getElementById('navUserName');
+      const navRole = document.getElementById('navUserRoleBadge');
+      const avatar = document.getElementById('userAvatarBadge');
+
+      if (AUTH_STATE.currentUser) {
+        authInd.classList.remove('hidden');
+        authInd.classList.add('flex');
+        navName.innerText = AUTH_STATE.currentUser.name;
+        navRole.innerText = ROLE_CONFIGS[AUTH_STATE.currentUser.role].label;
+        avatar.innerText = AUTH_STATE.currentUser.name.charAt(0).toUpperCase();
+      } else {
+        authInd.classList.add('hidden');
+        authInd.classList.remove('flex');
+      }
+    }
+
+    // Signup selection
+    function selectSignupOption(role) {
+      AUTH_STATE.selectedSignupRole = role;
+      ['restaurant', 'ngo', 'driver'].forEach(r => {
+        const card = document.getElementById(`signup-card-${r}`);
+        if (card) {
+          const radio = card.querySelector('.role-signup-radio');
+          if (r === role) {
+            card.classList.add('border-[#16803C]', 'bg-[#EAF6EE]');
+            card.classList.remove('border-borderline', 'bg-white');
+            if (radio) {
+              radio.classList.add('border-[#16803C]', 'bg-[#16803C]');
+            }
+          } else {
+            card.classList.remove('border-[#16803C]', 'bg-[#EAF6EE]');
+            card.classList.add('border-borderline', 'bg-white');
+            if (radio) {
+              radio.classList.remove('border-[#16803C]', 'bg-[#16803C]');
+            }
+          }
+        }
+      });
+    }
+
+    function proceedToSelectedSignupForm() {
+      const role = AUTH_STATE.selectedSignupRole;
+      navigateTo(`signup-${role}`);
+    }
+
+    function handleRegistrationSubmit(event, role) {
+      event.preventDefault();
+      
+      const roleName = ROLE_CONFIGS[role].label;
+      showToast(`${roleName} Account Created`, `${roleName} account created successfully. Directing to dashboard...`);
+      
+      AUTH_STATE.currentUser = {
+        id: `usr_${Date.now()}`,
+        name: role === 'restaurant' ? 'Green Olive Bistro' : (role === 'ngo' ? 'Hope Community Kitchen' : 'Alex Rivera'),
+        email: `${role}@registered.org`,
+        role: role
+      };
+
+      setTimeout(() => {
+        navigateToDashboard(role);
+      }, 700);
+    }
+
+    function handleForgotPassword(event) {
+      event.preventDefault();
+      const successMsg = document.getElementById('resetSuccessMessage');
+      const submitBtn = document.getElementById('resetSubmitBtn');
+      
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Sending link...';
+
+      setTimeout(() => {
+        submitBtn.innerText = 'Send Reset Link';
+        submitBtn.disabled = false;
+        successMsg.classList.remove('hidden');
+        lucide.createIcons();
+      }, 600);
+    }
+
+    function hideAllViews() {
+      const views = [
+        'view-login',
+        'view-signup',
+        'view-signup-restaurant',
+        'view-signup-ngo',
+        'view-signup-driver',
+        'view-forgot-password',
+        'view-dashboard-restaurant',
+        'view-dashboard-ngo',
+        'view-dashboard-driver',
+        'view-dashboard-admin'
+      ];
+      views.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      });
+    }
+
+    function navigateTo(routeKey) {
+      hideAllViews();
+      const target = document.getElementById(`view-${routeKey}`);
+      if (target) {
+        target.classList.remove('hidden');
+      }
+      if (routeKey === 'login') {
+        AUTH_STATE.currentRoute = '/login';
+        selectLoginRole(AUTH_STATE.selectedLoginRole);
+      } else if (routeKey === 'signup') {
+        AUTH_STATE.currentRoute = '/signup';
+        selectSignupOption('restaurant');
+      } else if (routeKey === 'forgot-password') {
+        AUTH_STATE.currentRoute = '/forgot-password';
+        const msg = document.getElementById('resetSuccessMessage');
+        if (msg) msg.classList.add('hidden');
+      }
+      lucide.createIcons();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showToast(title, message) {
+      const toast = document.getElementById('toastNotification');
+      const tTitle = document.getElementById('toastTitle');
+      const tMsg = document.getElementById('toastMessage');
+      
+      tTitle.innerText = title;
+      tMsg.innerText = message;
+      
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-24', 'opacity-0');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 4000);
+    }
+
+    // Initialize icons and default state on load
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      selectLoginRole('restaurant');
+    });
+  </script>
+
+<!-- Floating Universal Portal Switcher Widget -->
+<div id="global-portal-switcher" class="fixed bottom-4 right-4 z-[9999] font-sans">
+  <div class="relative inline-block text-left">
+    <button onclick="const m=document.getElementById('portalSwitchMenu'); m.classList.toggle('hidden');" 
+      type="button"
+      class="flex items-center gap-2 px-3.5 py-2 rounded-full bg-slate-900 text-white text-xs font-semibold shadow-2xl border border-slate-700 hover:bg-slate-800 transition-all cursor-pointer">
+      <span class="w-2 h-2 rounded-full bg-[#16803C] animate-pulse"></span>
+      <span>Switch Portal / Role</span>
+      <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+    </button>
+
+    <div id="portalSwitchMenu" class="hidden absolute right-0 bottom-12 w-64 rounded-xl bg-slate-900 text-white border border-slate-700 shadow-2xl z-[10000] p-2 flex flex-col gap-1 text-xs">
+      <div class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 mb-1">
+        Surplus-To-Shelter Portals
+      </div>
+      <a href="/index.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-slate-400"></span> 🔐 <b>Auth / Login Page</b>
+      </a>
+      <a href="/restaurant-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 🏪 <b>Restaurant Portal</b>
+      </a>
+      <a href="/ngo-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-blue-500"></span> 🤝 <b>NGO / Shelter Portal</b>
+      </a>
+      <a href="/admin-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-purple-500"></span> 🛡️ <b>Admin Command Center</b>
+      </a>
+      <a href="/driver-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-amber-500"></span> 🚚 <b>Driver Courier Portal</b>
+      </a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

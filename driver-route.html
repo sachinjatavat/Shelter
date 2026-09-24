@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"surface":"#f9f9ff","primary":"#00652c","on-primary-container":"#d3ffd5","tertiary-fixed":"#caead6","tertiary":"#415d4d","on-primary-fixed-variant":"#005323","surface-container":"#e7eefe","outline":"#6f7a6e","secondary-container":"#97f5cc","surface-container-lowest":"#ffffff","on-tertiary-fixed-variant":"#314d3e","primary-fixed":"#95f8a7","surface-tint":"#006d30","tertiary-container":"#597665","on-secondary-container":"#007353","surface-container-highest":"#dce2f3","inverse-on-surface":"#ebf1ff","on-error":"#ffffff","primary-container":"#15803d","on-surface":"#151c27","secondary-fixed":"#97f5cc","on-primary-fixed":"#00210a","background":"#f9f9ff","on-secondary-fixed":"#002115","on-tertiary-fixed":"#042014","inverse-primary":"#79db8d","surface-variant":"#dce2f3","on-background":"#151c27","secondary":"#006c4e","error-container":"#ffdad6","on-surface-variant":"#3f493f","primary-fixed-dim":"#79db8d","inverse-surface":"#2a313d","on-tertiary":"#ffffff","on-secondary":"#ffffff","on-tertiary-container":"#dcfce7","error":"#ba1a1a","on-error-container":"#93000a","secondary-fixed-dim":"#7bd8b1","surface-container-high":"#e2e8f8","outline-variant":"#becabc","tertiary-fixed-dim":"#afceba","surface-dim":"#d3daea","surface-bright":"#f9f9ff","on-secondary-fixed-variant":"#00513a","on-primary":"#ffffff","surface-container-low":"#f0f3ff"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"margin-mobile":"1rem","space-lg":"1.5rem","space-md":"1rem","space-sm":"0.5rem","space-xs":"0.25rem","gutter":"1.25rem","space-xl":"2rem","margin":"2rem","gutter-mobile":"0.75rem"},"fontFamily":{"label-lg":["Plus Jakarta Sans"],"body-lg":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"body-sm":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"metric-val":["Plus Jakarta Sans"],"headline-xl-mobile":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"]},"fontSize":{"label-lg":["14px",{"lineHeight":"20px","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"headline-md":["18px",{"lineHeight":"24px","fontWeight":"600"}],"headline-lg":["22px",{"lineHeight":"28px","fontWeight":"700"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.05em","fontWeight":"700"}],"body-sm":["13px",{"lineHeight":"18px","fontWeight":"400"}],"headline-xl":["30px",{"lineHeight":"38px","fontWeight":"700"}],"metric-val":["28px",{"lineHeight":"34px","fontWeight":"700"}],"headline-xl-mobile":["24px",{"lineHeight":"32px","fontWeight":"700"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.025em","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-screen w-60 bg-surface-container-lowest border-r border-outline-variant/40 z-50 flex flex-col justify-between select-none">
+  <div class="flex flex-col flex-1 min-h-0">
+    <div class="h-16 px-space-md flex flex-col justify-center border-b border-outline-variant/30">
+      <div class="flex items-center gap-1">
+        <span class="font-headline-md text-headline-md text-on-surface tracking-tight font-bold">SURPLUS<span class="text-primary-container font-bold">-</span>TO<span class="text-primary-container font-bold">-</span>SHELTER</span>
+      </div>
+      <div class="flex items-center gap-space-xs mt-0.5">
+        <span class="inline-flex items-center px-1.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm tracking-wider uppercase">DRIVER PORTAL</span>
+      </div>
+    </div>
+    
+    <div class="flex-1 overflow-y-auto py-space-sm px-space-sm">
+      <nav class="flex flex-col gap-1">
+        <a class="flex items-center gap-space-sm px-3 py-2 rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/driver-dashboard.html">
+          <span class="material-symbols-outlined text-[20px]">dashboard</span>
+          <span>Dashboard</span>
+        </a>
+        <a class="flex items-center gap-space-sm px-3 py-2 rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/driver-available.html">
+          <span class="material-symbols-outlined text-[20px]">inventory_2</span>
+          <span>Available Pickups</span>
+        </a>
+        <a class="flex items-center gap-space-sm px-3 py-2 rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/driver-active.html">
+          <span class="material-symbols-outlined text-[20px]">local_shipping</span>
+          <span>Active Pickup</span>
+        </a>
+        <a class="flex items-center gap-space-sm px-3 py-2 transition-colors bg-on-tertiary-container text-primary-container font-label-lg rounded-lg" href="/driver-route.html">
+          <span class="material-symbols-outlined text-[20px]">navigation</span>
+          <span>Route</span>
+        </a>
+        <a class="flex items-center gap-space-sm px-3 py-2 rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/driver-history.html">
+          <span class="material-symbols-outlined text-[20px]">calendar_month</span>
+          <span>Pickup History</span>
+        </a>
+        <a class="flex items-center gap-space-sm px-3 py-2 rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/driver-impact.html">
+          <span class="material-symbols-outlined text-[20px]">trending_up</span>
+          <span>Impact</span>
+        </a>
+        <a class="flex items-center gap-space-sm px-3 py-2 rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/driver-notifications.html">
+          <div class="flex items-center gap-space-sm flex-1">
+            <span class="material-symbols-outlined text-[20px]">notifications</span>
+            <span>Notifications</span>
+          </div>
+          <span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+        </a>
+        <a class="flex items-center gap-space-sm px-3 py-2 rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/driver-settings.html">
+          <span class="material-symbols-outlined text-[20px]">tune</span>
+          <span>Settings</span>
+        </a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="p-space-sm border-t border-outline-variant/30">
+    <a class="flex items-center gap-space-xs px-3 py-1.5 rounded text-outline font-label-md text-label-md hover:text-on-surface transition-colors" href="/index.html">
+      <span class="material-symbols-outlined text-[16px]">logout</span>
+      <span>Sign Out</span>
+    </a>
+  </div>
+</aside><div class="pl-60"><header class="fixed top-0 left-60 right-0 h-16 bg-surface-container-lowest border-b border-outline-variant/40 z-40 flex items-center justify-between px-space-md shadow-[0_1px_8px_rgba(0,0,0,0.02)]"><div class="relative w-full max-w-md"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px] pointer-events-none">search</span><input class="w-full h-10 pl-9 pr-4 rounded-lg bg-surface border border-outline-variant/60 font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search pickups, donors, shelters..." type="text"/></div><div class="flex items-center gap-space-md"><button aria-label="Notifications" class="relative p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error ring-2 ring-surface-container-lowest"></span></button><div class="h-6 w-px bg-outline-variant/40"></div><div class="flex items-center gap-space-sm cursor-pointer group"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="flex items-center gap-1"><span class="font-label-lg text-label-lg text-on-surface group-hover:text-primary transition-colors">Rahul Sharma</span><span class="material-symbols-outlined text-outline text-[18px] group-hover:text-on-surface transition-colors">expand_more</span></div></div><button aria-label="Sign out" class="p-2 rounded-lg text-outline hover:text-error hover:bg-error-container/20 transition-colors ml-space-xs" type="button"><span class="material-symbols-outlined text-[20px]">logout</span></button></div></header><main class="relative pt-16 bg-surface min-h-screen w-full px-space-md lg:px-margin py-space-md lg:py-margin"><div class="flex flex-col w-full pb-16"><div class="flex flex-col w-full gap-space-lg">
+<!-- Header Area -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs mb-1">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span>
+          Live Dispatch
+        </span>
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">• Pickup ID: #STS-8821</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">Smart Route</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Recommended route for your active pickup, optimized for food safety and shortest expiry windows.</p>
+</div>
+<div class="flex items-center gap-space-sm self-start lg:self-center">
+<button class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-container-lowest text-on-surface font-label-lg text-label-lg shadow-sm hover:bg-surface-container-low transition-all active:scale-[0.98]" id="recalc-btn" type="button">
+<span class="material-symbols-outlined text-[18px] text-tertiary transition-transform duration-700" id="recalc-icon">refresh</span>
+<span>Recalculate Route</span>
+</button>
+<button class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-container text-on-primary font-label-lg text-label-lg shadow-sm hover:bg-primary transition-all active:scale-[0.98]" type="button">
+<span class="material-symbols-outlined text-[18px]">near_me</span>
+<span>Open Navigation</span>
+</button>
+</div>
+</div>
+<!-- Urgency & Food Safety Alert Banner -->
+<div class="w-full bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-full bg-error-container text-on-error-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">timer</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-label-lg text-label-lg text-error">Urgency Window: 38 minutes remaining</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm">Cooked Meals</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Hot meals packed at 4:35 PM. Direct high-velocity path prioritized to maintain temperature safety before 5:30 PM threshold.</p>
+</div>
+</div>
+<div class="flex items-center gap-4 shrink-0 bg-surface-container-low px-3 py-2 rounded-lg">
+<div class="flex flex-col items-end">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Target Drop-off</span>
+<span class="font-headline-md text-headline-md text-primary-container">5:24 PM</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+</div>
+</div>
+</div>
+<!-- Main Grid: Map & Itinerary -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- LEFT / CENTER: Interactive Vector Map Canvas (lg:col-span-8) -->
+<div class="lg:col-span-8 flex flex-col gap-space-md">
+<div class="relative w-full h-[540px] bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col select-none">
+<!-- Live Traffic Floating Overlay Top -->
+<div class="absolute top-4 left-4 z-20 flex flex-wrap items-center gap-2">
+<div class="inline-flex items-center gap-2 bg-surface-container-lowest/95 backdrop-blur px-3 py-1.5 rounded-lg shadow-sm">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-ping"></span>
+<span class="font-label-sm text-label-sm text-on-surface uppercase tracking-wide">Grand Blvd Traffic:</span>
+<span class="font-label-md text-label-md text-primary-container">Clear (38 km/h avg)</span>
+</div>
+<div class="inline-flex items-center gap-1.5 bg-surface-container-lowest/95 backdrop-blur px-3 py-1.5 rounded-lg shadow-sm">
+<span class="material-symbols-outlined text-outline text-[16px]">thermostat</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Optimal Cargo Temp: 68°C</span>
+</div>
+</div>
+<!-- Map Controls (Top Right) -->
+<div class="absolute top-4 right-4 z-20 flex flex-col gap-1.5">
+<button aria-label="Zoom In" class="w-9 h-9 rounded-lg bg-surface-container-lowest text-on-surface shadow-sm hover:bg-surface-container-low flex items-center justify-center transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+<button aria-label="Zoom Out" class="w-9 h-9 rounded-lg bg-surface-container-lowest text-on-surface shadow-sm hover:bg-surface-container-low flex items-center justify-center transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">remove</span>
+</button>
+<button aria-label="Recenter Map" class="w-9 h-9 rounded-lg bg-surface-container-lowest text-primary-container shadow-sm hover:bg-surface-container-low flex items-center justify-center transition-colors mt-1" type="button">
+<span class="material-symbols-outlined text-[20px]">my_location</span>
+</button>
+</div>
+<!-- Stylized Map Vector Canvas -->
+<div class="relative w-full h-full bg-[#f4f7fa]">
+<!-- Geometric Vector Grid & City Blocks -->
+<svg class="absolute inset-0 w-full h-full" preserveaspectratio="none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<pattern height="60" id="city-grid" patternunits="userSpaceOnUse" width="60">
+<rect fill="#e9eff7" height="56" opacity="0.6" rx="4" width="56"></rect>
+</pattern>
+<lineargradient id="routeGradient" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#0284c7"></stop>
+<stop offset="45%" stop-color="#15803d"></stop>
+<stop offset="100%" stop-color="#00652c"></stop>
+</lineargradient>
+<filter height="140%" id="glow" width="140%" x="-20%" y="-20%">
+<fedropshadow dx="0" dy="2" flood-color="#15803d" flood-opacity="0.35" stddeviation="3"></fedropshadow>
+</filter>
+</defs>
+<!-- Background District Blocks -->
+<rect fill="#edf3f9" height="100%" width="100%"></rect>
+<rect fill="url(#city-grid)" height="100%" width="100%" x="0" y="0"></rect>
+<!-- Urban Green Spaces (Parks) -->
+<path d="M 280,40 Q 340,30 400,60 T 480,120 L 440,190 Q 330,160 270,120 Z" fill="#d8f3dc" opacity="0.75"></path>
+<path d="M 40,360 Q 110,340 180,380 L 160,490 Q 70,480 30,440 Z" fill="#d8f3dc" opacity="0.65"></path>
+<!-- Secondary Street Grid Lines -->
+<line stroke="#d5e1ee" stroke-width="12" x1="0" x2="1000" y1="90" y2="90"></line>
+<line stroke="#d5e1ee" stroke-width="14" x1="0" x2="1000" y1="210" y2="210"></line>
+<line stroke="#d5e1ee" stroke-width="14" x1="0" x2="1000" y1="340" y2="340"></line>
+<line stroke="#d5e1ee" stroke-width="10" x1="0" x2="1000" y1="460" y2="460"></line>
+<line stroke="#d5e1ee" stroke-width="12" x1="120" x2="120" y1="0" y2="600"></line>
+<line stroke="#d5e1ee" stroke-width="16" x1="280" x2="280" y1="0" y2="600"></line>
+<line stroke="#d5e1ee" stroke-width="18" x1="490" x2="490" y1="0" y2="600"></line>
+<line stroke="#d5e1ee" stroke-width="14" x1="680" x2="680" y1="0" y2="600"></line>
+<!-- Arterial Roads (Grand Blvd & Market St) -->
+<path d="M 60,420 L 280,420 L 490,210 L 780,210" stroke="#cbd7e6" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"></path>
+<!-- Active Dispatch Transit Corridor Route (Highlighted) -->
+<!-- 1. Start: (120, 420) Grand Ave -->
+<!-- 2. Pickup: (380, 310) Green Leaf Restaurant -->
+<!-- 3. Destination: (640, 160) Hope Shelter -->
+<path d="M 120,420 L 280,420 L 380,315 L 490,315 L 490,160 L 640,160" fill="none" filter="url(#glow)" id="active-transit-track" stroke="url(#routeGradient)" stroke-linecap="round" stroke-linejoin="round" stroke-width="8"></path>
+<path d="M 120,420 L 280,420 L 380,315 L 490,315 L 490,160 L 640,160" fill="none" opacity="0.9" stroke="#ffffff" stroke-dasharray="8 6" stroke-linecap="round" stroke-width="2"></path>
+<!-- Directional Flow Particles (Animated via CSS) -->
+<circle cx="210" cy="420" fill="#ffffff" r="3.5"></circle>
+<circle cx="430" cy="315" fill="#ffffff" r="3.5"></circle>
+<circle cx="490" cy="230" fill="#ffffff" r="3.5"></circle>
+<circle cx="560" cy="160" fill="#ffffff" r="3.5"></circle>
+</svg>
+<!-- Street Names & Typography Labels -->
+<div class="absolute left-20 bottom-32 font-label-sm text-[11px] font-semibold text-tertiary/70 tracking-widest uppercase pointer-events-none select-none">Grand Blvd</div>
+<div class="absolute left-[310px] top-40 font-label-sm text-[11px] font-semibold text-tertiary/70 tracking-widest uppercase pointer-events-none select-none">Market Street</div>
+<div class="absolute left-[510px] top-64 font-label-sm text-[11px] font-semibold text-tertiary/70 tracking-widest uppercase pointer-events-none select-none">4th Avenue</div>
+<div class="absolute left-[620px] top-28 font-label-sm text-[11px] font-semibold text-tertiary/70 tracking-widest uppercase pointer-events-none select-none">Elm Street</div>
+<!-- WAYPOINT 1: Current Driver Location -->
+<div class="absolute left-[120px] top-[420px] -translate-x-1/2 -translate-y-1/2 group cursor-pointer">
+<div class="relative flex items-center justify-center">
+<span class="absolute w-8 h-8 rounded-full bg-sky-500/30 animate-ping"></span>
+<div class="w-8 h-8 rounded-full bg-sky-600 text-white flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-[18px]">local_shipping</span>
+</div>
+</div>
+<!-- Pin Tooltip -->
+<div class="absolute top-9 left-1/2 -translate-x-1/2 whitespace-nowrap bg-surface-container-lowest px-2.5 py-1 rounded shadow-sm text-center">
+<p class="font-label-sm text-label-sm text-sky-700 font-bold">You (Driver)</p>
+<p class="font-body-sm text-[11px] text-on-surface-variant">Grand Ave &amp; 2nd</p>
+</div>
+</div>
+<!-- Route Segment 1 ETA Tag -->
+<div class="absolute left-[295px] top-[370px] -translate-x-1/2 -translate-y-1/2 bg-surface-container-lowest/90 backdrop-blur px-2 py-0.5 rounded shadow-sm">
+<span class="font-label-sm text-[11px] text-primary-container font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">schedule</span> 2.4 km • 8 min
+            </span>
+</div>
+<!-- WAYPOINT 2: Stop 1 - Green Leaf Restaurant (Pickup) -->
+<div class="absolute left-[380px] top-[315px] -translate-x-1/2 -translate-y-1/2 group cursor-pointer z-10">
+<div class="relative flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center shadow-lg ring-4 ring-white">
+<span class="material-symbols-outlined text-[20px]">restaurant</span>
+</div>
+<div class="w-2.5 h-2.5 bg-primary-container rotate-45 -mt-1 ring-2 ring-white"></div>
+</div>
+<!-- Pin Badge Box -->
+<div class="absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap bg-surface-container-lowest px-3 py-1.5 rounded-lg shadow-md flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<div class="flex flex-col text-left">
+<span class="font-label-sm text-label-sm text-on-surface font-bold">Green Leaf Restaurant</span>
+<span class="font-label-sm text-[10px] text-primary-container">Pickup: 25 kg Cooked Food</span>
+</div>
+</div>
+</div>
+<!-- Route Segment 2 ETA Tag -->
+<div class="absolute left-[540px] top-[230px] -translate-x-1/2 -translate-y-1/2 bg-surface-container-lowest/90 backdrop-blur px-2 py-0.5 rounded shadow-sm">
+<span class="font-label-sm text-[11px] text-primary-container font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">speed</span> 1.8 km • 6 min
+            </span>
+</div>
+<!-- WAYPOINT 3: Stop 2 - Hope Shelter (Destination) -->
+<div class="absolute left-[640px] top-[160px] -translate-x-1/2 -translate-y-1/2 group cursor-pointer z-10">
+<div class="relative flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-lg ring-4 ring-white">
+<span class="material-symbols-outlined text-[20px]">home_work</span>
+</div>
+<div class="w-2.5 h-2.5 bg-primary rotate-45 -mt-1 ring-2 ring-white"></div>
+</div>
+<!-- Pin Badge Box -->
+<div class="absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap bg-surface-container-lowest px-3 py-1.5 rounded-lg shadow-md flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<div class="flex flex-col text-left">
+<span class="font-label-sm text-label-sm text-on-surface font-bold">Hope Shelter</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant">Drop-off: ETA 5:24 PM</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Map Bottom Banner: Overall Summary Pill -->
+<div class="bg-surface-container-lowest px-space-md py-3 flex flex-wrap items-center justify-between gap-3 shadow-sm z-10">
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-[20px]">route</span>
+<span class="font-headline-md text-headline-md text-on-surface">4.2 km</span>
+<span class="font-body-sm text-body-sm text-outline">Total Run</span>
+</div>
+<div class="h-4 w-px bg-outline-variant/60 hidden sm:block"></div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-[20px]">schedule</span>
+<span class="font-headline-md text-headline-md text-on-surface">14 min</span>
+<span class="font-body-sm text-body-sm text-outline">Travel Time</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-on-tertiary-container text-primary-container font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">eco</span>
+              Zero Congestion Route
+            </span>
+</div>
+</div>
+</div>
+<!-- Quick Facility Snapshot & Visual Photo Card -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Donor Photo Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex items-center gap-space-md">
+<img class="w-20 h-20 rounded-lg object-cover shrink-0" data-alt="Front entrance of Green Leaf modern organic restaurant with clean delivery bay entrance and clear parking signage for food rescue logistics under bright daylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbvLN5Tj8GEmHUmgV3Qb5fdBWqvxW8QdWu5r2li0oNJnyQO1HNTaX7qzS0BPSJGiaeE-SnA8qBtQx-CO_-Oki7WHZZgXthCAQgoWEpV6B__oMBw4zbse3qx_lyPYveJS280c0b5eCz9WeNEH7jaZ-bngAPo9RMKNBCPcc8mz6gTciZZWZlMOsmJtbRI-0HITnA3vemaCeRA6EsWFp7HwyHpQyAVa5jM0Nqqzvf5MVA"/>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-primary-container uppercase tracking-wider">Pickup Donor</span>
+<h4 class="font-headline-md text-headline-md text-on-surface truncate">Green Leaf Restaurant</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Rear service dock on Elm St</p>
+<div class="flex items-center gap-1 text-outline font-label-md text-label-md mt-1">
+<span class="material-symbols-outlined text-[14px]">call</span>
+<span>(555) 342-9102</span>
+</div>
+</div>
+</div>
+<!-- Intake Coordinator Shelter Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex items-center gap-space-md">
+<img class="w-20 h-20 rounded-lg object-cover shrink-0" data-alt="Modern civic building of Hope Shelter with clean ramp entrance, double automatic doors for shelter intake logistics and delivery van staging area" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5corZG39iMdfKR54E98jWB224SCqgG923z03aL6hXu0CYWvgJr499UFZ4Z0M0DiHSxs8WBuSqd6J1gERyflhmDpMBn0UIuJK6UvYAYTK9rIfS2GKu-IWGVr_NOzTMBXhiXnCcIkmnOfaxP8xgeIFcqrGCr_kfqlgh6HJmCuv968GAyBXDmN4wPQ59dOgCvgjVEE0B5RQR6m50XxPEPd5l5IzhUdm4kG45XiseltHw"/>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-wider">Intake Coordinator</span>
+<h4 class="font-headline-md text-headline-md text-on-surface truncate">Hope Shelter</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Dock B, Kitchen Entrance</p>
+<div class="flex items-center gap-1 text-outline font-label-md text-label-md mt-1">
+<span class="material-symbols-outlined text-[14px]">badge</span>
+<span>Coordinator: Elena Ramos</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT SIDE: Turn-by-Turn Waypoints & Route Controls (lg:col-span-4) -->
+<div class="lg:col-span-4 flex flex-col gap-space-md">
+<!-- Navigation Progress & Dispatch Timeline -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col">
+<div class="flex items-center justify-between pb-space-sm mb-space-md">
+<div>
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Active Itinerary</span>
+<h3 class="font-headline-lg text-headline-lg text-on-surface">Step-by-Step</h3>
+</div>
+<span class="px-2 py-1 rounded bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-bold">2 Stops Total</span>
+</div>
+<!-- Timeline Steps -->
+<div class="relative flex flex-col gap-6 pl-3">
+<!-- Continuous Track Line -->
+<div class="absolute left-6 top-3 bottom-8 w-0.5 bg-surface-container-highest"></div>
+<!-- STEP 1: Current Driver Location -->
+<div class="relative flex items-start gap-4">
+<div class="w-7 h-7 rounded-full bg-sky-600 text-white flex items-center justify-center shrink-0 z-10 ring-4 ring-surface-container-lowest shadow-sm">
+<span class="material-symbols-outlined text-[14px]">navigation</span>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-sky-700 uppercase tracking-wide">START</span>
+<span class="font-label-sm text-label-sm text-outline">5:00 PM</span>
+</div>
+<h4 class="font-headline-md text-headline-md text-on-surface">Current Location</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Grand Ave facing North</p>
+<!-- Sub-step detail -->
+<div class="mt-2 p-2 rounded bg-surface-container-low flex items-center justify-between text-on-surface font-body-sm text-body-sm">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-tertiary">turn_right</span>
+                  Turn right onto 4th Ave
+                </span>
+<span class="font-label-md text-label-md text-outline">2.4 km • 8 min</span>
+</div>
+</div>
+</div>
+<!-- STEP 2: Stop 1 - Pickup Green Leaf -->
+<div class="relative flex items-start gap-4">
+<div class="w-7 h-7 rounded-full bg-primary-container text-on-primary flex items-center justify-center shrink-0 z-10 ring-4 ring-surface-container-lowest shadow-sm">
+<span class="material-symbols-outlined text-[14px]">lunch_dining</span>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-primary-container uppercase tracking-wide">STOP 1 • PICKUP</span>
+<span class="font-label-sm text-label-sm text-primary-container font-bold">5:08 PM</span>
+</div>
+<h4 class="font-headline-md text-headline-md text-on-surface">Green Leaf Restaurant</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">742 Evergreen Terrace</p>
+<div class="mt-2 p-2.5 rounded-lg bg-surface-container-low flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface font-bold">Cargo Manifest:</span>
+<span class="inline-flex px-1.5 py-0.5 rounded bg-on-tertiary-container text-primary-container font-label-sm text-[10px]">25 kg Total</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">• 12x Insulated trays: Vegetable Pasta Bake</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">• 8x Containers: Lentil &amp; Spinach Soup</p>
+<div class="flex items-center gap-2 mt-1 pt-1.5 border-t border-outline-variant/30">
+<span class="material-symbols-outlined text-[16px] text-primary-container">qr_code_scanner</span>
+<span class="font-label-sm text-label-sm text-primary-container">Scan donor QR upon loading</span>
+</div>
+</div>
+<!-- Transit to shelter -->
+<div class="mt-2 p-2 rounded bg-surface-container-low flex items-center justify-between text-on-surface font-body-sm text-body-sm">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-tertiary">straight</span>
+                  Grand Blvd via Elm St
+                </span>
+<span class="font-label-md text-label-md text-outline">1.8 km • 6 min</span>
+</div>
+</div>
+</div>
+<!-- STEP 3: Stop 2 - Final Destination Hope Shelter -->
+<div class="relative flex items-start gap-4">
+<div class="w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center shrink-0 z-10 ring-4 ring-surface-container-lowest shadow-sm">
+<span class="material-symbols-outlined text-[14px]">flag</span>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-primary uppercase tracking-wide">STOP 2 • DESTINATION</span>
+<span class="font-label-sm text-label-sm text-primary font-bold">5:24 PM</span>
+</div>
+<h4 class="font-headline-md text-headline-md text-on-surface">Hope Shelter</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">104 Downtown Way</p>
+<div class="mt-2 p-2.5 rounded-lg bg-surface-container-low flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface font-bold">Intake Capacity:</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">72 / 100 kg</span>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden mt-0.5">
+<div class="bg-primary-container h-full rounded-full w-[72%]"></div>
+</div>
+<p class="font-body-sm text-[11px] text-on-surface-variant mt-1">Shelter verified ready for heated intake transfer.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Driver Action Buttons inside panel -->
+<div class="mt-space-lg flex flex-col gap-2 pt-space-sm border-t border-outline-variant/30">
+<button class="w-full py-2.5 px-4 rounded-lg bg-primary-container text-on-primary font-label-lg text-label-lg shadow-sm hover:bg-primary transition-all flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+<span>Confirm Arrived at Pickup</span>
+</button>
+<button class="w-full py-2 px-4 rounded-lg bg-surface-container-lowest text-on-surface font-label-lg text-label-lg shadow-sm hover:bg-surface-container-low transition-all flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-[18px] text-outline">report_problem</span>
+<span>Report Transit Delay</span>
+</button>
+</div>
+</div>
+<!-- Quick Emergency & Dispatch Communications Drawer -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-sm">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Fast Contact Hub</span>
+<div class="flex items-center justify-between p-2 rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">restaurant</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Green Leaf Lead Chef</span>
+<span class="font-body-sm text-[11px] text-outline">Direct Kitchen Line</span>
+</div>
+</div>
+<button aria-label="Call donor" class="w-8 h-8 rounded-full bg-surface-container-lowest text-primary-container shadow-sm hover:bg-primary-container hover:text-on-primary flex items-center justify-center transition-all" type="button">
+<span class="material-symbols-outlined text-[16px]">call</span>
+</button>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">support_agent</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Hope Shelter Intake</span>
+<span class="font-body-sm text-[11px] text-outline">Dock Manager Elena</span>
+</div>
+</div>
+<button aria-label="Call coordinator" class="w-8 h-8 rounded-full bg-surface-container-lowest text-primary-container shadow-sm hover:bg-primary-container hover:text-on-primary flex items-center justify-center transition-all" type="button">
+<span class="material-symbols-outlined text-[16px]">call</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Simple micro-interaction for route recalculation
+  document.getElementById('recalc-btn')?.addEventListener('click', function() {
+    const icon = document.getElementById('recalc-icon');
+    if (icon) {
+      icon.classList.add('rotate-180');
+      setTimeout(() => {
+        icon.classList.remove('rotate-180');
+      }, 700);
+    }
+  });
+</script></div></main></div>
+<!-- Floating Universal Portal Switcher Widget -->
+<div id="global-portal-switcher" class="fixed bottom-4 right-4 z-[9999] font-sans">
+  <div class="relative inline-block text-left">
+    <button onclick="const m=document.getElementById('portalSwitchMenu'); m.classList.toggle('hidden');" 
+      type="button"
+      class="flex items-center gap-2 px-3.5 py-2 rounded-full bg-slate-900 text-white text-xs font-semibold shadow-2xl border border-slate-700 hover:bg-slate-800 transition-all cursor-pointer">
+      <span class="w-2 h-2 rounded-full bg-[#16803C] animate-pulse"></span>
+      <span>Switch Portal / Role</span>
+      <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+    </button>
+
+    <div id="portalSwitchMenu" class="hidden absolute right-0 bottom-12 w-64 rounded-xl bg-slate-900 text-white border border-slate-700 shadow-2xl z-[10000] p-2 flex flex-col gap-1 text-xs">
+      <div class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 mb-1">
+        Surplus-To-Shelter Portals
+      </div>
+      <a href="/index.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-slate-400"></span> 🔐 <b>Auth / Login Page</b>
+      </a>
+      <a href="/restaurant-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 🏪 <b>Restaurant Portal</b>
+      </a>
+      <a href="/ngo-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-blue-500"></span> 🤝 <b>NGO / Shelter Portal</b>
+      </a>
+      <a href="/admin-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-purple-500"></span> 🛡️ <b>Admin Command Center</b>
+      </a>
+      <a href="/driver-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-amber-500"></span> 🚚 <b>Driver Courier Portal</b>
+      </a>
+    </div>
+  </div>
+</div>
+
+</body></html>

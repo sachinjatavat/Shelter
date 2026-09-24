@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"surface":"#f9f9ff","primary":"#00652c","on-primary-container":"#d3ffd5","tertiary-fixed":"#caead6","tertiary":"#415d4d","on-primary-fixed-variant":"#005323","surface-container":"#e7eefe","outline":"#6f7a6e","secondary-container":"#97f5cc","surface-container-lowest":"#ffffff","on-tertiary-fixed-variant":"#314d3e","primary-fixed":"#95f8a7","surface-tint":"#006d30","tertiary-container":"#597665","on-secondary-container":"#007353","surface-container-highest":"#dce2f3","inverse-on-surface":"#ebf1ff","on-error":"#ffffff","primary-container":"#15803d","on-surface":"#151c27","secondary-fixed":"#97f5cc","on-primary-fixed":"#00210a","background":"#f9f9ff","on-secondary-fixed":"#002115","on-tertiary-fixed":"#042014","inverse-primary":"#79db8d","surface-variant":"#dce2f3","on-background":"#151c27","secondary":"#006c4e","error-container":"#ffdad6","on-surface-variant":"#3f493f","primary-fixed-dim":"#79db8d","inverse-surface":"#2a313d","on-tertiary":"#ffffff","on-secondary":"#ffffff","on-tertiary-container":"#dcfce7","error":"#ba1a1a","on-error-container":"#93000a","secondary-fixed-dim":"#7bd8b1","surface-container-high":"#e2e8f8","outline-variant":"#becabc","tertiary-fixed-dim":"#afceba","surface-dim":"#d3daea","surface-bright":"#f9f9ff","on-secondary-fixed-variant":"#00513a","on-primary":"#ffffff","surface-container-low":"#f0f3ff"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"margin-mobile":"1rem","space-lg":"1.5rem","space-md":"1rem","space-sm":"0.5rem","space-xs":"0.25rem","gutter":"1.25rem","space-xl":"2rem","margin":"2rem","gutter-mobile":"0.75rem"},"fontFamily":{"label-lg":["Plus Jakarta Sans"],"body-lg":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"body-sm":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"metric-val":["Plus Jakarta Sans"],"headline-xl-mobile":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"]},"fontSize":{"label-lg":["14px",{"lineHeight":"20px","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"headline-md":["18px",{"lineHeight":"24px","fontWeight":"600"}],"headline-lg":["22px",{"lineHeight":"28px","fontWeight":"700"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.05em","fontWeight":"700"}],"body-sm":["13px",{"lineHeight":"18px","fontWeight":"400"}],"headline-xl":["30px",{"lineHeight":"38px","fontWeight":"700"}],"metric-val":["28px",{"lineHeight":"34px","fontWeight":"700"}],"headline-xl-mobile":["24px",{"lineHeight":"32px","fontWeight":"700"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.025em","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-screen w-60 bg-surface-container-lowest border-r border-outline-variant/40 z-50 flex flex-col justify-between select-none">
+  <div class="flex flex-col flex-1 min-h-0">
+    <div class="h-16 px-space-md flex flex-col justify-center border-b border-outline-variant/30">
+      <div class="flex items-center gap-1">
+        <span class="font-headline-md text-headline-md text-on-surface tracking-tight font-bold">SURPLUS<span class="text-primary-container font-bold">-</span>TO<span class="text-primary-container font-bold">-</span>SHELTER</span>
+      </div>
+      <div class="flex items-center gap-space-xs mt-0.5">
+        <span class="inline-flex items-center px-1.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm tracking-wider uppercase">DRIVER PORTAL</span>
+      </div>
+    </div>
+    
+    <div class="flex-1 overflow-y-auto py-space-sm px-space-sm">
+      <nav class="flex flex-col gap-1">
+        <a class="flex items-center gap-space-sm px-3 py-2 rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/driver-dashboard.html">
+          <span class="material-symbols-outlined text-[20px]">dashboard</span>
+          <span>Dashboard</span>
+        </a>
+        <a class="flex items-center gap-space-sm px-3 py-2 rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/driver-available.html">
+          <span class="material-symbols-outlined text-[20px]">inventory_2</span>
+          <span>Available Pickups</span>
+        </a>
+        <a class="flex items-center gap-space-sm px-3 py-2 transition-colors bg-on-tertiary-container text-primary-container font-label-lg rounded-lg" href="/driver-active.html">
+          <span class="material-symbols-outlined text-[20px]">local_shipping</span>
+          <span>Active Pickup</span>
+        </a>
+        <a class="flex items-center gap-space-sm px-3 py-2 rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/driver-route.html">
+          <span class="material-symbols-outlined text-[20px]">navigation</span>
+          <span>Route</span>
+        </a>
+        <a class="flex items-center gap-space-sm px-3 py-2 rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/driver-history.html">
+          <span class="material-symbols-outlined text-[20px]">calendar_month</span>
+          <span>Pickup History</span>
+        </a>
+        <a class="flex items-center gap-space-sm px-3 py-2 rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/driver-impact.html">
+          <span class="material-symbols-outlined text-[20px]">trending_up</span>
+          <span>Impact</span>
+        </a>
+        <a class="flex items-center gap-space-sm px-3 py-2 rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/driver-notifications.html">
+          <div class="flex items-center gap-space-sm flex-1">
+            <span class="material-symbols-outlined text-[20px]">notifications</span>
+            <span>Notifications</span>
+          </div>
+          <span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+        </a>
+        <a class="flex items-center gap-space-sm px-3 py-2 rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/driver-settings.html">
+          <span class="material-symbols-outlined text-[20px]">tune</span>
+          <span>Settings</span>
+        </a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="p-space-sm border-t border-outline-variant/30">
+    <a class="flex items-center gap-space-xs px-3 py-1.5 rounded text-outline font-label-md text-label-md hover:text-on-surface transition-colors" href="/index.html">
+      <span class="material-symbols-outlined text-[16px]">logout</span>
+      <span>Sign Out</span>
+    </a>
+  </div>
+</aside><div class="pl-60"><header class="fixed top-0 left-60 right-0 h-16 bg-surface-container-lowest border-b border-outline-variant/40 z-40 flex items-center justify-between px-space-md shadow-[0_1px_8px_rgba(0,0,0,0.02)]"><div class="relative w-full max-w-md"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px] pointer-events-none">search</span><input class="w-full h-10 pl-9 pr-4 rounded-lg bg-surface border border-outline-variant/60 font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search pickups, donors, shelters..." type="text"/></div><div class="flex items-center gap-space-md"><button aria-label="Notifications" class="relative p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error ring-2 ring-surface-container-lowest"></span></button><div class="h-6 w-px bg-outline-variant/40"></div><div class="flex items-center gap-space-sm cursor-pointer group"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="flex items-center gap-1"><span class="font-label-lg text-label-lg text-on-surface group-hover:text-primary transition-colors">Rahul Sharma</span><span class="material-symbols-outlined text-outline text-[18px] group-hover:text-on-surface transition-colors">expand_more</span></div></div><button aria-label="Sign out" class="p-2 rounded-lg text-outline hover:text-error hover:bg-error-container/20 transition-colors ml-space-xs" type="button"><span class="material-symbols-outlined text-[20px]">logout</span></button></div></header><main class="relative pt-16 bg-surface min-h-screen w-full px-space-md lg:px-margin py-space-md lg:py-margin"><div class="flex flex-col w-full pb-16"><div class="flex flex-col w-full">
+<!-- Top Mission Bar / Header -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-sm mb-space-lg">
+<div>
+<div class="flex items-center gap-space-sm mb-1">
+<h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">Active Pickup</h1>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm uppercase tracking-wider" id="mission-status-badge">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+          Mission #SR-8924 • En Route
+        </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Real-time task guidance and status tracking for your current rescue mission.</p>
+</div>
+<div class="flex items-center gap-space-sm self-start md:self-auto">
+<button class="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container-low font-label-lg text-label-lg shadow-sm transition-all duration-200" onclick="reportIssuePrompt()" type="button">
+<span class="material-symbols-outlined text-[18px] text-outline">flag</span>
+<span>Report Issue</span>
+</button>
+<a class="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container-low font-label-lg text-label-lg shadow-sm transition-all duration-200" href="tel:+15550198822">
+<span class="material-symbols-outlined text-[18px] text-primary">support_agent</span>
+<span>Dispatch</span>
+</a>
+</div>
+</div>
+<!-- Horizontal Workflow Progress Stepper Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm mb-space-lg">
+<div class="flex items-center justify-between mb-space-md">
+<span class="font-label-md text-label-md uppercase tracking-wider text-outline">Workflow Progression</span>
+<span class="font-label-sm text-label-sm text-primary font-bold px-2 py-0.5 rounded-full bg-on-tertiary-container" id="step-eta-display">
+        ETA Green Leaf: 8 mins (5:18 PM)
+      </span>
+</div>
+<!-- Stepper Pipeline -->
+<div class="relative w-full">
+<div class="relative flex items-center justify-between w-full">
+<!-- Connecting Track Line -->
+<div class="absolute left-6 right-6 top-1/2 -translate-y-1/2 h-1 bg-surface-container-highest rounded-full z-0">
+<div class="h-full bg-primary-container rounded-full transition-all duration-500 ease-out" id="stepper-progress-fill" style="width: 50%;"></div>
+</div>
+<!-- Step 1: Assigned -->
+<div class="relative z-10 flex flex-col items-center group cursor-pointer" onclick="jumpToStep(1)">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center shadow-sm transition-all duration-300" id="step-circle-1">
+<span class="material-symbols-outlined text-[20px]">check</span>
+</div>
+<span class="mt-2 font-label-md text-label-md text-on-surface font-semibold">Assigned</span>
+<span class="font-body-sm text-body-sm text-outline">4:45 PM</span>
+</div>
+<!-- Step 2: Accepted -->
+<div class="relative z-10 flex flex-col items-center group cursor-pointer" onclick="jumpToStep(2)">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center shadow-sm transition-all duration-300" id="step-circle-2">
+<span class="material-symbols-outlined text-[20px]">check</span>
+</div>
+<span class="mt-2 font-label-md text-label-md text-on-surface font-semibold">Accepted</span>
+<span class="font-body-sm text-body-sm text-outline">4:50 PM</span>
+</div>
+<!-- Step 3: En Route to Donor -->
+<div class="relative z-10 flex flex-col items-center group cursor-pointer" onclick="jumpToStep(3)">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-md scale-110 transition-all duration-300 ring-4 ring-on-tertiary-container" id="step-circle-3">
+<span class="material-symbols-outlined text-[20px] animate-pulse">local_shipping</span>
+</div>
+<span class="mt-2 font-label-md text-label-md text-primary font-bold">En Route</span>
+<span class="font-body-sm text-body-sm text-primary">In transit</span>
+</div>
+<!-- Step 4: Picked Up -->
+<div class="relative z-10 flex flex-col items-center group cursor-pointer" onclick="jumpToStep(4)">
+<div class="w-10 h-10 rounded-full bg-surface-container-high text-outline flex items-center justify-center transition-all duration-300" id="step-circle-4">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+</div>
+<span class="mt-2 font-label-md text-label-md text-on-surface-variant font-medium">Picked Up</span>
+<span class="font-body-sm text-body-sm text-outline">Pending</span>
+</div>
+<!-- Step 5: Delivered -->
+<div class="relative z-10 flex flex-col items-center group cursor-pointer" onclick="jumpToStep(5)">
+<div class="w-10 h-10 rounded-full bg-surface-container-high text-outline flex items-center justify-center transition-all duration-300" id="step-circle-5">
+<span class="material-symbols-outlined text-[20px]">shelves</span>
+</div>
+<span class="mt-2 font-label-md text-label-md text-on-surface-variant font-medium">Delivered</span>
+<span class="font-body-sm text-body-sm text-outline">Pending</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Main 2-Column Responsive Workspace Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- LEFT COLUMN (Span 7): Mission Specifications & Logistics Info -->
+<div class="lg:col-span-7 flex flex-col gap-space-md">
+<!-- DONOR CARD -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm transition-all hover:shadow-md">
+<div class="flex items-start justify-between gap-space-sm mb-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[22px]">storefront</span>
+</div>
+<div>
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Pickup Point (Donor)</span>
+<h2 class="font-headline-md text-headline-md text-on-surface font-bold leading-tight">Green Leaf Restaurant</h2>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+            Deadline: 5:30 PM
+          </span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md bg-surface-container-low rounded-xl p-space-md mt-space-sm">
+<div>
+<div class="font-label-sm text-label-sm text-outline uppercase">Address</div>
+<div class="font-body-md text-body-md text-on-surface font-medium mt-0.5">142 Market St, Suite 4B</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Downtown Commercial District</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-outline uppercase">Site Contact</div>
+<div class="font-body-md text-body-md text-on-surface font-medium mt-0.5">David Chen (Manager)</div>
+<a class="font-body-sm text-body-sm text-primary-container font-semibold hover:underline flex items-center gap-1 mt-0.5" href="tel:+15552348901">
+<span class="material-symbols-outlined text-[14px]">phone</span>
+              +1 (555) 234-8901
+            </a>
+</div>
+</div>
+<div class="mt-space-md p-space-sm bg-on-tertiary-container/30 rounded-lg flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-primary-container text-[20px] mt-0.5 shrink-0">info</span>
+<p class="font-body-sm text-body-sm text-on-surface leading-snug">
+<strong class="text-primary-container font-semibold">Special Instructions:</strong> Use the back loading dock accessible via Elm Alley. Ring buzzer #2 and mention driver pickup ID SR-8924.
+          </p>
+</div>
+</div>
+<!-- FOOD DETAILS CARD -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm">
+<div class="flex items-center justify-between mb-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-xl bg-on-tertiary-container/60 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[22px]">soup_kitchen</span>
+</div>
+<div>
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Manifest Specifications</span>
+<h3 class="font-headline-md text-headline-md text-on-surface font-bold">Cooked Prepared Meals</h3>
+</div>
+</div>
+<div class="text-right">
+<span class="font-headline-lg text-headline-lg text-on-surface font-bold">25 kg</span>
+<div class="font-body-sm text-body-sm text-primary font-medium">~50 hot servings</div>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-space-sm">
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col justify-between">
+<div class="flex items-center gap-1.5 text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-error">thermostat</span>
+<span>Temp Control</span>
+</div>
+<div class="font-body-md text-body-md text-on-surface font-bold mt-2">Hot Insulated Boxes</div>
+<span class="font-label-sm text-label-sm text-outline">Keep &gt; 60°C</span>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col justify-between">
+<div class="flex items-center gap-1.5 text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-primary">inventory</span>
+<span>Packaging</span>
+</div>
+<div class="font-body-md text-body-md text-on-surface font-bold mt-2">10 Sealed Foil Tins</div>
+<span class="font-label-sm text-label-sm text-outline">Labelled &amp; Stacked</span>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col justify-between">
+<div class="flex items-center gap-1.5 text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-tertiary">eco</span>
+<span>Impact Factor</span>
+</div>
+<div class="font-body-md text-body-md text-on-surface font-bold mt-2">19 kg CO2e Saved</div>
+<span class="font-label-sm text-label-sm text-primary">Zero Landfill</span>
+</div>
+</div>
+<!-- Shelf Life Bar -->
+<div class="mt-space-md pt-space-md border-t border-surface-container">
+<div class="flex justify-between items-center mb-1.5">
+<span class="font-body-sm text-body-sm text-outline">Safe Transit Window Remaining</span>
+<span class="font-label-sm text-label-sm text-primary-container font-bold">42 mins (Safe)</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full" style="width: 78%;"></div>
+</div>
+</div>
+</div>
+<!-- DESTINATION CARD -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm">
+<div class="flex items-start justify-between gap-space-sm mb-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[22px]">roofing</span>
+</div>
+<div>
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Destination Shelter</span>
+<h3 class="font-headline-md text-headline-md text-on-surface font-bold leading-tight">Hope Shelter (Main Intake)</h3>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-on-tertiary-container text-primary-container font-label-sm text-label-sm">
+            Ready for Intake
+          </span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md bg-surface-container-low rounded-xl p-space-md mt-space-sm">
+<div>
+<div class="font-label-sm text-label-sm text-outline uppercase">Delivery Location</div>
+<div class="font-body-md text-body-md text-on-surface font-medium mt-0.5">740 4th Ave, South District</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Gate B Community Kitchen Entrance</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-outline uppercase">Shelter Intake Officer</div>
+<div class="font-body-md text-body-md text-on-surface font-medium mt-0.5">Sarah Jenkins (Coordinator)</div>
+<a class="font-body-sm text-body-sm text-primary-container font-semibold hover:underline flex items-center gap-1 mt-0.5" href="tel:+15557890123">
+<span class="material-symbols-outlined text-[14px]">phone</span>
+              +1 (555) 789-0123
+            </a>
+</div>
+</div>
+<!-- Capacity Meter of Shelter (From attached image inspiration) -->
+<div class="mt-space-md">
+<div class="flex justify-between items-center mb-1">
+<span class="font-label-md text-label-md text-on-surface font-medium">Shelter Storage Capacity</span>
+<span class="font-label-lg text-label-lg text-on-surface font-bold">72 / 100 kg</span>
+</div>
+<div class="h-2.5 w-full bg-surface-container rounded-full overflow-hidden flex">
+<!-- Existing filled -->
+<div class="h-full bg-primary-container" style="width: 72%;"></div>
+<!-- Incoming 25 kg chunk animated -->
+<div class="h-full bg-secondary-container animate-pulse" style="width: 25%;" title="Incoming Rescue (25 kg)"></div>
+</div>
+<div class="flex justify-between items-center mt-1.5 font-label-sm text-label-sm text-outline">
+<span>Room for this rescue: <strong>Yes (28 kg available)</strong></span>
+<span class="text-primary font-semibold">+25 kg will fill to 97%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN (Span 5): Live Route, Interactive CTA Panel, & Impact Preview -->
+<div class="lg:col-span-5 flex flex-col gap-space-md">
+<!-- Interactive Dynamic Action Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm border-2 border-primary-container/20">
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-sm text-label-sm text-primary-container uppercase tracking-wider font-bold flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+            Immediate Driver Action
+          </span>
+<span class="font-label-sm text-label-sm text-outline font-semibold" id="active-step-counter">Step 3 of 5</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-on-surface font-bold leading-tight mb-space-xs" id="current-action-title">
+          Heading to Green Leaf Restaurant
+        </h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-space-lg" id="current-action-desc">
+          Please park at the back alley loading dock. Once food bins are inspected and placed inside thermal bags, confirm pickup below.
+        </p>
+<!-- Primary Action Trigger Button -->
+<button class="w-full h-14 rounded-xl bg-primary-container text-on-primary hover:bg-primary font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.99]" id="main-action-btn" onclick="handlePrimaryAction()" type="button">
+<span class="material-symbols-outlined text-[22px]">inventory_2</span>
+<span class="text-base font-bold" id="main-action-text">Confirm Pickup (25 kg Loaded)</span>
+</button>
+<!-- Secondary Action Buttons -->
+<div class="grid grid-cols-2 gap-space-sm mt-space-sm">
+<button class="h-11 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container font-label-md text-label-md flex items-center justify-center gap-1.5 transition-colors" onclick="simulateGpsNav()" type="button">
+<span class="material-symbols-outlined text-primary text-[18px]">near_me</span>
+<span>Turn-by-Turn GPS</span>
+</button>
+<button class="h-11 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container font-label-md text-label-md flex items-center justify-center gap-1.5 transition-colors" onclick="contactParty()" type="button">
+<span class="material-symbols-outlined text-secondary text-[18px]">call</span>
+<span>Call Donor</span>
+</button>
+</div>
+<!-- Quick Checkbox Checklist -->
+<div class="mt-space-md pt-space-md border-t border-surface-container flex flex-col gap-2">
+<label class="flex items-center gap-2 cursor-pointer text-on-surface select-none">
+<input checked="" class="w-4 h-4 rounded text-primary-container focus:ring-primary accent-primary" type="checkbox"/>
+<span class="font-body-sm text-body-sm">Insulated thermal storage bags prepared</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer text-on-surface select-none">
+<input class="w-4 h-4 rounded text-primary-container focus:ring-primary accent-primary" id="seal-check" type="checkbox"/>
+<span class="font-body-sm text-body-sm">Container hygiene &amp; lid seal confirmed</span>
+</label>
+</div>
+</div>
+<!-- Live Route Map Preview Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm overflow-hidden flex flex-col">
+<div class="flex items-center justify-between px-space-xs pb-space-sm">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[20px]">map</span>
+<span class="font-label-lg text-label-lg text-on-surface font-bold">Rescue Route</span>
+</div>
+<span class="font-body-sm text-body-sm text-outline">Total: 4.2 km • 14 min</span>
+</div>
+<!-- Dynamic Map Visual with data-location -->
+<div class="relative w-full h-48 rounded-lg overflow-hidden bg-surface-container">
+<div class="w-full h-full bg-cover bg-center" data-alt="Clear high-contrast GPS navigation map overview showing a delivery route highlighted with a vibrant green line across an urban grid, marked with donor and shelter location pins under clean natural daylight." data-location="142 Market St to 740 4th Ave, Downtown" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAcA7qftDpol0XS4Bygp0IF5Z4mUrDhKujsnXiz8K18ZP8MJbwQj8-SH6lMmtNmrP6YJH9godemgNiA0bR_DEm3CHDK-UhO4BmRUWsCNh4hvfsV2QP8rAclgA4fUfN3M4k8GfbEJjph84qSueU8Zz9Xkmpj0F97UBk5xte_FvsGBR5dPf6rDhJsHNBVjoX0s0cFILvjOaI_JBfhcnIuLEZ8gaRUAqKM2_f-cVBPvDUm')"></div>
+<!-- Route Floating Micro-Stats Badge -->
+<div class="absolute top-2.5 left-2.5 bg-surface-container-lowest/90 backdrop-blur-md px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-3">
+<div class="flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">2.4 km to Donor</span>
+</div>
+<span class="text-outline text-xs">•</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">8 min drive</span>
+</div>
+<div class="absolute bottom-2.5 right-2.5 bg-primary-container text-on-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm font-bold flex items-center gap-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[16px]">navigation</span>
+            Live Telemetry On
+          </div>
+</div>
+<!-- Route Legs Breakdown -->
+<div class="flex items-center justify-between pt-space-sm px-space-xs text-center font-body-sm text-body-sm mt-1">
+<div class="flex-1 flex items-center justify-start gap-2">
+<div class="w-6 h-6 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-label-sm text-label-sm">A</div>
+<div class="text-left">
+<div class="font-label-sm text-label-sm text-on-surface font-semibold">Green Leaf</div>
+<div class="text-xs text-outline">2.4 km away</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-[18px]">arrow_forward</span>
+<div class="flex-1 flex items-center justify-end gap-2">
+<div class="text-right">
+<div class="font-label-sm text-label-sm text-on-surface font-semibold">Hope Shelter</div>
+<div class="text-xs text-outline">1.8 km leg</div>
+</div>
+<div class="w-6 h-6 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center font-label-sm text-label-sm font-bold">B</div>
+</div>
+</div>
+</div>
+<!-- Impact & Delivery Completion Preview -->
+<div class="bg-gradient-to-br from-surface-container-lowest to-on-tertiary-container/20 rounded-xl p-space-lg shadow-sm border border-secondary-container" id="mission-completion-card">
+<div class="flex items-center gap-space-sm mb-space-sm">
+<div class="w-9 h-9 rounded-full bg-primary-container text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">volunteer_activism</span>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-primary uppercase font-bold">Mission Value</div>
+<h4 class="font-headline-md text-headline-md text-on-surface font-bold leading-none">Anticipated Impact</h4>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+          Completing this run will instantly feed approximately 50 sheltered residents and prevent food waste from entering municipal landfills.
+        </p>
+<div class="grid grid-cols-3 gap-2 text-center">
+<div class="bg-surface-container-lowest p-2 rounded-lg shadow-xs">
+<span class="font-headline-md text-headline-md text-primary font-bold">25</span>
+<span class="font-label-sm text-label-sm text-outline block">kg Saved</span>
+</div>
+<div class="bg-surface-container-lowest p-2 rounded-lg shadow-xs">
+<span class="font-headline-md text-headline-md text-primary font-bold">50</span>
+<span class="font-label-sm text-label-sm text-outline block">Meals Served</span>
+</div>
+<div class="bg-surface-container-lowest p-2 rounded-lg shadow-xs">
+<span class="font-headline-md text-headline-md text-primary font-bold">19</span>
+<span class="font-label-sm text-label-sm text-outline block">kg CO2e cut</span>
+</div>
+</div>
+</div>
+<!-- Quick Donor/Shelter Notes Accordion -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm">
+<div class="flex items-center justify-between text-on-surface cursor-pointer" onclick="toggleSafetyGuidelines()">
+<span class="font-label-lg text-label-lg font-semibold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[20px] text-tertiary">health_and_safety</span>
+            Food Safety &amp; Handling Protocol
+          </span>
+<span class="material-symbols-outlined text-outline transition-transform duration-200" id="guidelines-icon">expand_more</span>
+</div>
+<div class="hidden mt-space-sm pt-space-sm border-t border-surface-container text-body-sm text-on-surface-variant flex flex-col gap-1.5" id="guidelines-content">
+<p>• Hot food must stay above 60°C (140°F) at all times until handover.</p>
+<p>• Wear sanitizing gloves before handling container handles.</p>
+<p>• Inspect all foil container seals for punctures or leakage before sign-off.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Notification Toast Container -->
+<div class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none" id="toast-banner">
+<div class="bg-on-surface text-inverse-on-surface px-space-md py-3 rounded-xl shadow-xl flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-fixed text-[22px]" id="toast-icon">check_circle</span>
+<span class="font-body-md text-body-md" id="toast-message">Pickup status updated!</span>
+</div>
+</div>
+</div>
+<script>
+  let currentMissionStep = 3; // 1: Assigned, 2: Accepted, 3: En Route to Donor, 4: Picked Up / En Route to Shelter, 5: Delivered
+
+  function updateStepperUI() {
+    const progressFill = document.getElementById('stepper-progress-fill');
+    const badge = document.getElementById('mission-status-badge');
+    const etaDisplay = document.getElementById('step-eta-display');
+    const actionTitle = document.getElementById('current-action-title');
+    const actionDesc = document.getElementById('current-action-desc');
+    const mainBtn = document.getElementById('main-action-btn');
+    const mainBtnText = document.getElementById('main-action-text');
+    const stepCounter = document.getElementById('active-step-counter');
+
+    // Reset base circles
+    for (let i = 1; i <= 5; i++) {
+      const circle = document.getElementById(`step-circle-${i}`);
+      circle.className = 'w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ';
+      
+      if (i < currentMissionStep) {
+        // Completed
+        circle.className += 'bg-primary-container text-on-primary shadow-sm';
+        circle.innerHTML = '<span class="material-symbols-outlined text-[20px]">check</span>';
+      } else if (i === currentMissionStep) {
+        // Active
+        circle.className += 'bg-primary text-on-primary shadow-md scale-110 ring-4 ring-on-tertiary-container';
+        if (i === 3) circle.innerHTML = '<span class="material-symbols-outlined text-[20px] animate-pulse">local_shipping</span>';
+        if (i === 4) circle.innerHTML = '<span class="material-symbols-outlined text-[20px] animate-pulse">inventory_2</span>';
+        if (i === 5) circle.innerHTML = '<span class="material-symbols-outlined text-[20px]">verified</span>';
+      } else {
+        // Future
+        circle.className += 'bg-surface-container-high text-outline';
+        if (i === 4) circle.innerHTML = '<span class="material-symbols-outlined text-[20px]">inventory_2</span>';
+        if (i === 5) circle.innerHTML = '<span class="material-symbols-outlined text-[20px]">shelves</span>';
+      }
+    }
+
+    // Step configuration logic
+    if (currentMissionStep === 3) {
+      progressFill.style.width = '50%';
+      badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span> Mission #SR-8924 &bull; En Route to Donor';
+      badge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm uppercase tracking-wider';
+      etaDisplay.innerText = 'ETA Green Leaf: 8 mins (5:18 PM)';
+      stepCounter.innerText = 'Step 3 of 5';
+      actionTitle.innerText = 'Heading to Green Leaf Restaurant';
+      actionDesc.innerText = 'Please park at the back alley loading dock. Once food bins are inspected and placed inside thermal bags, confirm pickup below.';
+      mainBtnText.innerText = 'Confirm Pickup (25 kg Loaded)';
+      mainBtn.className = 'w-full h-14 rounded-xl bg-primary-container text-on-primary hover:bg-primary font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.99]';
+    } else if (currentMissionStep === 4) {
+      progressFill.style.width = '75%';
+      badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span> Mission #SR-8924 &bull; Food In Transit';
+      badge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm uppercase tracking-wider font-bold';
+      etaDisplay.innerText = 'ETA Hope Shelter: 6 mins (5:34 PM)';
+      stepCounter.innerText = 'Step 4 of 5';
+      actionTitle.innerText = 'En Route to Hope Shelter';
+      actionDesc.innerText = '25 kg hot meals safely onboard. Deliver to Gate B Kitchen entrance. Shelter coordinator Sarah Jenkins is waiting for verification.';
+      mainBtnText.innerText = 'Confirm Delivery at Shelter';
+      mainBtn.className = 'w-full h-14 rounded-xl bg-primary text-on-primary hover:bg-primary-container font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.99]';
+    } else if (currentMissionStep === 5) {
+      progressFill.style.width = '100%';
+      badge.innerHTML = '<span class="material-symbols-outlined text-[14px]">task_alt</span> Mission #SR-8924 &bull; Completed';
+      badge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-on-tertiary-container text-primary-container font-label-sm text-label-sm uppercase tracking-wider font-bold';
+      etaDisplay.innerText = 'Delivered at 5:35 PM';
+      stepCounter.innerText = 'Mission Complete';
+      actionTitle.innerText = 'Delivery Successfully Completed!';
+      actionDesc.innerText = 'Awesome job! 25 kg of fresh surplus food rescued and delivered to Hope Shelter. 50 people provided with warm meals today.';
+      mainBtnText.innerText = 'View Impact & Return to Dashboard';
+      mainBtn.className = 'w-full h-14 rounded-xl bg-on-surface text-inverse-on-surface hover:bg-on-surface-variant font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-md transition-all';
+    }
+  }
+
+  function handlePrimaryAction() {
+    if (currentMissionStep === 3) {
+      currentMissionStep = 4;
+      showToast('Pickup Confirmed! 25 kg loaded in vehicle.');
+    } else if (currentMissionStep === 4) {
+      currentMissionStep = 5;
+      showToast('Rescue Delivered! Mission Complete. Great work!');
+    } else if (currentMissionStep === 5) {
+      showToast('Redirecting to Driver Dashboard...');
+      setTimeout(() => {
+        window.location.hash = '#dashboard';
+      }, 1000);
+    }
+    updateStepperUI();
+  }
+
+  function jumpToStep(stepNumber) {
+    currentMissionStep = stepNumber;
+    updateStepperUI();
+    showToast(`Navigated to Workflow Step ${stepNumber}`);
+  }
+
+  function showToast(message) {
+    const toast = document.getElementById('toast-banner');
+    const toastMsg = document.getElementById('toast-message');
+    toastMsg.innerText = message;
+    toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+    toast.classList.add('translate-y-0', 'opacity-100');
+    setTimeout(() => {
+      toast.classList.remove('translate-y-0', 'opacity-100');
+      toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+    }, 3200);
+  }
+
+  function toggleSafetyGuidelines() {
+    const content = document.getElementById('guidelines-content');
+    const icon = document.getElementById('guidelines-icon');
+    if (content.classList.contains('hidden')) {
+      content.classList.remove('hidden');
+      icon.style.transform = 'rotate(180deg)';
+    } else {
+      content.classList.add('hidden');
+      icon.style.transform = 'rotate(0deg)';
+    }
+  }
+
+  function reportIssuePrompt() {
+    showToast('Dispatch notified: Driver report opened.');
+  }
+
+  function contactParty() {
+    const phone = currentMissionStep <= 3 ? '+1 (555) 234-8901 (Donor)' : '+1 (555) 789-0123 (Shelter)';
+    showToast(`Calling ${phone}...`);
+  }
+
+  function simulateGpsNav() {
+    showToast('Opening external Navigation / Google Maps...');
+  }
+</script></div></main></div>
+<!-- Floating Universal Portal Switcher Widget -->
+<div id="global-portal-switcher" class="fixed bottom-4 right-4 z-[9999] font-sans">
+  <div class="relative inline-block text-left">
+    <button onclick="const m=document.getElementById('portalSwitchMenu'); m.classList.toggle('hidden');" 
+      type="button"
+      class="flex items-center gap-2 px-3.5 py-2 rounded-full bg-slate-900 text-white text-xs font-semibold shadow-2xl border border-slate-700 hover:bg-slate-800 transition-all cursor-pointer">
+      <span class="w-2 h-2 rounded-full bg-[#16803C] animate-pulse"></span>
+      <span>Switch Portal / Role</span>
+      <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+    </button>
+
+    <div id="portalSwitchMenu" class="hidden absolute right-0 bottom-12 w-64 rounded-xl bg-slate-900 text-white border border-slate-700 shadow-2xl z-[10000] p-2 flex flex-col gap-1 text-xs">
+      <div class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 mb-1">
+        Surplus-To-Shelter Portals
+      </div>
+      <a href="/index.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-slate-400"></span> 🔐 <b>Auth / Login Page</b>
+      </a>
+      <a href="/restaurant-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 🏪 <b>Restaurant Portal</b>
+      </a>
+      <a href="/ngo-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-blue-500"></span> 🤝 <b>NGO / Shelter Portal</b>
+      </a>
+      <a href="/admin-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-purple-500"></span> 🛡️ <b>Admin Command Center</b>
+      </a>
+      <a href="/driver-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-amber-500"></span> 🚚 <b>Driver Courier Portal</b>
+      </a>
+    </div>
+  </div>
+</div>
+
+</body></html>

@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "secondary": "#486554",
+          "on-surface": "#141b2b",
+          "background": "#f9f9ff",
+          "on-secondary-fixed-variant": "#314d3e",
+          "surface-bright": "#f9f9ff",
+          "tertiary-fixed-dim": "#ffb2be",
+          "on-primary-fixed": "#002109",
+          "on-tertiary": "#ffffff",
+          "primary-fixed": "#95f8a5",
+          "error-container": "#ffdad6",
+          "on-secondary-container": "#4e6b5a",
+          "inverse-on-surface": "#edf0ff",
+          "error": "#ba1a1a",
+          "surface-container": "#e9edff",
+          "on-primary-container": "#d3ffd4",
+          "on-secondary-fixed": "#042014",
+          "on-primary-fixed-variant": "#005322",
+          "on-tertiary-fixed-variant": "#82233d",
+          "secondary-fixed-dim": "#afceba",
+          "on-error-container": "#93000a",
+          "on-error": "#ffffff",
+          "on-background": "#141b2b",
+          "surface-container-high": "#e1e8fd",
+          "secondary-fixed": "#caead6",
+          "tertiary": "#97334c",
+          "inverse-primary": "#7adb8c",
+          "inverse-surface": "#293040",
+          "secondary-container": "#caead6",
+          "surface-container-low": "#f1f3ff",
+          "surface-container-highest": "#dce2f7",
+          "on-primary": "#ffffff",
+          "surface": "#f9f9ff",
+          "outline-variant": "#becabb",
+          "primary-fixed-dim": "#7adb8c",
+          "tertiary-container": "#b64b64",
+          "primary-container": "#16803c",
+          "outline": "#6f7a6e",
+          "surface-container-lowest": "#ffffff",
+          "on-secondary": "#ffffff",
+          "surface-dim": "#d3daef",
+          "on-tertiary-container": "#fff0f1",
+          "surface-tint": "#006d2f",
+          "on-surface-variant": "#3f493f",
+          "on-tertiary-fixed": "#3f0015",
+          "surface-variant": "#dce2f7",
+          "tertiary-fixed": "#ffd9de",
+          "primary": "#00652b"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.125rem",
+          "lg": "0.25rem",
+          "xl": "0.5rem",
+          "full": "0.75rem"
+        },
+        "spacing": {
+          "margin": "2rem",
+          "gutter-sm": "1rem",
+          "space-xs": "0.25rem",
+          "space-xl": "2rem",
+          "space-md": "1rem",
+          "margin-mobile": "1rem",
+          "space-sm": "0.5rem",
+          "space-lg": "1.5rem",
+          "gutter": "1.5rem"
+        },
+        "fontFamily": {
+          "display-lg": [
+            "Inter"
+          ],
+          "label-md": [
+            "Inter"
+          ],
+          "label-sm": [
+            "Inter"
+          ],
+          "tabular-numeric": [
+            "Inter"
+          ],
+          "body-md": [
+            "Inter"
+          ],
+          "headline-lg": [
+            "Inter"
+          ],
+          "body-sm": [
+            "Inter"
+          ],
+          "headline-sm": [
+            "Inter"
+          ],
+          "body-lg": [
+            "Inter"
+          ],
+          "headline-md": [
+            "Inter"
+          ]
+        },
+        "fontSize": {
+          "display-lg": [
+            "32px",
+            {
+              "lineHeight": "40px",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "label-md": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "letterSpacing": "0em",
+              "fontWeight": "500"
+            }
+          ],
+          "label-sm": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "letterSpacing": "0.01em",
+              "fontWeight": "500"
+            }
+          ],
+          "tabular-numeric": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "letterSpacing": "0em",
+              "fontWeight": "500"
+            }
+          ],
+          "body-md": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "letterSpacing": "0em",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-lg": [
+            "24px",
+            {
+              "lineHeight": "32px",
+              "letterSpacing": "-0.015em",
+              "fontWeight": "600"
+            }
+          ],
+          "body-sm": [
+            "13px",
+            {
+              "lineHeight": "18px",
+              "letterSpacing": "0.005em",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-sm": [
+            "16px",
+            {
+              "lineHeight": "24px",
+              "letterSpacing": "-0.005em",
+              "fontWeight": "600"
+            }
+          ],
+          "body-lg": [
+            "16px",
+            {
+              "lineHeight": "24px",
+              "letterSpacing": "0em",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-md": [
+            "20px",
+            {
+              "lineHeight": "28px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-surface-container-lowest font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest border-r border-outline-variant/30 z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="px-space-lg pt-space-lg pb-space-md border-b border-outline-variant/20"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-primary-container text-[24px]">eco</span><span class="font-headline-sm text-headline-sm tracking-tight uppercase text-on-surface">Surplus-To-Shelter</span></div><div class="mt-space-xs pl-7"><span class="inline-flex items-center px-2 py-0.5 rounded-lg text-label-sm font-label-sm bg-secondary-container text-on-secondary-container tracking-wider uppercase">Restaurant Portal</span></div></div><div class="px-space-sm pt-space-md"><div class="px-space-sm pb-space-xs text-label-sm font-label-sm text-outline uppercase tracking-wider">Operations</div><nav class="space-y-0.5" data-active-classes="bg-secondary-container/60 text-on-surface font-label-md border-l-4 border-primary-container"><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-body-md font-body-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/restaurant-dashboard.html" href="#"><span class="material-symbols-outlined text-[20px] text-outline">dashboard</span><span>Dashboard</span></a><a aria-current="page" class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg transition-colors bg-secondary-container/60 text-on-surface font-label-md border-l-4 border-primary-container" data-path="donations" href="#"><span class="material-symbols-outlined text-[20px] text-outline">inventory_2</span><span>Donations</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-body-md font-body-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="post-donation" href="#"><span class="material-symbols-outlined text-[20px] text-primary-container">add_circle</span><span class="font-label-md text-label-md text-primary-container">Post Donation</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-body-md font-body-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="pickups" href="#"><span class="material-symbols-outlined text-[20px] text-outline">local_shipping</span><span>Pickups</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-body-md font-body-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="impact" href="#"><span class="material-symbols-outlined text-[20px] text-outline">query_stats</span><span>Impact</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-body-md font-body-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="notifications" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px] text-outline">notifications</span><span>Notifications</span></div><span class="inline-flex items-center justify-center px-1.5 py-0.5 text-label-sm font-label-sm rounded-full bg-error text-on-error">3</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-body-md font-body-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="settings" href="#"><span class="material-symbols-outlined text-[20px] text-outline">settings</span><span>Settings</span></a></nav></div></div><div class="px-space-sm pb-space-lg border-t border-outline-variant/20 pt-space-sm"><nav class="space-y-0.5" data-active-classes="bg-secondary-container/60 text-on-surface font-label-md border-l-4 border-primary-container"><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-body-md font-body-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="history" href="#"><span class="material-symbols-outlined text-[20px] text-outline">history</span><span>History &amp; Archives</span></a></nav></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest border-b border-outline-variant/30 z-40 flex items-center justify-between px-space-lg"><div class="flex items-center w-96"><div class="relative w-full"><span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-[18px]">search</span><input class="w-full h-10 pl-9 pr-3 rounded-lg border border-outline-variant/50 bg-surface-container-lowest text-body-sm font-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container" placeholder="Search donations, NGOs, drivers..." type="search"/></div></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-outline-variant/40 bg-surface-container-low"><span class="inline-block w-2 h-2 rounded-full bg-primary-container"></span><span class="text-label-sm font-label-sm text-on-surface-variant">Kitchen Active</span></div><button class="relative p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span></button><div class="h-6 w-px bg-outline-variant/40"></div><div class="flex items-center gap-space-sm"><div class="text-right"><div class="text-label-md font-label-md text-on-surface leading-tight">ABC Restaurant</div><div class="text-label-sm font-label-sm text-primary-container leading-tight">Verified Partner</div></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><button class="p-1.5 rounded-lg text-outline hover:text-error hover:bg-error-container/20 transition-colors" title="Sign out" type="button"><span class="material-symbols-outlined text-[20px]">logout</span></button></div></div></header><main class="w-full pt-16 bg-surface-container-lowest min-h-screen p-8"><div class="flex flex-col w-full">
+<!-- Sticky Status Context Banner -->
+<div class="w-full bg-surface-container-low rounded-xl p-space-md mb-space-lg flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-lg bg-primary-container text-on-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">restaurant</span>
+</div>
+<div>
+<div class="text-label-sm font-label-sm uppercase tracking-wider text-outline">Donation Pipeline Live</div>
+<div class="text-headline-sm font-headline-sm text-on-surface flex items-center gap-2">
+<span>20 kg Pasta</span>
+<span class="text-outline-variant font-normal">•</span>
+<span class="inline-flex items-center gap-1 text-primary text-label-md font-label-md">
+<span class="material-symbols-outlined text-[16px]">timer</span>
+            Safe until 6:30 PM (3h 42m remaining)
+          </span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-label-sm font-label-sm bg-secondary-container text-on-secondary-container">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+        Automated Dispatch Pool Active
+      </span>
+<button class="h-9 px-3 rounded-lg text-label-sm font-label-sm bg-surface-container-lowest text-on-surface hover:bg-surface-container transition-colors" type="button">
+        Batch Settings
+      </button>
+</div>
+</div>
+<!-- Header & Algorithmic Criteria Section -->
+<div class="flex flex-col gap-space-sm mb-space-xl">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="text-headline-lg font-headline-lg text-on-surface">Finding the best recipient</h1>
+<p class="text-body-md font-body-md text-on-surface-variant mt-1">
+          We're checking nearby organizations based on distance, capacity and food requirements.
+        </p>
+</div>
+<div class="text-label-sm font-label-sm text-outline flex items-center gap-1.5 self-start md:self-auto">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+        Real-time telemetry updated 8s ago
+      </div>
+</div>
+<!-- Clean Informational Bar / Algorithm Verification -->
+<div class="w-full bg-surface-container-lowest rounded-xl p-space-md shadow-sm mt-space-sm">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex items-center gap-2 text-label-md font-label-md text-on-surface-variant">
+<span class="material-symbols-outlined text-primary-container text-[20px]">tune</span>
+<span>Matches are based on distance, available capacity, food preferences and urgency.</span>
+</div>
+<div class="flex flex-wrap items-center gap-space-md text-label-sm font-label-sm">
+<div class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Distance checked (12 NGOs within 5 km)</span>
+</div>
+<div class="h-4 w-px bg-outline-variant/40 hidden sm:block"></div>
+<div class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Capacity matched</span>
+</div>
+<div class="h-4 w-px bg-outline-variant/40 hidden sm:block"></div>
+<div class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Dietary fit verified</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recommended Recipients Grid -->
+<div class="flex flex-col gap-space-md mb-space-xl">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<h2 class="text-headline-md font-headline-md text-on-surface">Recommended Recipients</h2>
+<span class="px-2 py-0.5 rounded text-label-sm font-label-sm bg-surface-container-high text-on-surface">3 Ranked</span>
+</div>
+<span class="text-label-sm font-label-sm text-outline">Priority sorted by delivery velocity</span>
+</div>
+<div class="grid grid-cols-1 gap-space-md">
+<!-- Card 1: Hope Shelter (Top Recommendation) -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1.5 h-full bg-primary-container"></div>
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pl-2">
+<div class="flex-1">
+<div class="flex flex-wrap items-center gap-2 mb-2">
+<span class="text-headline-sm font-headline-sm text-on-surface">Hope Shelter</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-label-sm font-label-sm bg-secondary-container text-on-secondary-container">
+<span class="material-symbols-outlined text-[14px]">near_me</span>
+                2.1 km away
+              </span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-label-sm font-label-sm bg-primary-container/10 text-primary-container">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+                Verified NGO
+              </span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-label-sm font-label-sm bg-tertiary-fixed text-on-tertiary-fixed font-semibold">
+                Top Recommendation
+              </span>
+</div>
+<p class="text-body-md font-body-md text-on-surface-variant max-w-2xl mb-4">
+              Community shelter serving 120 individuals daily. Immediate refrigeration available.
+            </p>
+<!-- 3 Metric Tiles -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-xl">
+<div class="bg-surface-container-low rounded-lg p-3">
+<div class="text-label-sm font-label-sm text-outline">Capacity</div>
+<div class="text-headline-sm font-headline-sm font-tabular-numeric text-on-surface mt-0.5">70%</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant">Available for 45 meals</div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-3">
+<div class="text-label-sm font-label-sm text-outline">Food Match</div>
+<div class="text-headline-sm font-headline-sm font-tabular-numeric text-primary-container mt-0.5">100%</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant">Cooked pasta / veg</div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-3">
+<div class="text-label-sm font-label-sm text-outline">Pickup ETA</div>
+<div class="text-headline-sm font-headline-sm font-tabular-numeric text-on-surface mt-0.5">12 min</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant">Rahul Sharma nearby</div>
+</div>
+</div>
+</div>
+<div class="flex flex-row lg:flex-col gap-2 shrink-0 justify-end">
+<button class="h-10 px-5 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md hover:bg-primary transition-colors flex items-center justify-center gap-1.5 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">send</span>
+              Send Donation
+            </button>
+<button class="h-10 px-4 rounded-lg bg-surface-container-lowest text-on-surface font-label-md text-label-md hover:bg-surface-container-low transition-colors flex items-center justify-center" type="button">
+              View Details
+            </button>
+</div>
+</div>
+</div>
+<!-- Card 2: Annapurna Food Bank -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+<div class="flex-1">
+<div class="flex flex-wrap items-center gap-2 mb-2">
+<span class="text-headline-sm font-headline-sm text-on-surface">Annapurna Food Bank</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-label-sm font-label-sm bg-surface-container text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">near_me</span>
+                4.2 km away
+              </span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-label-sm font-label-sm bg-primary-container/10 text-primary-container">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+                Verified NGO
+              </span>
+</div>
+<p class="text-body-md font-body-md text-on-surface-variant max-w-2xl mb-4">
+              Central distribution hub catering to midday meal centers.
+            </p>
+<!-- 3 Metric Tiles -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-xl">
+<div class="bg-surface-container-low rounded-lg p-3">
+<div class="text-label-sm font-label-sm text-outline">Capacity</div>
+<div class="text-headline-sm font-headline-sm font-tabular-numeric text-on-surface mt-0.5">55%</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant">Available for 30 meals</div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-3">
+<div class="text-label-sm font-label-sm text-outline">Food Match</div>
+<div class="text-headline-sm font-headline-sm font-tabular-numeric text-on-surface mt-0.5">90%</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant">Accepts hot meals</div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-3">
+<div class="text-label-sm font-label-sm text-outline">Pickup ETA</div>
+<div class="text-headline-sm font-headline-sm font-tabular-numeric text-on-surface mt-0.5">20 min</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant">Driver assignment queued</div>
+</div>
+</div>
+</div>
+<div class="flex flex-row lg:flex-col gap-2 shrink-0 justify-end">
+<button class="h-10 px-5 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md hover:bg-primary transition-colors flex items-center justify-center gap-1.5 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">send</span>
+              Send Donation
+            </button>
+<button class="h-10 px-4 rounded-lg bg-surface-container-lowest text-on-surface font-label-md text-label-md hover:bg-surface-container-low transition-colors flex items-center justify-center" type="button">
+              View Details
+            </button>
+</div>
+</div>
+</div>
+<!-- Card 3: Community Kitchen -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+<div class="flex-1">
+<div class="flex flex-wrap items-center gap-2 mb-2">
+<span class="text-headline-sm font-headline-sm text-on-surface">Community Kitchen</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-label-sm font-label-sm bg-surface-container text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">near_me</span>
+                1.8 km away
+              </span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-label-sm font-label-sm bg-primary-container/10 text-primary-container">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+                Verified NGO
+              </span>
+</div>
+<p class="text-body-md font-body-md text-on-surface-variant max-w-2xl mb-4">
+              Local neighborhood dining service assisting transient workers and elderly residents.
+            </p>
+<!-- 3 Metric Tiles -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-xl">
+<div class="bg-surface-container-low rounded-lg p-3">
+<div class="text-label-sm font-label-sm text-outline">Capacity</div>
+<div class="text-headline-sm font-headline-sm font-tabular-numeric text-on-surface mt-0.5">40%</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant">Limited warming space</div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-3">
+<div class="text-label-sm font-label-sm text-outline">Food Match</div>
+<div class="text-headline-sm font-headline-sm font-tabular-numeric text-on-surface mt-0.5">85%</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant">Pasta suitable with notice</div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-3">
+<div class="text-label-sm font-label-sm text-outline">Pickup ETA</div>
+<div class="text-headline-sm font-headline-sm font-tabular-numeric text-on-surface mt-0.5">15 min</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant">Driver 1.2 km away</div>
+</div>
+</div>
+</div>
+<div class="flex flex-row lg:flex-col gap-2 shrink-0 justify-end">
+<button class="h-10 px-5 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md hover:bg-primary transition-colors flex items-center justify-center gap-1.5 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">send</span>
+              Send Donation
+            </button>
+<button class="h-10 px-4 rounded-lg bg-surface-container-lowest text-on-surface font-label-md text-label-md hover:bg-surface-container-low transition-colors flex items-center justify-center" type="button">
+              View Details
+            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Donation Details & Status Timeline Section -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm mt-space-sm mb-space-xl">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 mb-6 bg-surface-container-low/40 -mx-6 -mt-6 p-6 rounded-t-xl">
+<div>
+<div class="flex items-center gap-2">
+<span class="text-label-sm font-label-sm font-tabular-numeric px-2 py-0.5 rounded bg-surface-container-highest text-on-surface font-medium">Route: /restaurant/donations/D-8821</span>
+<span class="inline-flex items-center gap-1 text-label-sm font-label-sm text-primary-container">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-ping"></span>
+            Dispatch Active
+          </span>
+</div>
+<h2 class="text-headline-md font-headline-md text-on-surface mt-1">Active Donation Tracking: #D-8821</h2>
+</div>
+<button class="h-10 px-5 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md hover:bg-primary transition-colors flex items-center gap-2 self-start lg:self-auto shadow-sm" type="button">
+<span>Track Live Driver Pickup</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+<!-- Metadata Grid -->
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+<div class="bg-surface-container-low p-3.5 rounded-lg">
+<div class="text-label-sm font-label-sm text-outline">Food Item</div>
+<div class="text-label-md font-label-md text-on-surface font-semibold mt-1">Pasta (20 kg)</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant">Cooked &amp; Trayed</div>
+</div>
+<div class="bg-surface-container-low p-3.5 rounded-lg">
+<div class="text-label-sm font-label-sm text-outline">Donated Time</div>
+<div class="text-label-md font-label-md text-on-surface font-semibold font-tabular-numeric mt-1">24 Sep, 2:10 PM</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant">Recorded digitally</div>
+</div>
+<div class="bg-surface-container-low p-3.5 rounded-lg">
+<div class="text-label-sm font-label-sm text-outline">Selected Recipient</div>
+<div class="text-label-md font-label-md text-on-surface font-semibold mt-1">Hope Shelter</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant">2.1 km transit</div>
+</div>
+<div class="bg-surface-container-low p-3.5 rounded-lg">
+<div class="text-label-sm font-label-sm text-outline">Assigned Driver</div>
+<div class="text-label-md font-label-md text-on-surface font-semibold mt-1">Rahul Sharma</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant">Tata Ace / Van (KA-01-E-9022)</div>
+</div>
+<div class="bg-surface-container-low p-3.5 rounded-lg">
+<div class="text-label-sm font-label-sm text-outline">Pickup Origin</div>
+<div class="text-label-md font-label-md text-on-surface font-semibold mt-1">ABC Restaurant</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant font-tabular-numeric">Window: 2:30 PM</div>
+</div>
+<div class="bg-surface-container-low p-3.5 rounded-lg">
+<div class="text-label-sm font-label-sm text-outline">Delivery Target</div>
+<div class="text-label-md font-label-md text-on-surface font-semibold mt-1">Hope Shelter</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant font-tabular-numeric">ETA: 2:45 PM</div>
+</div>
+</div>
+<!-- Status Timeline -->
+<div class="pt-2">
+<div class="text-label-sm font-label-sm uppercase tracking-wider text-outline mb-6">Dispatch Status Timeline</div>
+<div class="relative">
+<!-- Connecting Track Line -->
+<div class="hidden md:block absolute top-4 left-6 right-6 h-0.5 bg-surface-container-high z-0"></div>
+<div class="hidden md:block absolute top-4 left-6 w-[70%] h-0.5 bg-primary-container z-0"></div>
+<div class="grid grid-cols-1 md:grid-cols-6 gap-6 relative z-10">
+<!-- Step 1 -->
+<div class="flex md:flex-col items-center md:items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<div>
+<div class="text-label-sm font-label-sm font-semibold text-on-surface">1. POSTED</div>
+<div class="text-body-sm font-body-sm text-primary font-medium font-tabular-numeric">2:10 PM</div>
+<div class="text-label-sm font-label-sm text-outline">Food logged</div>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="flex md:flex-col items-center md:items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<div>
+<div class="text-label-sm font-label-sm font-semibold text-on-surface">2. MATCHED</div>
+<div class="text-body-sm font-body-sm text-primary font-medium font-tabular-numeric">2:12 PM</div>
+<div class="text-label-sm font-label-sm text-outline">Algorithm scored</div>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="flex md:flex-col items-center md:items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<div>
+<div class="text-label-sm font-label-sm font-semibold text-on-surface">3. NGO ACCEPTED</div>
+<div class="text-body-sm font-body-sm text-primary font-medium font-tabular-numeric">2:15 PM</div>
+<div class="text-label-sm font-label-sm text-outline">Hope Shelter</div>
+</div>
+</div>
+<!-- Step 4 -->
+<div class="flex md:flex-col items-center md:items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<div>
+<div class="text-label-sm font-label-sm font-semibold text-on-surface">4. DRIVER ASSIGNED</div>
+<div class="text-body-sm font-body-sm text-primary font-medium font-tabular-numeric">2:18 PM</div>
+<div class="text-label-sm font-label-sm text-outline">Rahul S. (Tata Ace)</div>
+</div>
+</div>
+<!-- Step 5 (In-Progress) -->
+<div class="flex md:flex-col items-center md:items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0 relative">
+<span class="w-3 h-3 rounded-full bg-primary-container animate-ping absolute"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container relative"></span>
+</div>
+<div>
+<div class="text-label-sm font-label-sm font-semibold text-primary-container">5. PICKED UP</div>
+<div class="inline-flex items-center px-1.5 py-0.5 rounded text-label-sm font-label-sm bg-primary-container/10 text-primary-container font-medium mt-0.5">
+                In-Progress
+              </div>
+<div class="text-label-sm font-label-sm text-outline mt-0.5 font-tabular-numeric">Driver at kitchen</div>
+</div>
+</div>
+<!-- Step 6 (Pending) -->
+<div class="flex md:flex-col items-center md:items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-high text-outline flex items-center justify-center shrink-0">
+<span class="w-2.5 h-2.5 rounded-full bg-outline-variant"></span>
+</div>
+<div>
+<div class="text-label-sm font-label-sm font-semibold text-outline">6. DELIVERED</div>
+<div class="text-body-sm font-body-sm text-outline font-tabular-numeric">Pending</div>
+<div class="text-label-sm font-label-sm text-outline font-tabular-numeric">Est: 2:45 PM</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div></main></div>
+<!-- Floating Universal Portal Switcher Widget -->
+<div id="global-portal-switcher" class="fixed bottom-4 right-4 z-[9999] font-sans">
+  <div class="relative inline-block text-left">
+    <button onclick="const m=document.getElementById('portalSwitchMenu'); m.classList.toggle('hidden');" 
+      type="button"
+      class="flex items-center gap-2 px-3.5 py-2 rounded-full bg-slate-900 text-white text-xs font-semibold shadow-2xl border border-slate-700 hover:bg-slate-800 transition-all cursor-pointer">
+      <span class="w-2 h-2 rounded-full bg-[#16803C] animate-pulse"></span>
+      <span>Switch Portal / Role</span>
+      <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+    </button>
+
+    <div id="portalSwitchMenu" class="hidden absolute right-0 bottom-12 w-64 rounded-xl bg-slate-900 text-white border border-slate-700 shadow-2xl z-[10000] p-2 flex flex-col gap-1 text-xs">
+      <div class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 mb-1">
+        Surplus-To-Shelter Portals
+      </div>
+      <a href="/index.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-slate-400"></span> 🔐 <b>Auth / Login Page</b>
+      </a>
+      <a href="/restaurant-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 🏪 <b>Restaurant Portal</b>
+      </a>
+      <a href="/ngo-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-blue-500"></span> 🤝 <b>NGO / Shelter Portal</b>
+      </a>
+      <a href="/admin-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-purple-500"></span> 🛡️ <b>Admin Command Center</b>
+      </a>
+      <a href="/driver-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-amber-500"></span> 🚚 <b>Driver Courier Portal</b>
+      </a>
+    </div>
+  </div>
+</div>
+
+</body></html>

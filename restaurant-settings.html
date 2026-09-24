@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "secondary": "#486554",
+          "on-surface": "#141b2b",
+          "background": "#f9f9ff",
+          "on-secondary-fixed-variant": "#314d3e",
+          "surface-bright": "#f9f9ff",
+          "tertiary-fixed-dim": "#ffb2be",
+          "on-primary-fixed": "#002109",
+          "on-tertiary": "#ffffff",
+          "primary-fixed": "#95f8a5",
+          "error-container": "#ffdad6",
+          "on-secondary-container": "#4e6b5a",
+          "inverse-on-surface": "#edf0ff",
+          "error": "#ba1a1a",
+          "surface-container": "#e9edff",
+          "on-primary-container": "#d3ffd4",
+          "on-secondary-fixed": "#042014",
+          "on-primary-fixed-variant": "#005322",
+          "on-tertiary-fixed-variant": "#82233d",
+          "secondary-fixed-dim": "#afceba",
+          "on-error-container": "#93000a",
+          "on-error": "#ffffff",
+          "on-background": "#141b2b",
+          "surface-container-high": "#e1e8fd",
+          "secondary-fixed": "#caead6",
+          "tertiary": "#97334c",
+          "inverse-primary": "#7adb8c",
+          "inverse-surface": "#293040",
+          "secondary-container": "#caead6",
+          "surface-container-low": "#f1f3ff",
+          "surface-container-highest": "#dce2f7",
+          "on-primary": "#ffffff",
+          "surface": "#f9f9ff",
+          "outline-variant": "#becabb",
+          "primary-fixed-dim": "#7adb8c",
+          "tertiary-container": "#b64b64",
+          "primary-container": "#16803c",
+          "outline": "#6f7a6e",
+          "surface-container-lowest": "#ffffff",
+          "on-secondary": "#ffffff",
+          "surface-dim": "#d3daef",
+          "on-tertiary-container": "#fff0f1",
+          "surface-tint": "#006d2f",
+          "on-surface-variant": "#3f493f",
+          "on-tertiary-fixed": "#3f0015",
+          "surface-variant": "#dce2f7",
+          "tertiary-fixed": "#ffd9de",
+          "primary": "#00652b"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.125rem",
+          "lg": "0.25rem",
+          "xl": "0.5rem",
+          "full": "0.75rem"
+        },
+        "spacing": {
+          "margin": "2rem",
+          "gutter-sm": "1rem",
+          "space-xs": "0.25rem",
+          "space-xl": "2rem",
+          "space-md": "1rem",
+          "margin-mobile": "1rem",
+          "space-sm": "0.5rem",
+          "space-lg": "1.5rem",
+          "gutter": "1.5rem"
+        },
+        "fontFamily": {
+          "display-lg": [
+            "Inter"
+          ],
+          "label-md": [
+            "Inter"
+          ],
+          "label-sm": [
+            "Inter"
+          ],
+          "tabular-numeric": [
+            "Inter"
+          ],
+          "body-md": [
+            "Inter"
+          ],
+          "headline-lg": [
+            "Inter"
+          ],
+          "body-sm": [
+            "Inter"
+          ],
+          "headline-sm": [
+            "Inter"
+          ],
+          "body-lg": [
+            "Inter"
+          ],
+          "headline-md": [
+            "Inter"
+          ]
+        },
+        "fontSize": {
+          "display-lg": [
+            "32px",
+            {
+              "lineHeight": "40px",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "label-md": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "letterSpacing": "0em",
+              "fontWeight": "500"
+            }
+          ],
+          "label-sm": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "letterSpacing": "0.01em",
+              "fontWeight": "500"
+            }
+          ],
+          "tabular-numeric": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "letterSpacing": "0em",
+              "fontWeight": "500"
+            }
+          ],
+          "body-md": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "letterSpacing": "0em",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-lg": [
+            "24px",
+            {
+              "lineHeight": "32px",
+              "letterSpacing": "-0.015em",
+              "fontWeight": "600"
+            }
+          ],
+          "body-sm": [
+            "13px",
+            {
+              "lineHeight": "18px",
+              "letterSpacing": "0.005em",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-sm": [
+            "16px",
+            {
+              "lineHeight": "24px",
+              "letterSpacing": "-0.005em",
+              "fontWeight": "600"
+            }
+          ],
+          "body-lg": [
+            "16px",
+            {
+              "lineHeight": "24px",
+              "letterSpacing": "0em",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-md": [
+            "20px",
+            {
+              "lineHeight": "28px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-surface-container-lowest font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest border-r border-outline-variant/30 z-50 flex flex-col justify-between">
+  <div class="flex flex-col">
+    <div class="px-space-lg pt-space-lg pb-space-md border-b border-outline-variant/20">
+      <div class="flex items-center gap-space-sm">
+        <span class="material-symbols-outlined text-primary-container text-[24px]">eco</span>
+        <span class="font-headline-sm text-headline-sm tracking-tight uppercase text-on-surface">Surplus-To-Shelter</span>
+      </div>
+      <div class="mt-space-xs pl-7">
+        <span class="inline-flex items-center px-2 py-0.5 rounded-lg text-label-sm font-label-sm bg-secondary-container text-on-secondary-container tracking-wider uppercase">Restaurant Portal</span>
+      </div>
+    </div>
+    
+    <div class="px-space-sm pt-space-md">
+      <div class="px-space-sm pb-space-xs text-label-sm font-label-sm text-outline uppercase tracking-wider">OPERATIONS</div>
+      <nav class="space-y-0.5">
+        <a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-body-md font-body-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/restaurant-dashboard.html">
+          <span class="material-symbols-outlined text-[20px] text-outline">dashboard</span>
+          <span>Dashboard</span>
+        </a>
+        <a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-body-md font-body-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/restaurant-donations.html">
+          <span class="material-symbols-outlined text-[20px] text-outline">inventory_2</span>
+          <span>Donations</span>
+        </a>
+        <a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-body-md font-body-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/restaurant-post.html">
+          <span class="material-symbols-outlined text-[20px] text-primary-container">add_circle</span>
+          <span class="font-label-md text-label-md text-primary-container">Post Donation</span>
+        </a>
+        <a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-body-md font-body-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/restaurant-pickups.html">
+          <span class="material-symbols-outlined text-[20px] text-outline">local_shipping</span>
+          <span>Pickups</span>
+        </a>
+        <a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-body-md font-body-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/restaurant-impact.html">
+          <span class="material-symbols-outlined text-[20px] text-outline">query_stats</span>
+          <span>Impact</span>
+        </a>
+        <a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-body-md font-body-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/restaurant-notifications.html">
+          <div class="flex items-center gap-space-sm flex-1">
+            <span class="material-symbols-outlined text-[20px] text-outline">notifications</span>
+            <span>Notifications</span>
+          </div>
+          <span class="inline-flex items-center justify-center px-1.5 py-0.5 text-label-sm font-label-sm rounded-full bg-error text-on-error">3</span>
+        </a>
+        <a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg transition-colors bg-secondary-container/60 text-on-surface font-label-md border-l-4 border-primary-container" href="/restaurant-settings.html">
+          <span class="material-symbols-outlined text-[20px] text-outline">settings</span>
+          <span>Settings</span>
+        </a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="px-space-sm pb-space-lg border-t border-outline-variant/20 pt-space-sm">
+    <nav class="space-y-0.5">
+      <a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-body-md font-body-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/index.html">
+        <span class="material-symbols-outlined text-[20px] text-outline">logout</span>
+        <span>Sign Out</span>
+      </a>
+    </nav>
+  </div>
+</aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest border-b border-outline-variant/30 z-40 flex items-center justify-between px-space-lg"><div class="flex items-center w-96"><div class="relative w-full"><span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-[18px]">search</span><input class="w-full h-10 pl-9 pr-3 rounded-lg border border-outline-variant/50 bg-surface-container-lowest text-body-sm font-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container" placeholder="Search donations, NGOs, drivers..." type="search"/></div></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-outline-variant/40 bg-surface-container-low"><span class="inline-block w-2 h-2 rounded-full bg-primary-container"></span><span class="text-label-sm font-label-sm text-on-surface-variant">Kitchen Active</span></div><button class="relative p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span></button><div class="h-6 w-px bg-outline-variant/40"></div><div class="flex items-center gap-space-sm"><div class="text-right"><div class="text-label-md font-label-md text-on-surface leading-tight">ABC Restaurant</div><div class="text-label-sm font-label-sm text-primary-container leading-tight">Verified Partner</div></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><button class="p-1.5 rounded-lg text-outline hover:text-error hover:bg-error-container/20 transition-colors" title="Sign out" type="button"><span class="material-symbols-outlined text-[20px]">logout</span></button></div></div></header><main class="w-full pt-16 bg-surface-container-lowest min-h-screen p-8">
+<div class="flex flex-col w-full gap-6 max-w-4xl">
+  <div class="pb-4 border-b border-outline-variant/20">
+    <h1 class="text-2xl font-bold tracking-tight text-on-surface">Restaurant Settings & Profile</h1>
+    <p class="text-sm text-outline mt-1">Manage kitchen operational hours, pickup instructions, and food safety credentials.</p>
+  </div>
+
+  <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-6 shadow-sm space-y-6">
+    <!-- Partner Info -->
+    <div>
+      <h3 class="text-base font-bold text-on-surface mb-3 flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary-container">store</span> Business Information
+      </h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-outline uppercase mb-1">Restaurant Name</label>
+          <input type="text" value="Fresh Harvest Bistro" class="w-full px-3 py-2 text-sm rounded-lg border border-outline-variant/40 bg-surface-container-low font-semibold text-on-surface">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-outline uppercase mb-1">FSSAI License #</label>
+          <input type="text" value="11422890001892" class="w-full px-3 py-2 text-sm rounded-lg border border-outline-variant/40 bg-surface-container-low font-mono text-on-surface">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-outline uppercase mb-1">Kitchen Manager Email</label>
+          <input type="email" value="manager@freshharvest.org" class="w-full px-3 py-2 text-sm rounded-lg border border-outline-variant/40 bg-surface-container-low text-on-surface">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-outline uppercase mb-1">Direct Phone</label>
+          <input type="tel" value="+91 98290 12345" class="w-full px-3 py-2 text-sm rounded-lg border border-outline-variant/40 bg-surface-container-low text-on-surface">
+        </div>
+      </div>
+    </div>
+
+    <!-- Pickup Location -->
+    <div class="pt-4 border-t border-outline-variant/20">
+      <h3 class="text-base font-bold text-on-surface mb-3 flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary-container">location_on</span> Pickup Location & Notes
+      </h3>
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-outline uppercase mb-1">Full Pickup Address</label>
+          <input type="text" value="Plot 42, Commercial Complex, C-Scheme, Jaipur, Rajasthan 302001" class="w-full px-3 py-2 text-sm rounded-lg border border-outline-variant/40 bg-surface-container-low text-on-surface">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-outline uppercase mb-1">Instructions for Courier Drivers</label>
+          <textarea rows="2" class="w-full px-3 py-2 text-sm rounded-lg border border-outline-variant/40 bg-surface-container-low text-on-surface">Use rear service gate #2 for loading. Thermal packaging containers available at dispatch desk.</textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="pt-4 border-t border-outline-variant/20 flex justify-end">
+      <button onclick="alert('Settings Saved Successfully!')" class="px-6 py-2.5 rounded-lg bg-primary-container text-white font-semibold text-sm hover:bg-primary shadow-sm transition-colors">
+        Save Settings
+      </button>
+    </div>
+  </div>
+</div>
+</main></div>
+<!-- Floating Universal Portal Switcher Widget -->
+<div id="global-portal-switcher" class="fixed bottom-4 right-4 z-[9999] font-sans">
+  <div class="relative inline-block text-left">
+    <button onclick="const m=document.getElementById('portalSwitchMenu'); m.classList.toggle('hidden');" 
+      type="button"
+      class="flex items-center gap-2 px-3.5 py-2 rounded-full bg-slate-900 text-white text-xs font-semibold shadow-2xl border border-slate-700 hover:bg-slate-800 transition-all cursor-pointer">
+      <span class="w-2 h-2 rounded-full bg-[#16803C] animate-pulse"></span>
+      <span>Switch Portal / Role</span>
+      <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+    </button>
+
+    <div id="portalSwitchMenu" class="hidden absolute right-0 bottom-12 w-64 rounded-xl bg-slate-900 text-white border border-slate-700 shadow-2xl z-[10000] p-2 flex flex-col gap-1 text-xs">
+      <div class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 mb-1">
+        Surplus-To-Shelter Portals
+      </div>
+      <a href="/index.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-slate-400"></span> 🔐 <b>Auth / Login Page</b>
+      </a>
+      <a href="/restaurant-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 🏪 <b>Restaurant Portal</b>
+      </a>
+      <a href="/ngo-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-blue-500"></span> 🤝 <b>NGO / Shelter Portal</b>
+      </a>
+      <a href="/admin-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-purple-500"></span> 🛡️ <b>Admin Command Center</b>
+      </a>
+      <a href="/driver-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-amber-500"></span> 🚚 <b>Driver Courier Portal</b>
+      </a>
+    </div>
+  </div>
+</div>
+
+</body></html>
