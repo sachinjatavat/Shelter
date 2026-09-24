@@ -1470,6 +1470,90 @@
         emptyView.classList.add('hidden');
       }
     });
+
+    // Load Live Donations from Supabase / Express API / LocalStorage
+    async function loadLiveNGODonations() {
+      if (!window.SupabaseService) return;
+      try {
+        const donations = await window.SupabaseService.getDonations();
+        if (!donations || !Array.isArray(donations)) return;
+
+        const gridContainer = document.getElementById('donations-grid-container');
+        const tableBody = document.querySelector('#donations-tab tbody');
+
+        const available = donations.filter(d => !d.status || d.status === 'AVAILABLE' || d.status === 'PENDING');
+
+        available.forEach(don => {
+          // 1. Grid Card rendering
+          if (gridContainer && !document.querySelector(`.donation-card[data-id="${don.id}"]`)) {
+            const card = document.createElement('article');
+            card.className = 'donation-card border-2 border-brand-green/30 rounded-lg p-4 bg-emerald-50/20 shadow-sm hover:border-brand-green transition-all flex flex-col justify-between';
+            card.dataset.category = don.category || 'Cooked Meals';
+            card.dataset.distance = '1.2';
+            card.dataset.expiry = don.pickup_window || '2h';
+            card.dataset.id = don.id;
+            card.dataset.location = don.donor_address || 'Jaipur';
+            card.dataset.quantity = don.quantity_kg || 20;
+            card.dataset.restaurant = don.donor_name || 'Partner Restaurant';
+            card.dataset.title = don.title || 'Surplus Food';
+
+            card.innerHTML = `
+              <div>
+                <div class="flex items-start justify-between gap-2">
+                  <span class="inline-block text-[11px] px-2 py-0.5 rounded font-semibold bg-brand-greenLight text-brand-green">${don.category || 'Cooked Meals'}</span>
+                  <span class="inline-flex items-center text-[11px] px-2 py-0.5 rounded font-bold bg-emerald-600 text-white animate-pulse">NEW LIVE</span>
+                </div>
+                <h3 class="text-base font-bold text-brand-dark mt-2.5">${don.title}</h3>
+                <p class="text-xs text-brand-secondary mt-0.5">${don.donor_name || 'Partner Restaurant'} &bull; ${don.donor_address || 'Jaipur'} (1.2 km away)</p>
+                <div class="mt-3.5 py-2 px-3 bg-brand-subtle rounded border border-gray-100 flex items-center justify-between text-xs">
+                  <span class="text-brand-secondary">Quantity:</span>
+                  <span class="font-bold text-brand-dark text-sm">${don.quantity_kg || 20} kg (${don.portions || 30} portions)</span>
+                </div>
+                <p class="text-xs text-gray-500 mt-2 line-clamp-2">Fresh surplus donation ready for immediate shelter collection. Pickup window: ${don.pickup_window || 'Next 2 hours'}.</p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-brand-border flex items-center gap-2">
+                <button class="flex-1 py-1.5 border border-brand-border rounded text-xs font-medium text-brand-dark hover:bg-brand-subtle transition-colors" onclick="viewDetailsModal('${don.id}')">
+                  Details
+                </button>
+                <button class="flex-1 py-1.5 bg-brand-green hover:bg-brand-greenDark text-white rounded text-xs font-semibold shadow-sm transition-colors" onclick="openAcceptModal('${don.id}')">
+                  Accept Donation
+                </button>
+              </div>
+            `;
+            gridContainer.prepend(card);
+          }
+
+          // 2. Table Row rendering
+          if (tableBody && !document.querySelector(`tr[data-id="${don.id}"]`)) {
+            const row = document.createElement('tr');
+            row.className = 'hover:bg-gray-50/80 transition-colors bg-emerald-50/30';
+            row.dataset.id = don.id;
+            row.innerHTML = `
+              <td class="p-3.5 font-bold text-emerald-900">${don.title} <span class="text-[10px] bg-emerald-600 text-white px-1.5 py-0.5 rounded ml-1">LIVE</span></td>
+              <td class="p-3.5"><span class="px-2 py-0.5 bg-brand-greenLight text-brand-green rounded text-[11px] font-semibold">${don.category || 'Cooked'}</span></td>
+              <td class="p-3.5 font-bold">${don.quantity_kg || 20} kg</td>
+              <td class="p-3.5 text-brand-secondary">${don.donor_name || 'Partner Restaurant'}</td>
+              <td class="p-3.5">1.2 km</td>
+              <td class="p-3.5 text-emerald-700 font-medium">${don.pickup_window || 'Next 2 Hours'}</td>
+              <td class="p-3.5 text-right">
+                <button class="px-3 py-1 bg-brand-green hover:bg-brand-greenDark text-white rounded font-semibold text-xs transition-colors" onclick="openAcceptModal('${don.id}')">Accept</button>
+              </td>
+            `;
+            tableBody.prepend(row);
+          }
+        });
+
+        // Update total counters dynamically
+        const totalCards = document.querySelectorAll('.donation-card').length;
+        const availStat = document.getElementById('stat-available-donations');
+        if (availStat) availStat.textContent = totalCards;
+        const badgeCount = document.getElementById('donations-badge-count');
+        if (badgeCount) badgeCount.textContent = totalCards;
+
+      } catch (e) {
+        console.warn('Error loading live NGO donations:', e);
+      }
+    }
   </script>
 <!-- END: JavaScript Functionality -->
 
@@ -1525,6 +1609,10 @@
         }
       });
     }
+
+    // Load Live NGO Donations immediately and auto-poll every 3 seconds
+    loadLiveNGODonations();
+    setInterval(loadLiveNGODonations, 3000);
   });
 </script>
 
