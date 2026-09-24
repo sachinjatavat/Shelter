@@ -101,6 +101,7 @@
         <thead class="bg-surface-container-low text-on-surface-variant font-label-lg uppercase">
           <tr>
             <th class="p-3">Mission ID</th>
+            <th class="p-3">Food Item Name</th>
             <th class="p-3">Donor Restaurant</th>
             <th class="p-3">Recipient Shelter</th>
             <th class="p-3">Weight</th>
@@ -112,6 +113,7 @@
         <tbody class="divide-y divide-outline-variant/20 text-on-surface font-body-sm">
           <tr>
             <td class="p-3 font-bold">DON-9480</td>
+            <td class="p-3 font-semibold text-primary">Fresh Pasta & Penne Meals</td>
             <td class="p-3">Green Leaf Restaurant</td>
             <td class="p-3">Hope Shelter</td>
             <td class="p-3 font-semibold">25 kg</td>
@@ -121,6 +123,7 @@
           </tr>
           <tr>
             <td class="p-3 font-bold">DON-9475</td>
+            <td class="p-3 font-semibold text-primary">Organic Dairy & Produce Crates</td>
             <td class="p-3">FreshMart Supermarket</td>
             <td class="p-3">Care Center Desk 1</td>
             <td class="p-3 font-semibold">18 kg</td>
@@ -130,6 +133,7 @@
           </tr>
           <tr>
             <td class="p-3 font-bold">DON-9462</td>
+            <td class="p-3 font-semibold text-primary">Artisan Whole Wheat Loaves</td>
             <td class="p-3">City Bakery & Cafe</td>
             <td class="p-3">Community Food Bank</td>
             <td class="p-3 font-semibold">12 kg</td>
@@ -143,6 +147,7 @@
   </div>
 </div>
 </div></main></div>
+<script src="/js/supabase.js"></script>
 <!-- Floating Universal Portal Switcher Widget -->
 <div id="global-portal-switcher" class="fixed bottom-4 right-4 z-[9999] font-sans">
   <div class="relative inline-block text-left">
@@ -179,22 +184,53 @@
 
 
 <script>
+  async function loadLiveDriverHistory() {
+    if (!window.SupabaseService) return;
+    try {
+      const donations = await window.SupabaseService.getDonations();
+      if (!donations || !Array.isArray(donations)) return;
+      const tbody = document.querySelector('tbody');
+      if (!tbody) return;
+
+      donations.forEach(don => {
+        if (!document.querySelector(`tr[data-id="${don.id}"]`)) {
+          const row = document.createElement('tr');
+          row.dataset.id = don.id;
+          row.className = 'hover:bg-surface-container-low transition-colors';
+          row.innerHTML = `
+            <td class="p-3 font-bold">${don.id}</td>
+            <td class="p-3 font-semibold text-primary">${don.title || 'Surplus Food Batch'}</td>
+            <td class="p-3">${don.donor_name || 'Partner Restaurant'}</td>
+            <td class="p-3">${don.recipient_ngo || 'Hope Shelter'}</td>
+            <td class="p-3 font-semibold">${don.quantity_kg || 20} kg</td>
+            <td class="p-3 text-on-surface-variant">Today</td>
+            <td class="p-3"><span class="px-2 py-0.5 rounded-full bg-on-tertiary-container text-primary-container font-semibold">Completed</span></td>
+            <td class="p-3"><button onclick="alert('Viewing Proof of Delivery Receipt #${don.id}')" class="text-primary-container font-bold hover:underline">View Receipt</button></td>
+          `;
+          tbody.prepend(row);
+        }
+      });
+    } catch (e) {
+      console.warn('History load error:', e);
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     const savedName = localStorage.getItem('user_name');
     if (savedName) {
-      // Find top header user name elements and replace static 'Rahul Sharma' or 'ABC Restaurant'
       document.querySelectorAll('.font-label-lg, .text-label-md, .user-name-display').forEach(el => {
         if (el.textContent.includes('Rahul Sharma') || el.textContent.includes('ABC Restaurant') || el.textContent.includes('System Administrator') || el.textContent.includes('User Name')) {
           el.textContent = savedName;
         }
       });
-      // Replace greeting if any
       document.querySelectorAll('h1').forEach(el => {
         if (el.textContent.includes('Good morning, Rahul') || el.textContent.includes('Good morning,')) {
           el.textContent = `Good morning, ${savedName}`;
         }
       });
     }
+
+    loadLiveDriverHistory();
   });
 </script>
 
