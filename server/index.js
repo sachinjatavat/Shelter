@@ -107,18 +107,28 @@ app.get('/api/health', (req, res) => {
 // 2. Auth Login Endpoint
 app.post('/api/auth/login', async (req, res) => {
   const { email, role } = req.body;
-  if (!email) return res.status(400).json({ error: 'Email is required' });
+  if (!email) return res.status(400).json({ success: false, error: 'Email is required' });
+
+  const cleanEmail = email.trim().toLowerCase();
 
   if (isSupabaseConfigured && supabase) {
     try {
-      const { data, error } = await supabase.from('users').select('*').eq('email', email).single();
+      const { data, error } = await supabase.from('users').select('*').ilike('email', cleanEmail).single();
       if (data) return res.json({ success: true, user: data });
     } catch (e) {}
   }
 
-  // Fallback
-  const user = memoryDb.users.find(u => u.email === email) || { id: `usr-${Date.now()}`, email, role: role || 'restaurant', name: email.split('@')[0] };
-  res.json({ success: true, user });
+  // Memory fallback lookup
+  const user = memoryDb.users.find(u => u.email.toLowerCase() === cleanEmail);
+  if (user) {
+    return res.json({ success: true, user });
+  }
+
+  // If not found in DB
+  return res.status(404).json({
+    success: false,
+    error: `There isn't any account created using this email (${email}). Please register first.`
+  });
 });
 
 // 2b. Get All Users Endpoint

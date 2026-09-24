@@ -1377,27 +1377,19 @@
     }
 
     // Role-based login execution
-        function handleLoginSubmit(event) {
+    async function handleLoginSubmit(event) {
       if (event) event.preventDefault();
       
-      const email = document.getElementById('loginEmail')?.value;
-      const password = document.getElementById('loginPassword')?.value;
+      const emailInput = document.getElementById('loginEmail');
+      const passwordInput = document.getElementById('loginPassword');
+      const email = emailInput ? emailInput.value.trim() : '';
+      const password = passwordInput ? passwordInput.value.trim() : '';
       const role = AUTH_STATE.selectedLoginRole || 'restaurant';
 
-      let userName = 'Krishna';
-      if (role === 'driver') userName = 'Krishna (Driver)';
-      else if (role === 'restaurant') userName = 'Fresh Harvest Bistro';
-      else if (role === 'ngo') userName = 'Hope Shelter';
-      
-
-      if (email) {
-        const parts = email.split('@')[0];
-        userName = parts.charAt(0).toUpperCase() + parts.slice(1);
+      if (!email) {
+        alert("⚠️ LOGIN REQUIRED\n\nPlease enter your email address to log in.");
+        return;
       }
-
-      localStorage.setItem('user_name', userName);
-      localStorage.setItem('user_email', email || 'krishna@driver.com');
-      localStorage.setItem('user_role', role);
 
       const submitBtn = document.getElementById('loginSubmitBtn');
       const btnText = document.getElementById('loginBtnText');
@@ -1407,16 +1399,39 @@
       if (btnText) btnText.classList.add('hidden');
       if (btnSpinner) btnSpinner.classList.remove('hidden');
 
-      const roleMap = {
-        restaurant: '/restaurant-dashboard.html',
-        ngo: '/ngo-dashboard.html',
-        driver: '/driver-dashboard.html',
-        
-      };
+      if (window.SupabaseService && typeof window.SupabaseService.loginUser === 'function') {
+        const result = await window.SupabaseService.loginUser(email, password, role);
 
-      setTimeout(() => {
-        window.location.href = roleMap[role] || '/restaurant-dashboard.html';
-      }, 350);
+        if (!result.success) {
+          if (submitBtn) submitBtn.disabled = false;
+          if (btnText) btnText.classList.remove('hidden');
+          if (btnSpinner) btnSpinner.classList.add('hidden');
+
+          alert(`⚠️ LOGIN FAILED\n\nThere isn't any account created using this email (${email}).\n\nPlease register your account first.`);
+          showToast('Account Not Found', `No account registered with ${email}`);
+          return;
+        }
+
+        const user = result.user || {};
+        const userName = user.name || email.split('@')[0];
+        const userRole = user.role || role;
+
+        localStorage.setItem('user_name', userName);
+        localStorage.setItem('user_email', email);
+        localStorage.setItem('user_role', userRole);
+
+        const roleMap = {
+          restaurant: '/restaurant-dashboard.html',
+          ngo: '/ngo-dashboard.html',
+          driver: '/driver-dashboard.html',
+        };
+
+        showToast('Login Successful', `Welcome back, ${userName}!`);
+
+        setTimeout(() => {
+          window.location.href = roleMap[userRole] || '/restaurant-dashboard.html';
+        }, 350);
+      }
     }
 
 

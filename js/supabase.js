@@ -40,6 +40,54 @@ window.SupabaseService = {
     }
   },
 
+  // Validate & Login User
+  async loginUser(email, password, role) {
+    if (!email || !email.trim()) {
+      return { success: false, error: 'Please enter a valid email address.' };
+    }
+
+    const cleanEmail = email.trim().toLowerCase();
+
+    // 1. Try API login endpoint
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: cleanEmail, password, role })
+      });
+      const data = await res.json();
+      if (!data.success) {
+        return { success: false, error: data.error || `There isn't any account created using this email (${email}). Please register first.` };
+      }
+      return { success: true, user: data.user };
+    } catch (e) {
+      // Offline fallback: check local registered users array
+      const localUsers = JSON.parse(localStorage.getItem('local_users') || '[]');
+      const foundLocal = localUsers.find(u => u.email && u.email.toLowerCase() === cleanEmail);
+      if (foundLocal) {
+        return { success: true, user: foundLocal };
+      }
+
+      const defaultEmails = [
+        'manager@freshharvest.org',
+        'coordinator@hopeshelter.org',
+        'driver402@surplusrescue.org',
+        'sachin@gmail.com',
+        'krishna@gmail.com',
+        'nitesh@gmail.com',
+        'priyanshi@gmail.com'
+      ];
+      if (defaultEmails.includes(cleanEmail)) {
+        return { success: true, user: { email: cleanEmail, name: cleanEmail.split('@')[0], role: role || 'restaurant' } };
+      }
+
+      return {
+        success: false,
+        error: `There isn't any account created using this email (${email}). Please register first.`
+      };
+    }
+  },
+
   // Register New User
   async registerUser(userData) {
     // Local persistence
