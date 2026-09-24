@@ -669,17 +669,10 @@
 
 <script>
   function triggerSendDonation(btn) {
-    if (window.triggerConfettiBurst) {
-      let x = window.innerWidth / 2;
-      let y = window.innerHeight / 2;
-      if (btn && btn.getBoundingClientRect) {
-        const rect = btn.getBoundingClientRect();
-        x = rect.left + rect.width / 2;
-        y = rect.top + rect.height / 2;
-      }
-      window.triggerConfettiBurst(x, y);
+    if (window.triggerSendDonation) {
+      window.triggerSendDonation(btn);
+      return;
     }
-
     let ngoName = 'Hope Shelter';
     if (btn && btn.closest) {
       const card = btn.closest('.bg-surface-container-lowest, article, .donation-card, tr, div');
@@ -690,23 +683,17 @@
         }
       }
     }
-
-    alert(`🎉 DONATION DISPATCH CONFIRMED!\n\nYour surplus food donation has been assigned to ${ngoName}.\n\nCourier Driver Rahul Sharma (+91 98290-XXXXX) has been dispatched for immediate pickup.\nTracking details are live on your Pickups dashboard.`);
-
-    if (window.SupabaseService) {
-      window.SupabaseService.createDonation({
-        title: 'Surplus Food Batch',
-        recipient_ngo: ngoName,
-        status: 'DISPATCHED'
-      });
-    }
-
+    alert(`DONATION DISPATCH CONFIRMED!\n\nYour surplus food donation has been assigned to ${ngoName}.\n\nCourier Driver Rahul Sharma (+91 98290-XXXXX) has been dispatched for immediate pickup.\nTracking details are live on your Pickups dashboard.`);
     setTimeout(() => {
       window.location.href = '/restaurant-pickups.html';
-    }, 600);
+    }, 200);
   }
 
   function triggerViewDetails(btn) {
+    if (window.triggerViewDetails) {
+      window.triggerViewDetails(btn);
+      return;
+    }
     let ngoName = 'Hope Shelter';
     if (btn && btn.closest) {
       const card = btn.closest('.bg-surface-container-lowest, article, .donation-card, tr, div');
@@ -717,8 +704,7 @@
         }
       }
     }
-
-    alert(`📋 RECIPIENT SPECIFICATIONS:\n\nOrganisation: ${ngoName}\nVerification: 100% Certified NGO Partner\nAvailable Capacity: 45 meals remaining today\nDriver Vehicle: Thermal Insulated EV Van (#RJ-14-EV-9401)\nEstimated Pickup ETA: 12 minutes\nHandling Notes: Sanitary food-grade thermal containers provided.`);
+    alert(`RECIPIENT SPECIFICATIONS:\n\nOrganisation: ${ngoName}\nVerification: 100% Certified NGO Partner\nAvailable Capacity: 45 meals remaining today\nDriver Vehicle: Thermal Insulated EV Van (#RJ-14-EV-9401)\nEstimated Pickup ETA: 12 minutes\nHandling Notes: Sanitary food-grade thermal containers provided.`);
   }
 
   document.addEventListener('DOMContentLoaded', () => {

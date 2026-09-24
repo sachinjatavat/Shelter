@@ -1,238 +1,68 @@
 /* ==========================================================================
-   SURPLUS-TO-SHELTER HIGH-PERFORMANCE MOTION & ANIMATION DESIGN SYSTEM
+   SURPLUS-TO-SHELTER BUTTON MOTION SYSTEM
    ========================================================================== */
 
-/* --------------------------------------------------------------------------
-   1. Universal Button Motion & Spring Micro-interactions
-   -------------------------------------------------------------------------- */
-
+/* 1. Universal Button Motion (Hover Lift & Active Click Press) */
 button, 
 .btn, 
 a[role="button"], 
 input[type="submit"], 
 input[type="button"],
 .interactive-btn {
-  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), 
-              box-shadow 0.25s ease, 
-              background-color 0.2s ease, 
-              border-color 0.2s ease,
-              color 0.2s ease !important;
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), 
+              box-shadow 0.2s ease, 
+              background-color 0.15s ease, 
+              border-color 0.15s ease,
+              color 0.15s ease !important;
   position: relative;
-  overflow: hidden;
 }
 
-/* Hover lift and glow effect */
+/* Hover Lift */
 button:hover:not(:disabled), 
 .btn:hover:not(:disabled),
 a[role="button"]:hover,
 .interactive-btn:hover {
-  transform: translateY(-2px) scale(1.015);
-  box-shadow: 0 6px 20px -4px rgba(22, 128, 60, 0.25), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px -4px rgba(22, 128, 60, 0.22), 0 3px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
-/* Click press down spring effect */
+/* Click Press Down Spring */
 button:active:not(:disabled), 
 .btn:active:not(:disabled),
 a[role="button"]:active,
 .interactive-btn:active {
   transform: translateY(1px) scale(0.96) !important;
-  box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 2px 6px -2px rgba(0, 0, 0, 0.1) !important;
   transition-duration: 0.08s !important;
 }
 
-/* Icon rotation / bounce on button hover */
+/* Button Icon Motion on Hover */
 button:hover svg, 
 button:hover .material-symbols-outlined,
 .btn:hover svg, 
 .btn:hover .material-symbols-outlined {
-  transform: scale(1.15) rotate(-3deg);
-  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
 }
 
-/* Primary Green Glow Buttons */
-.bg-brand-green:hover, 
-.bg-emerald-600:hover, 
-.bg-primary:hover,
-.bg-primary-container:hover {
-  box-shadow: 0 8px 25px -5px rgba(22, 128, 60, 0.4) !important;
-}
-
-/* Shimmer Light Reflection Effect on Primary Action Buttons */
-button.bg-brand-green::after,
-button.bg-emerald-600::after,
-.btn-shimmer::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -60%;
-  width: 50%;
-  height: 200%;
-  background: linear-gradient(
-    60deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.35) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  transform: rotate(25deg);
-  transition: all 0.65s ease;
-  pointer-events: none;
-}
-
-button.bg-brand-green:hover::after,
-button.bg-emerald-600:hover::after,
-.btn-shimmer:hover::after {
-  left: 140%;
-}
-
-/* --------------------------------------------------------------------------
-   2. Card & Container Hover Animations
-   -------------------------------------------------------------------------- */
-
-.donation-card,
-.stat-card,
-.hover-card,
-article,
-.interactive-card {
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
-              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
-              border-color 0.25s ease !important;
-}
-
-.donation-card:hover,
-.stat-card:hover,
-.hover-card:hover,
-.interactive-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.08), 0 4px 12px -4px rgba(22, 128, 60, 0.12) !important;
-}
-
-/* --------------------------------------------------------------------------
-   3. Keyframe Animations (Entrance, Pulse, Float, Bounce)
-   -------------------------------------------------------------------------- */
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes popIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  70% {
-    opacity: 1;
-    transform: scale(1.03);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes pulseGlow {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(22, 128, 60, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 0 10px rgba(22, 128, 60, 0);
-  }
-}
-
-@keyframes floatGentle {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
-}
-
-@keyframes gradientFlow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-@keyframes celebrateBounce {
-  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-12px); }
-  60% { transform: translateY(-6px); }
-}
-
-/* Animation Utilities */
-.animate-fade-in-up {
-  animation: fadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
+/* Disable all non-button decorative keyframe animations */
+.animate-pulse,
+.animate-ping,
+.animate-bounce,
+.animate-pulse-glow,
+.animate-float-gentle,
+.animate-celebrate,
+.animate-fade-in-up,
 .animate-pop-in {
-  animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: none !important;
 }
 
-.animate-pulse-glow {
-  animation: pulseGlow 2s infinite;
+/* Loading Spinners (Keep functional spinners only) */
+.animate-spin {
+  animation: spin 1s linear infinite !important;
 }
 
-.animate-float-gentle {
-  animation: floatGentle 4s ease-in-out infinite;
-}
-
-.animate-celebrate {
-  animation: celebrateBounce 0.8s ease;
-}
-
-.gradient-text-animated {
-  background: linear-gradient(135deg, #16803C 0%, #059669 40%, #0284C7 80%, #16803C 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: gradientFlow 5s ease infinite;
-}
-
-/* Floating Portal Switcher Widget Floating Motion */
-#global-portal-switcher {
-  animation: floatGentle 3.5s ease-in-out infinite;
-}
-#global-portal-switcher:hover {
-  animation-play-state: paused;
-}
-
-/* Ripple effect container */
-.ripple-target {
-  position: relative;
-  overflow: hidden;
-}
-
-/* Fun Confetti Pop Effect overlay */
-.confetti-pop-overlay {
-  position: fixed;
-  pointer-events: none;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  box-shadow: 
-    -40px -40px 0 #16803c,
-    40px -30px 0 #059669,
-    -30px 40px 0 #10b981,
-    35px 35px 0 #3b82f6,
-    -50px 10px 0 #eab308,
-    50px -10px 0 #ef4444;
-  animation: confettiExplode 0.7s ease-out forwards;
-  z-index: 99999;
-}
-
-@keyframes confettiExplode {
-  0% {
-    transform: scale(0.2);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(2.5);
-    opacity: 0;
-  }
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
