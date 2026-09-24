@@ -712,10 +712,92 @@
     applyFilters();
   }
 
+  async function loadLiveDonations() {
+    if (!window.SupabaseService) return;
+    try {
+      const list = await window.SupabaseService.getDonations();
+      const tbody = document.getElementById('pickupsBody');
+      if (!tbody || !list) return;
+
+      list.forEach(item => {
+        const existingRow = document.querySelector(`tr[data-id="${item.id}"]`);
+        if (!existingRow) {
+          const tr = document.createElement('tr');
+          tr.setAttribute('data-id', item.id);
+          tr.setAttribute('data-distance', '2.1');
+          tr.setAttribute('data-priority', 'urgent');
+          tr.setAttribute('data-qty', item.quantity_kg || 20);
+          tr.setAttribute('data-type', 'cooked');
+          tr.className = 'hover:bg-surface-container-low/30 transition-colors group bg-emerald-50/60 border-l-4 border-emerald-600';
+
+          tr.innerHTML = `
+            <td class="py-4 px-4 align-middle">
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined text-[22px]">restaurant</span>
+                </div>
+                <div>
+                  <span class="font-label-lg text-label-lg text-on-surface block leading-tight font-bold">${item.title}</span>
+                  <span class="font-body-sm text-body-sm text-on-surface-variant block mt-0.5">${item.category || 'Cooked Meals'} • Live Posted</span>
+                </div>
+              </div>
+            </td>
+            <td class="py-4 px-4 align-middle whitespace-nowrap">
+              <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-900 font-label-md text-label-md font-bold shadow-sm">
+                ${item.quantity_kg || 20} kg (${item.portions || 40} meals)
+              </span>
+            </td>
+            <td class="py-4 px-4 align-middle">
+              <span class="font-label-lg text-label-lg text-on-surface block leading-tight font-bold">${item.donor_name || 'Restaurant Donor'}</span>
+              <span class="font-body-sm text-body-sm text-outline block mt-0.5">${item.donor_address || 'Jaipur'}</span>
+            </td>
+            <td class="py-4 px-4 align-middle whitespace-nowrap">
+              <div class="flex items-center gap-1.5 font-label-md text-label-md text-on-surface">
+                <span class="material-symbols-outlined text-[16px] text-tertiary">near_me</span>
+                <span>2.1 km</span>
+                <span class="text-outline font-normal">(8 min drive)</span>
+              </div>
+            </td>
+            <td class="py-4 px-4 align-middle whitespace-nowrap">
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-error-container/60 text-error font-label-md text-label-md font-bold">
+                <span class="material-symbols-outlined text-[16px]">hourglass_top</span>
+                <span>${item.pickup_window || 'Next 2 Hours'}</span>
+              </div>
+            </td>
+            <td class="py-4 px-4 align-middle">
+              <div class="flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[18px] text-primary-container">night_shelter</span>
+                <div>
+                  <span class="font-label-md text-label-md text-on-surface block">${item.recipient_ngo || 'Hope Shelter'}</span>
+                  <span class="font-body-sm text-body-sm text-outline block">1.8 km onward</span>
+                </div>
+              </div>
+            </td>
+            <td class="py-4 px-4 align-middle text-center whitespace-nowrap">
+              <span class="inline-flex px-2 py-0.5 rounded-full bg-emerald-600 text-white font-label-sm text-label-sm font-bold tracking-wider uppercase shadow-sm">
+                NEW LIVE
+              </span>
+            </td>
+            <td class="py-4 px-4 align-middle text-right whitespace-nowrap">
+              <div class="flex items-center justify-end gap-2">
+                <button class="px-3 py-1.5 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md transition-all shadow-sm flex items-center gap-1.5" onclick="openAcceptModal('${item.title}', '${item.quantity_kg || 20} kg', '${item.donor_name}', '${item.donor_address}', 'Hope Shelter', '2.1 km', 'Next 2 Hours')" type="button">
+                  <span>Accept Pickup</span>
+                  <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                </button>
+              </div>
+            </td>
+          `;
+          tbody.insertBefore(tr, tbody.firstChild);
+        }
+      });
+    } catch(e) {}
+  }
+
   function refreshPickups() {
     const btn = event.currentTarget;
     const icon = btn.querySelector('.material-symbols-outlined');
     icon.classList.add('animate-spin');
+    loadLiveDonations();
     setTimeout(() => {
       icon.classList.remove('animate-spin');
       resetFilters();
@@ -815,6 +897,7 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    loadLiveDonations();
     const savedName = localStorage.getItem('user_name');
     if (savedName) {
       // Find top header user name elements and replace static 'Rahul Sharma' or 'ABC Restaurant'
