@@ -342,18 +342,47 @@
   document.addEventListener('DOMContentLoaded', () => {
     const savedName = localStorage.getItem('user_name');
     if (savedName) {
-      // Find top header user name elements and replace static 'Rahul Sharma' or 'ABC Restaurant'
       document.querySelectorAll('.font-label-lg, .text-label-md, .user-name-display').forEach(el => {
         if (el.textContent.includes('Rahul Sharma') || el.textContent.includes('ABC Restaurant') || el.textContent.includes('System Administrator') || el.textContent.includes('User Name')) {
           el.textContent = savedName;
         }
       });
-      // Replace greeting if any
       document.querySelectorAll('h1').forEach(el => {
         if (el.textContent.includes('Good morning, Rahul') || el.textContent.includes('Good morning,')) {
           el.textContent = `Good morning, ${savedName}`;
         }
       });
+    }
+
+    // Render Emergency Notification item if crisis is active
+    const crisisRaw = localStorage.getItem('emergency_crisis_event');
+    if (crisisRaw) {
+      try {
+        const crisis = JSON.parse(crisisRaw);
+        if (crisis && crisis.active) {
+          const list = document.querySelector('.space-y-3');
+          if (list) {
+            const emergencyItem = document.createElement('div');
+            emergencyItem.className = 'p-4 rounded-xl bg-red-50 border-2 border-red-500 shadow-md flex items-start gap-4 animate-pulse';
+            emergencyItem.innerHTML = `
+              <div class="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center shrink-0 mt-0.5 font-bold text-lg">
+                🚨
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-sm font-bold text-red-700 uppercase">RED ALERT: ${crisis.type}</h3>
+                  <span class="text-xs text-red-600 font-bold">ACTIVE NOW</span>
+                </div>
+                <p class="text-xs text-red-900 mt-1 font-semibold">${crisis.ngo || 'Hope Shelter'} requested emergency relief: <strong>${crisis.portions}</strong>.</p>
+                <button onclick="quickDispatchEmergencyRelief()" class="mt-2 px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg shadow-sm">
+                  ⚡ Quick Respond (50 Meals)
+                </button>
+              </div>
+            `;
+            list.prepend(emergencyItem);
+          }
+        }
+      } catch (e) {}
     }
   });
 </script>

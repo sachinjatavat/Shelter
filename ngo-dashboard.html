@@ -1289,6 +1289,16 @@
       if (desc) desc.textContent = `High-priority requirement: ${portions}. Broadcasted to 12 Jaipur commercial kitchens & driver network.`;
       if (banner) banner.classList.remove('hidden');
 
+      // Save global event so restaurant & driver portals pick it up instantly across tabs/portals
+      const crisisData = {
+        active: true,
+        type: type,
+        portions: portions,
+        ngo: localStorage.getItem('user_name') || 'Hope Shelter',
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem('emergency_crisis_event', JSON.stringify(crisisData));
+
       closeEmergencyModal();
       showToast(`🚨 RED ALERT: ${type} broadcasted to all restaurant partners!`);
 
@@ -1300,6 +1310,11 @@
     function cancelEmergencyCrisis() {
       const banner = document.getElementById('emergency-banner');
       if (banner) banner.classList.add('hidden');
+
+      localStorage.removeItem('emergency_crisis_event');
+      if (window.dismissGlobalEmergencyBanner) {
+        window.dismissGlobalEmergencyBanner();
+      }
       showToast('Emergency Crisis Relief deactivated.');
     }
     // Current Global State
