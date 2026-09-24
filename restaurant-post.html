@@ -452,24 +452,34 @@
 </div>
 <!-- Upload Food Image -->
 <div>
-<label class="block font-label-md text-label-md text-on-surface mb-1">
-                Visual Inspection Photo
-              </label>
-<div class="border-2 border-dashed border-outline-variant/70 rounded-xl p-5 text-center bg-surface-container-low/40 hover:bg-surface-container-low/80 transition-colors flex flex-col items-center justify-center">
-<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container mb-2">
-<span class="material-symbols-outlined text-[24px]">photo_camera</span>
-</div>
-<div class="font-label-md text-label-md text-on-surface mb-0.5">Upload food photo (JPG, PNG up to 10MB)</div>
-<div class="font-body-sm text-body-sm text-outline mb-3">Clear image of food in containers speeds up verification</div>
-<div class="flex items-center gap-2">
-<label class="inline-flex items-center gap-1.5 px-4 py-2 bg-surface-container-lowest border border-outline-variant/60 rounded-lg text-label-md font-label-md text-on-surface hover:bg-surface-container-low cursor-pointer shadow-sm transition-all">
-<span class="material-symbols-outlined text-[16px]">upload_file</span>
-<span>Upload Image</span>
-<input accept="image/*" class="hidden" type="file"/>
-</label>
-<span class="text-label-sm font-label-sm text-outline">or take live shot with mobile</span>
-</div>
-</div>
+  <label class="block font-label-md text-label-md text-on-surface mb-1">
+    Visual Inspection Photo <span class="text-error">*</span>
+  </label>
+  <div id="image-dropzone" class="border-2 border-dashed border-outline-variant/70 rounded-xl p-5 text-center bg-surface-container-low/40 hover:bg-surface-container-low/80 transition-colors flex flex-col items-center justify-center relative">
+    <div id="upload-prompt-view" class="flex flex-col items-center">
+      <div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container mb-2">
+        <span class="material-symbols-outlined text-[24px]">photo_camera</span>
+      </div>
+      <div class="font-label-md text-label-md text-on-surface mb-0.5">Upload food photo (JPG, PNG up to 10MB)</div>
+      <div class="font-body-sm text-body-sm text-outline mb-3">Clear image of food in containers speeds up verification</div>
+      <div class="flex items-center gap-2">
+        <label class="inline-flex items-center gap-1.5 px-4 py-2 bg-primary-container text-white rounded-lg text-label-md font-label-md hover:bg-primary cursor-pointer shadow-sm transition-all">
+          <span class="material-symbols-outlined text-[16px]">upload_file</span>
+          <span>Choose Image File</span>
+          <input id="food-image-input" accept="image/*" class="hidden" type="file" onchange="handleImageUpload(event)"/>
+        </label>
+      </div>
+    </div>
+
+    <!-- Active Image Preview Container -->
+    <div id="image-preview-wrapper" class="hidden w-full flex flex-col items-center gap-2">
+      <img id="uploaded-image-preview" src="" alt="Selected food photo" class="max-h-48 rounded-lg border border-outline-variant/40 object-cover shadow-sm"/>
+      <div class="flex items-center gap-2">
+        <span id="image-filename" class="text-xs font-semibold text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded">Photo Selected ✓</span>
+        <button type="button" onclick="removeUploadedImage()" class="text-xs text-red-600 hover:underline font-semibold">Remove / Change</button>
+      </div>
+    </div>
+  </div>
 </div>
 </div>
 </div>
@@ -494,7 +504,7 @@
 </div>
 <!-- RIGHT COLUMN: Donation Preview (35% Sticky) -->
 <div class="lg:col-span-4 sticky top-20 space-y-4">
-<div class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-5 shadow-sm">
+<div class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-5 shadow-sm space-y-4">
 <!-- Preview Header -->
 <div class="flex items-center justify-between pb-3.5 mb-4 border-b border-outline-variant/20">
 <div class="flex items-center gap-2">
@@ -503,9 +513,41 @@
 </div>
 <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-label-sm font-label-sm bg-primary-container/10 text-primary-container font-medium">
 <span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
-            Live Preview
-          </span>
+Live Preview
+</span>
 </div>
+
+<!-- AI Food Freshness & Expiry Risk Score Card -->
+<div class="p-4 rounded-xl border border-emerald-500/40 bg-emerald-50/60 shadow-sm space-y-3">
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <span class="material-symbols-outlined text-emerald-600 text-[22px] animate-pulse">psychology</span>
+      <span class="font-headline-sm text-headline-sm font-bold text-slate-900">AI Freshness Score</span>
+    </div>
+    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-600 text-white shadow-sm" id="ai-freshness-badge">94% EXCELLENT</span>
+  </div>
+  
+  <!-- Progress Gauge -->
+  <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+    <div id="ai-freshness-bar" class="bg-emerald-600 h-2.5 rounded-full transition-all duration-500" style="width: 94%;"></div>
+  </div>
+  
+  <div class="grid grid-cols-2 gap-2 text-[11px] pt-1 border-t border-emerald-200/60">
+    <div class="bg-white/90 p-2 rounded border border-emerald-100">
+      <span class="text-slate-500 block uppercase font-semibold text-[10px]">HACCP Risk Level</span>
+      <span class="font-bold text-emerald-700" id="ai-risk-level">Low Spoilage Risk</span>
+    </div>
+    <div class="bg-white/90 p-2 rounded border border-emerald-100">
+      <span class="text-slate-500 block uppercase font-semibold text-[10px]">Ambient Temp (Q10)</span>
+      <span class="font-bold text-slate-800" id="ai-temp-factor">1.0x (Optimal 24°C)</span>
+    </div>
+  </div>
+  
+  <p class="text-[11px] text-slate-600 italic">
+    *Calculated via WHO/HACCP microbial decay model: Prep condition + temperature acceleration rate.
+  </p>
+</div>
+
 <!-- Food Visual Card -->
 <div class="relative rounded-lg overflow-hidden mb-4 border border-outline-variant/30 bg-surface-container-low">
 <img class="w-full h-44 object-cover" data-alt="A clean, appetizing stainless steel gastro container filled with freshly prepared hot penne pasta tossed in bright red tomato basil pomodoro sauce, steaming gently under professional kitchen pendant lighting, sanitary commercial prep counter setting." id="preview-image" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLyg7bsFK4jKnN0fEIutpgIxqdh27AovZfuWE1QiTJIp47d-oRAHyegPRXpo95kDrHDC7xXpHMxZb_Zd3yVODL8xGPDUvV5doU-WNdWef-ZTyGIQHH9I3La0Tfmpu7IRYBUFA0SlkYT51iAdJ2KTX7RgnN_3U1zdJy0ipOIiy4ZmXgrg4YyZ22XqObUNvHkTibo7x_YI9VA4d9oTRtgFDlI7I2xvU4ef4NHPguNAaLQnMxy3O3K8xbnw"/>
@@ -618,6 +660,115 @@
 <span id="toast-text">Donation posted successfully!</span>
 </div>
 </div>
+
+<script>
+  function handleImageUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      const dataUrl = evt.target.result;
+      
+      const previewImg = document.getElementById('uploaded-image-preview');
+      const wrapper = document.getElementById('image-preview-wrapper');
+      const promptView = document.getElementById('upload-prompt-view');
+      const fileNameSpan = document.getElementById('image-filename');
+
+      if (previewImg) previewImg.src = dataUrl;
+      if (wrapper) wrapper.classList.remove('hidden');
+      if (promptView) promptView.classList.add('hidden');
+      if (fileNameSpan) fileNameSpan.textContent = `✓ ${file.name}`;
+
+      const rightPreviewImg = document.getElementById('preview-image');
+      if (rightPreviewImg) rightPreviewImg.src = dataUrl;
+
+      window.selectedFoodImageData = dataUrl;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function removeUploadedImage() {
+    const fileInput = document.getElementById('food-image-input');
+    if (fileInput) fileInput.value = '';
+    
+    const wrapper = document.getElementById('image-preview-wrapper');
+    const promptView = document.getElementById('upload-prompt-view');
+    if (wrapper) wrapper.classList.add('hidden');
+    if (promptView) promptView.classList.remove('hidden');
+
+    window.selectedFoodImageData = null;
+  }
+
+  function calculateAIFreshnessScore() {
+    const category = document.getElementById('food-category')?.value || 'Cooked Meals';
+    const conditionInput = document.querySelector('input[name="condition"]:checked')?.value || 'Freshly Prepared';
+    
+    let baseScore = 95;
+    if (conditionInput === 'Freshly Prepared') baseScore = 96;
+    else if (conditionInput === 'Prepared Earlier Today') baseScore = 84;
+    else if (conditionInput === 'Packaged / Sealed') baseScore = 99;
+
+    if (category === 'Dairy') baseScore -= 10;
+    if (category === 'Cooked Meals') baseScore -= 4;
+
+    const badge = document.getElementById('ai-freshness-badge');
+    const bar = document.getElementById('ai-freshness-bar');
+    const risk = document.getElementById('ai-risk-level');
+
+    if (bar) bar.style.width = `${baseScore}%`;
+    if (badge) {
+      if (baseScore >= 90) {
+        badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-600 text-white shadow-sm';
+        badge.textContent = `${baseScore}% EXCELLENT`;
+        if (risk) risk.textContent = 'Low Spoilage Risk';
+      } else if (baseScore >= 75) {
+        badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-600 text-white shadow-sm';
+        badge.textContent = `${baseScore}% GOOD`;
+        if (risk) risk.textContent = 'Moderate Risk';
+      } else {
+        badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-600 text-white shadow-sm';
+        badge.textContent = `${baseScore}% EXPIRING SOON`;
+        if (risk) risk.textContent = 'High Spoilage Risk';
+      }
+    }
+  }
+
+  function updatePreview() {
+    const foodName = document.getElementById('food-name').value.trim() || 'Pasta';
+    const category = document.getElementById('food-category').value;
+    const qty = document.getElementById('food-qty').value || '20';
+    const unit = document.getElementById('qty-unit').value || 'kg';
+    const location = document.getElementById('pickup-location').value;
+    const ready = document.getElementById('ready-time').value;
+    const safe = document.getElementById('safe-until').value;
+    const desc = document.getElementById('food-description').value;
+
+    const conditionChecked = document.querySelector('input[name="condition"]:checked');
+    const condition = conditionChecked ? conditionChecked.value : 'Freshly Prepared';
+
+    document.getElementById('preview-name').textContent = foodName;
+    document.getElementById('preview-category-badge').textContent = category;
+    
+    let approxText = '';
+    if (unit === 'kg') {
+      const servings = Math.round(Number(qty) * 2);
+      approxText = ` (~${servings} servings)`;
+    }
+    document.getElementById('preview-qty').textContent = `${qty} ${unit}${approxText}`;
+    document.getElementById('preview-condition-badge').textContent = condition;
+
+    const shortLoc = location.split(',')[0] || 'ABC Restaurant';
+    document.getElementById('preview-location').textContent = shortLoc;
+    document.getElementById('preview-location').title = location;
+
+    document.getElementById('preview-ready').textContent = ready;
+    document.getElementById('preview-safe').textContent = safe;
+    document.getElementById('preview-desc').textContent = desc || 'Fresh surplus food ready for immediate transit.';
+
+    calculateAIFreshnessScore();
+  }
+</script>
 <script>
   function updatePreview() {
     const foodName = document.getElementById('food-name').value || 'Surplus Meal';

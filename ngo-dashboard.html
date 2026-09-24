@@ -212,11 +212,26 @@
 <h1 class="text-2xl font-bold tracking-tight text-brand-dark">Good morning, Hope Shelter</h1>
 <p class="text-sm text-brand-secondary mt-0.5">Track incoming donations and manage your capacity.</p>
 </div>
-<div>
+<div class="flex items-center gap-2">
 <button class="px-4 py-2 border border-brand-border rounded-lg text-sm font-medium text-brand-dark hover:bg-brand-subtle hover:border-gray-400 transition-all shadow-sm" onclick="openCapacityModal()">
               Update Capacity
             </button>
+<button class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-bold shadow-md transition-all flex items-center gap-2" onclick="openEmergencyModal()">
+  <span>🚨 Emergency Crisis Broadcast</span>
+</button>
 </div>
+</div>
+
+<!-- Emergency Red Alert Banner (Hidden by default, toggled on SOS broadcast) -->
+<div id="emergency-banner" class="hidden bg-red-600 text-white p-4 rounded-xl shadow-lg border-2 border-red-400 flex flex-col md:flex-row items-center justify-between gap-3 animate-pulse">
+  <div class="flex items-center gap-3">
+    <div class="w-10 h-10 rounded-full bg-white text-red-600 flex items-center justify-center font-bold text-xl">🚨</div>
+    <div>
+      <h3 class="font-bold text-base" id="emergency-title">EMERGENCY RELIEF ALERT BROADCAST ACTIVE</h3>
+      <p class="text-xs text-red-100" id="emergency-desc">High-priority request sent to 12 nearby restaurant kitchens & driver network.</p>
+    </div>
+  </div>
+  <button onclick="cancelEmergencyCrisis()" class="px-3 py-1.5 bg-white text-red-700 text-xs font-bold rounded-lg hover:bg-red-50">Deactivate Alert</button>
 </div>
 <!-- Capacity Card (Detailed, Exact to reference) -->
 <div class="border border-brand-border rounded-lg p-5 bg-white shadow-sm space-y-3">
@@ -1201,6 +1216,51 @@
 </div>
 </div>
 <!-- END: UpdateCapacityModal -->
+
+<!-- BEGIN: EmergencyCrisisModal -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden" id="emergency-modal">
+  <div class="fixed inset-0 modal-backdrop transition-opacity" onclick="closeEmergencyModal()"></div>
+  <div class="relative bg-white rounded-xl border border-red-300 shadow-2xl max-w-md w-full p-6 z-10 space-y-4">
+    <div class="flex items-center justify-between border-b pb-3 border-gray-200">
+      <h3 class="text-base font-bold text-red-600 flex items-center gap-2">
+        <span>🚨 Trigger Emergency Crisis Broadcast</span>
+      </h3>
+      <button onclick="closeEmergencyModal()" class="text-gray-400 hover:text-gray-700">✕</button>
+    </div>
+    
+    <div class="space-y-3 text-xs text-slate-700">
+      <p class="font-medium text-slate-700">
+        Broadcast high-priority emergency Red Alerts to all commercial kitchens within 15 km during rainstorms, floods, or sudden shelter capacity surges.
+      </p>
+
+      <div>
+        <label class="block font-bold text-slate-800 mb-1">Select Crisis Type</label>
+        <select id="crisis-type" class="w-full border border-gray-300 rounded-lg p-2 text-xs">
+          <option value="🌧️ Heavy Rain & Flood Emergency">🌧️ Heavy Rain & Flood Emergency</option>
+          <option value="☀️ Extreme Heatwave Alert">☀️ Extreme Heatwave Ration Request</option>
+          <option value="🏠 Shelter Capacity Surge">🏠 Urgent Shelter Intake Surge (+100 people)</option>
+          <option value="⚠️ Disaster Relief Operation">⚠️ Disaster Relief Operation</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block font-bold text-slate-800 mb-1">Emergency Meal Requirement</label>
+        <select id="crisis-portions" class="w-full border border-gray-300 rounded-lg p-2 text-xs">
+          <option value="100 Meals (Urgent)">100 Prepared Meals (Next 1 Hour)</option>
+          <option value="250 Meals (High Priority)">250 Prepared Meals (Next 2 Hours)</option>
+          <option value="500+ Emergency Rations">500+ Emergency Meals (All Kitchens Alerted)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-end gap-2 pt-3 border-t border-gray-200">
+      <button onclick="closeEmergencyModal()" class="px-4 py-2 border rounded-lg text-xs font-semibold hover:bg-gray-50">Cancel</button>
+      <button onclick="broadcastEmergencyCrisis()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold shadow-md">🚨 Broadcast Red Alert</button>
+    </div>
+  </div>
+</div>
+<!-- END: EmergencyCrisisModal -->
+
 <!-- BEGIN: ToastNotification -->
 <div class="fixed bottom-6 right-6 z-50 hidden bg-brand-dark text-white text-xs px-4 py-3 rounded-lg shadow-xl border border-gray-700 flex items-center gap-3 transition-all transform translate-y-2" id="toast-message">
 <div class="w-5 h-5 rounded-full bg-brand-green text-white flex items-center justify-center flex-shrink-0 text-xs font-bold">✓</div>
@@ -1209,6 +1269,39 @@
 <!-- END: ToastNotification -->
 <!-- BEGIN: JavaScript Functionality -->
 <script data-purpose="tab-navigation-and-workflow">
+    function openEmergencyModal() {
+      document.getElementById('emergency-modal').classList.remove('hidden');
+    }
+
+    function closeEmergencyModal() {
+      document.getElementById('emergency-modal').classList.add('hidden');
+    }
+
+    function broadcastEmergencyCrisis() {
+      const type = document.getElementById('crisis-type').value;
+      const portions = document.getElementById('crisis-portions').value;
+
+      const banner = document.getElementById('emergency-banner');
+      const title = document.getElementById('emergency-title');
+      const desc = document.getElementById('emergency-desc');
+
+      if (title) title.textContent = `🚨 ${type.toUpperCase()}`;
+      if (desc) desc.textContent = `High-priority requirement: ${portions}. Broadcasted to 12 Jaipur commercial kitchens & driver network.`;
+      if (banner) banner.classList.remove('hidden');
+
+      closeEmergencyModal();
+      showToast(`🚨 RED ALERT: ${type} broadcasted to all restaurant partners!`);
+
+      if (window.triggerConfettiBurst) {
+        window.triggerConfettiBurst(window.innerWidth / 2, window.innerHeight / 2);
+      }
+    }
+
+    function cancelEmergencyCrisis() {
+      const banner = document.getElementById('emergency-banner');
+      if (banner) banner.classList.add('hidden');
+      showToast('Emergency Crisis Relief deactivated.');
+    }
     // Current Global State
     let currentCapacity = 72;
     let maxCapacity = 100;
