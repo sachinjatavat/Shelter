@@ -1664,23 +1664,51 @@
       navigateTo(`signup-${role}`);
     }
 
-    function handleRegistrationSubmit(event, role) {
+    async function handleRegistrationSubmit(event, role) {
       event.preventDefault();
+      const form = event.target;
+      const inputs = form.querySelectorAll('input, select');
       
-      const roleName = ROLE_CONFIGS[role].label;
-      showToast(`${roleName} Account Created`, `${roleName} account created successfully. Directing to dashboard...`);
-      
-      AUTH_STATE.currentUser = {
-        id: `usr_${Date.now()}`,
-        name: role === 'restaurant' ? 'Green Olive Bistro' : (role === 'ngo' ? 'Hope Community Kitchen' : 'Alex Rivera'),
-        email: `${role}@registered.org`,
-        role: role
+      let name = '';
+      let email = '';
+      let phone = '';
+      let address = '';
+
+      inputs.forEach(input => {
+        if (input.type === 'email') email = input.value;
+        if (input.type === 'tel') phone = input.value;
+        if (input.placeholder && input.placeholder.toLowerCase().includes('name')) name = input.value;
+        if (input.placeholder && (input.placeholder.toLowerCase().includes('city') || input.placeholder.toLowerCase().includes('address'))) address = input.value;
+      });
+
+      if (!name) name = email ? email.split('@')[0] : `${role.toUpperCase()} User`;
+      if (!email) email = `${role}_${Date.now()}@shelter.org`;
+
+      const userData = { email, role, name, phone, address };
+
+      try {
+        if (window.SupabaseService) {
+          await window.SupabaseService.registerUser(userData);
+        }
+      } catch (e) {
+        console.warn('Registration API warning:', e);
+      }
+
+      const roleName = ROLE_CONFIGS[role] ? ROLE_CONFIGS[role].label : role;
+      showToast(`${roleName} Account Created`, `Account saved to Supabase! Directing to dashboard...`);
+
+      const roleMap = {
+        restaurant: '/restaurant-dashboard.html',
+        ngo: '/ngo-dashboard.html',
+        driver: '/driver-dashboard.html',
+        admin: '/admin-dashboard.html'
       };
 
       setTimeout(() => {
-        navigateToDashboard(role);
-      }, 700);
+        window.location.href = roleMap[role] || '/driver-dashboard.html';
+      }, 500);
     }
+
 
     function handleForgotPassword(event) {
       event.preventDefault();

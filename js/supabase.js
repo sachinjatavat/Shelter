@@ -5,7 +5,7 @@
 const API_BASE_URL = 'http://localhost:5000/api';
 
 window.SupabaseService = {
-  // Check Backend & Supabase Connection Health
+  // Get Health Status
   async getHealth() {
     try {
       const res = await fetch(`${API_BASE_URL}/health`);
@@ -14,6 +14,22 @@ window.SupabaseService = {
       return { status: 'offline', database: 'Local Storage' };
     }
   },
+
+  // Register New User in Supabase & Backend
+  async registerUser(userData) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/users`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData)
+      });
+      return await res.json();
+    } catch (e) {
+      console.error('User registration error:', e);
+      return { success: false, error: e.message };
+    }
+  },
+
 
   // Get All Donations
   async getDonations() {

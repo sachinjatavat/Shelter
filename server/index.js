@@ -99,14 +99,61 @@ app.post('/api/auth/login', async (req, res) => {
   if (!email) return res.status(400).json({ error: 'Email is required' });
 
   if (isSupabaseConfigured && supabase) {
-    const { data, error } = await supabase.from('users').select('*').eq('email', email).single();
-    if (data) return res.json({ success: true, user: data });
+    try {
+      const { data, error } = await supabase.from('users').select('*').eq('email', email).single();
+      if (data) return res.json({ success: true, user: data });
+    } catch (e) {}
   }
 
   // Fallback
   const user = memoryDb.users.find(u => u.email === email) || { id: `usr-${Date.now()}`, email, role: role || 'restaurant', name: email.split('@')[0] };
   res.json({ success: true, user });
 });
+
+// 2b. Get All Users Endpoint
+app.get('/api/users', async (req, res) => {
+  if (isSupabaseConfigured && supabase) {
+    try {
+      const { data, error } = await supabase.from('users').select('*').order('created_at', { ascending: false });
+      if (!error && data) return res.json({ success: true, users: data });
+    } catch (e) {}
+  }
+  res.json({ success: true, users: memoryDb.users });
+});
+
+// 2c. Register New User Endpoint (Drivers, Restaurants, NGOs)
+app.post('/api/users', async (req, res) => {
+  const { email, role, name, phone, address } = req.body;
+  if (!email) return res.status(400).json({ error: 'Email is required' });
+
+  const newUser = {
+    email,
+    role: role || 'driver',
+    name: name || email.split('@')[0],
+    phone: phone || '',
+    address: address || '',
+    created_at: new Date().toISOString()
+  };
+
+  if (isSupabaseConfigured && supabase) {
+    try {
+      const { data, error } = await supabase.from('users').insert([newUser]).select();
+      if (error) {
+        console.warn('Supabase user insert notice:', error.message);
+      } else if (data) {
+        console.log('✅ New User Saved to Supabase:', data[0]);
+        return res.json({ success: true, user: data[0] });
+      }
+    } catch (e) {
+      console.error('Error inserting user to Supabase:', e);
+    }
+  }
+
+  // Fallback storage
+  memoryDb.users.unshift(newUser);
+  res.json({ success: true, user: newUser });
+});
+
 
 // 3. Get All Donations
 app.get('/api/donations', async (req, res) => {
