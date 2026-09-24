@@ -1509,6 +1509,9 @@
       localStorage.setItem('user_name', name);
       localStorage.setItem('user_email', email);
       localStorage.setItem('user_role', role);
+      localStorage.setItem('is_new_user', 'true');
+      localStorage.setItem('local_donations', JSON.stringify([]));
+      localStorage.removeItem('emergency_crisis_event');
 
       try {
         if (window.SupabaseService) {

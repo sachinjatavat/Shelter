@@ -145,8 +145,38 @@ function checkEmergencyCrisisState() {
   }
 }
 
+window.handleSignOut = function() {
+  localStorage.removeItem('user_name');
+  localStorage.removeItem('user_email');
+  localStorage.removeItem('user_role');
+  localStorage.removeItem('user_session');
+  localStorage.removeItem('current_user');
+  localStorage.removeItem('is_new_user');
+  localStorage.setItem('local_donations', JSON.stringify([]));
+  localStorage.removeItem('emergency_crisis_event');
+
+  alert('Signed out successfully.');
+  window.location.href = '/index.html';
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   checkEmergencyCrisisState();
   setInterval(checkEmergencyCrisisState, 3000);
+
+  document.addEventListener('click', (e) => {
+    const logoutTarget = e.target.closest('button[aria-label="Sign out"], button[aria-label="Logout"], .logout-btn, a[href="#logout"], a[href="/index.html"]');
+    if (logoutTarget) {
+      const text = logoutTarget.textContent.toLowerCase();
+      const aria = (logoutTarget.getAttribute('aria-label') || '').toLowerCase();
+      const icon = logoutTarget.querySelector('.material-symbols-outlined');
+      const iconText = icon ? icon.textContent.trim().toLowerCase() : '';
+
+      if (aria.includes('sign out') || aria.includes('logout') || text.includes('sign out') || text.includes('logout') || iconText === 'logout') {
+        e.preventDefault();
+        e.stopPropagation();
+        window.handleSignOut();
+      }
+    }
+  });
 });
 

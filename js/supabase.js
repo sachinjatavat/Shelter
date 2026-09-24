@@ -82,6 +82,9 @@ window.SupabaseService = {
 
   // Get All Donations (Merged API + Local)
   async getDonations() {
+    const isNewUser = localStorage.getItem('is_new_user') === 'true';
+    const userName = localStorage.getItem('user_name');
+
     let apiDonations = [];
     try {
       const res = await fetch(`${API_BASE_URL}/donations`);
@@ -94,6 +97,26 @@ window.SupabaseService = {
     }
 
     const localList = getLocalDonations();
+
+    if (isNewUser && userName) {
+      // Return local items plus API items that belong to this newly registered user account
+      const userDonations = localList.filter(d => 
+        !d.donor_name || d.donor_name === userName || d.recipient_ngo === userName || d.driver_name === userName
+      );
+      const apiUserDonations = apiDonations.filter(d => 
+        (d.donor_name && d.donor_name.toLowerCase().includes(userName.toLowerCase())) || 
+        (d.recipient_ngo && d.recipient_ngo.toLowerCase().includes(userName.toLowerCase())) || 
+        (d.driver_name && d.driver_name.toLowerCase().includes(userName.toLowerCase()))
+      );
+
+      const combined = [...userDonations];
+      const existingIds = new Set(userDonations.map(d => d.id));
+      for (const item of apiUserDonations) {
+        if (!existingIds.has(item.id)) combined.push(item);
+      }
+      return combined;
+    }
+
     const combined = [...apiDonations];
     const existingIds = new Set(apiDonations.map(d => d.id));
 
@@ -101,7 +124,6 @@ window.SupabaseService = {
       if (!existingIds.has(item.id)) {
         combined.push(item);
       } else {
-        // Update item in combined if local status is newer
         const idx = combined.findIndex(d => d.id === item.id);
         if (idx >= 0 && item.status !== combined[idx].status) {
           combined[idx] = { ...combined[idx], ...item };
