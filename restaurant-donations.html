@@ -389,7 +389,7 @@
 </div>
 </div>
 <div class="flex flex-row lg:flex-col gap-2 shrink-0 justify-end">
-<button class="h-10 px-5 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md hover:bg-primary transition-colors flex items-center justify-center gap-1.5 shadow-sm" type="button">
+<button class="h-10 px-5 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md hover:bg-primary transition-colors flex items-center justify-center gap-1.5 shadow-sm" type="button" onclick="triggerSendDonation(this)">
 <span class="material-symbols-outlined text-[18px]">send</span>
               Send Donation
             </button>
@@ -668,16 +668,67 @@
 
 
 <script>
+  function triggerSendDonation(btn) {
+    if (window.triggerConfettiBurst) {
+      let x = window.innerWidth / 2;
+      let y = window.innerHeight / 2;
+      if (btn && btn.getBoundingClientRect) {
+        const rect = btn.getBoundingClientRect();
+        x = rect.left + rect.width / 2;
+        y = rect.top + rect.height / 2;
+      }
+      window.triggerConfettiBurst(x, y);
+    }
+
+    let ngoName = 'Hope Shelter';
+    if (btn && btn.closest) {
+      const card = btn.closest('.bg-surface-container-lowest, article, .donation-card, tr, div');
+      if (card) {
+        const heading = card.querySelector('.text-headline-sm, h2, h3, .font-bold');
+        if (heading && heading.textContent) {
+          ngoName = heading.textContent.trim();
+        }
+      }
+    }
+
+    alert(`🎉 DONATION DISPATCH CONFIRMED!\n\nYour surplus food donation has been assigned to ${ngoName}.\n\nCourier Driver Rahul Sharma (+91 98290-XXXXX) has been dispatched for immediate pickup.\nTracking details are live on your Pickups dashboard.`);
+
+    if (window.SupabaseService) {
+      window.SupabaseService.createDonation({
+        title: 'Surplus Food Batch',
+        recipient_ngo: ngoName,
+        status: 'DISPATCHED'
+      });
+    }
+
+    setTimeout(() => {
+      window.location.href = '/restaurant-pickups.html';
+    }, 600);
+  }
+
+  function triggerViewDetails(btn) {
+    let ngoName = 'Hope Shelter';
+    if (btn && btn.closest) {
+      const card = btn.closest('.bg-surface-container-lowest, article, .donation-card, tr, div');
+      if (card) {
+        const heading = card.querySelector('.text-headline-sm, h2, h3, .font-bold');
+        if (heading && heading.textContent) {
+          ngoName = heading.textContent.trim();
+        }
+      }
+    }
+
+    alert(`📋 RECIPIENT SPECIFICATIONS:\n\nOrganisation: ${ngoName}\nVerification: 100% Certified NGO Partner\nAvailable Capacity: 45 meals remaining today\nDriver Vehicle: Thermal Insulated EV Van (#RJ-14-EV-9401)\nEstimated Pickup ETA: 12 minutes\nHandling Notes: Sanitary food-grade thermal containers provided.`);
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     const savedName = localStorage.getItem('user_name');
     if (savedName) {
-      // Find top header user name elements and replace static 'Rahul Sharma' or 'ABC Restaurant'
       document.querySelectorAll('.font-label-lg, .text-label-md, .user-name-display').forEach(el => {
         if (el.textContent.includes('Rahul Sharma') || el.textContent.includes('ABC Restaurant') || el.textContent.includes('System Administrator') || el.textContent.includes('User Name')) {
           el.textContent = savedName;
         }
       });
-      // Replace greeting if any
       document.querySelectorAll('h1').forEach(el => {
         if (el.textContent.includes('Good morning, Rahul') || el.textContent.includes('Good morning,')) {
           el.textContent = `Good morning, ${savedName}`;
