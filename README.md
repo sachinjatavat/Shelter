@@ -16,69 +16,7 @@
 
 By integrating **AI-driven safety & freshness scoring**, **IoT thermal cold-chain telemetry**, **NGO emergency crisis dispatch**, and automated **Section 80G Tax Deduction Certificate generation**, Surplus-To-Shelter turns food waste into social impact while incentivizing businesses and couriers.
 
----
 
-## 📽️ PowerPoint (PPT) Presentation Slide Deck Outline
-
-*Use this pre-structured slide outline to instantly generate slides for pitch decks, hackathons, or project presentations.*
-
-### **Slide 1: Title & Vision**
-- **Headline**: Surplus-To-Shelter — Real-Time Smart Food Rescue Network
-- **Subtitle**: Bridging commercial surplus food with urban shelters using AI & smart logistics.
-- **Team Members**: Sachin, Krishna, Nitesh, Priyanshi
-- **Key Takeaway**: Transforming urban food waste into zero-latency community relief.
-
-### **Slide 2: The Problem**
-- **Food Discard**: Millions of tonnes of edible food are wasted daily while urban shelters suffer meal shortages.
-- **Landfill Methane**: Decomposing food waste in landfills generates harmful greenhouse gases (CO₂ / Methane).
-- **NGO Logistics Gap**: Shelters lack real-time visibility, insulated transportation, and speed to claim fresh food.
-- **Commercial Barriers**: Restaurants fear food safety liability and lack incentives to donate.
-
-### **Slide 3: The Solution — Surplus-To-Shelter**
-- **Unified 3-Tier Network**: Seamless coordination between **Restaurants** (Donors), **NGO Shelters** (Recipients), and **Courier Drivers** (Logistics Fleet).
-- **AI Freshness Score**: Algorithmic safety scoring (`98/100 Tier A`) based on preparation timestamp, temperature, and category shelf-life.
-- **Instant 80G Tax Deductions**: Auto-generated official tax exemption certificates for donor restaurants.
-- **Emergency Crisis Dispatch**: Red Alert system for immediate hunger relief during urban crises & weather emergencies.
-
-### **Slide 4: Platform Architecture & Technology Stack**
-- **Frontend**: Multi-portal UI built with HTML5, Vanilla CSS (Design Tokens, Glassmorphism), and Vite.
-- **Backend**: Express REST API (`:5000`) for routing, validation, and real-time event broadcasting.
-- **Database & Persistence**: Supabase PostgreSQL Cloud Database paired with local storage synchronization.
-- **Sensors & Maps**: IoT Cold-Chain thermal sensor telemetry and turn-by-turn route navigation.
-
-### **Slide 5: Key Feature 1 — AI Freshness & Expiry Engine**
-- **Inputs**: Cooking timestamp, ambient temperature, food classification (cooked, bakery, produce), container sealing.
-- **Outputs**: Real-time safety score, remaining safe window countdown, and automated safety tier rating.
-- **Impact**: Zero risk of food safety hazards or foodborne illness reaching shelters.
-
-### **Slide 6: Key Feature 2 — Emergency Relief Red Alert**
-- **NGO Crisis Trigger**: NGOs send priority request (e.g. Heavy Rain / Flood Emergency).
-- **Universal Banner Broadcast**: Emergency alert immediately spans across all connected donor and driver dashboards.
-- **1-Click Fast-Track Dispatch**: Bypasses standard queues to send immediate food relief batches within 15 minutes.
-
-### **Slide 7: Key Feature 3 — IoT Cold-Chain & Driver Courier Portal**
-- **Live Driver Marketplace**: Open pickup feed sorted by distance, reward pay, and food safety urgency.
-- **Thermal Sensor Telemetry**: Continuous monitoring of insulated box temperature (`4.2°C` safe standard) and tamper-proof seal check.
-- **Smart Navigation**: Integrated route guidance with pickup/dropoff checkpoints.
-
-### **Slide 8: Financial & Driver Monetization Model**
-- **Base Pickup Pay**: ₹50–₹80 per delivery funded via Corporate CSR & ESG Grants.
-- **Distance Allowance**: ₹10/km for long-distance relief routes.
-- **Emergency Bonus**: +₹50 bonus pay during Red Alert crisis responses.
-- **Green Miles EV Subsidy**: Carbon credit vouchers & eco-rewards for zero-emission EV/Bike deliveries.
-
-### **Slide 9: Environmental & ESG Impact Metrics**
-- **CO₂ Emissions Prevented**: Direct metric of landfill gas reduction per kg of rescued food.
-- **Meals Served**: Live counter of nutritious portions delivered to children & families in need.
-- **Water Saved**: Virtual water conservation tracked per meal category.
-- **Tax Savings**: 50% Section 80G tax benefit claimable on Fair Market Valuation (₹140/meal).
-
-### **Slide 10: Future Roadmap & Call to Action**
-- **Scale Fleet**: Integration with commercial EV delivery fleets and drone delivery trials.
-- **Predictive Analytics**: Machine learning models predicting surplus food spikes in advance.
-- **Join Us**: Partnering with restaurant chains, regional NGO networks, and corporate CSR sponsors.
-
----
 
 ## 🌟 Detailed Platform Portals & Features
 
