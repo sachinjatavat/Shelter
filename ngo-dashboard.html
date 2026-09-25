@@ -1020,7 +1020,7 @@
 <div class="space-y-3 text-xs">
 <div>
 <label class="text-brand-secondary block mb-1">Shelter Name</label>
-<input class="w-full border border-brand-border rounded px-3 py-1.5 font-medium text-brand-dark" type="text" value="Hope Shelter Jaipur"/>
+<input id="ngoNameInput" class="w-full border border-brand-border rounded px-3 py-1.5 font-medium text-brand-dark" type="text" value="Hope Shelter Jaipur"/>
 </div>
 <div>
 <label class="text-brand-secondary block mb-1">Physical Address</label>
@@ -1030,7 +1030,19 @@
 <label class="text-brand-secondary block mb-1">Primary Operating Contact</label>
 <input class="w-full border border-brand-border rounded px-3 py-1.5 font-medium text-brand-dark" type="text" value="Dr. Sunita Verma (+91 98291 55432)"/>
 </div>
-<button class="px-3.5 py-1.5 bg-brand-dark text-white rounded font-medium text-xs" onclick="alert('Profile details saved.')">Update Profile</button>
+<button class="px-3.5 py-1.5 bg-brand-dark text-white rounded font-medium text-xs hover:bg-slate-800 transition-colors" onclick="saveNGOProfile()">Update Profile</button>
+<script>
+  async function saveNGOProfile() {
+    const newName = document.getElementById('ngoNameInput').value;
+    if (window.SupabaseService) {
+      await window.SupabaseService.updateUserProfile(newName, 'ngo');
+    } else {
+      localStorage.setItem('user_name', newName);
+      if (window.syncProfileHeaderUI) window.syncProfileHeaderUI();
+    }
+    alert(`✓ NGO Shelter Profile Updated!\n\nShelter name updated to "${newName}". Header badge has been updated.`);
+  }
+</script>
 </div>
 </div>
 <div class="border border-brand-border rounded-lg p-5 bg-white shadow-sm space-y-3">
@@ -1479,14 +1491,19 @@
     }
 
     // Confirm Food Receipt Workflow
-    function confirmFoodReceipt() {
+    async function confirmFoodReceipt(donationId) {
+      const targetId = donationId || selectedDonationId || 'DON-9482';
+      
+      if (window.SupabaseService) {
+        await window.SupabaseService.updateStatus(targetId, 'DELIVERED');
+      }
+
       // Add weight to food received and shelter current capacity
       const addedWeight = 20;
       currentCapacity += addedWeight;
       foodReceived += addedWeight;
 
       // Update Stat Cards
-      document.getElementById('stat-food-received').textContent = `${foodReceived} kg`;
       updateCapacityDisplay();
 
       // Update Milestone Badge in Deliveries Tab
@@ -1496,7 +1513,7 @@
         step5.innerHTML = `
           <span class="text-[11px] font-bold block">STEP 5 &bull; VERIFIED</span>
           <span class="text-xs font-bold mt-1 block">Delivered & Weighed</span>
-          <span class="text-[11px]">Added 20 kg to inventory</span>
+          <span class="text-[11px]">Added to inventory</span>
         `;
       }
 
@@ -1507,9 +1524,14 @@
         receiptBtn.textContent = 'Receipt Verified & Stored ✓';
       }
 
-      document.getElementById('delivery-eta-timer').textContent = 'Completed Just Now';
+      const timerEl = document.getElementById('delivery-eta-timer');
+      if (timerEl) timerEl.textContent = 'Completed Just Now';
       
-      showToast(`20 kg Pasta verified! Capacity adjusted to ${currentCapacity} kg.`);
+      showToast(`Food delivery verified! Added to inventory & status updated to DELIVERED.`);
+
+      if (typeof loadLiveNGODonations === 'function') {
+        loadLiveNGODonations();
+      }
     }
 
     // Donation Filter & Search Functionality
@@ -1589,13 +1611,28 @@
         const donations = await window.SupabaseService.getDonations();
         if (!donations || !Array.isArray(donations)) return;
 
+        const currentNgoName = localStorage.getItem('user_name') || 'Hope Shelter';
+
         const gridContainer = document.getElementById('donations-grid-container');
         const tableBody = document.querySelector('#donations-tab tbody');
+        const activeShipmentContainer = document.getElementById('active-shipment-card');
+        const completedTableBody = document.getElementById('completed-deliveries-table-body');
+        const historyTableBody = document.querySelector('#history-tab tbody');
 
-        const available = donations.filter(d => !d.status || d.status === 'AVAILABLE' || d.status === 'PENDING' || d.status === 'DISPATCHED' || d.recipient_ngo === 'Hope Shelter');
+        const available = donations.filter(d => 
+          !d.status || d.status === 'AVAILABLE' || d.status === 'PENDING' || d.status === 'MATCHED'
+        );
 
+        const inTransit = donations.filter(d => 
+          d.status === 'CLAIMED' || d.status === 'EN_ROUTE' || d.status === 'DISPATCHED' || d.status === 'PICKED_UP' || d.status === 'ASSIGNED'
+        );
+
+        const delivered = donations.filter(d => 
+          d.status === 'DELIVERED'
+        );
+
+        // 1. Render Available Donations Grid & Table
         available.forEach(don => {
-          // 1. Grid Card rendering
           if (gridContainer && !document.querySelector(`.donation-card[data-id="${don.id}"]`)) {
             const card = document.createElement('article');
             card.className = 'donation-card border-2 border-brand-green/30 rounded-lg p-4 bg-emerald-50/20 shadow-sm hover:border-brand-green transition-all flex flex-col justify-between';
@@ -1634,7 +1671,6 @@
             gridContainer.prepend(card);
           }
 
-          // 2. Table Row rendering
           if (tableBody && !document.querySelector(`tr[data-id="${don.id}"]`)) {
             const row = document.createElement('tr');
             row.className = 'hover:bg-gray-50/80 transition-colors bg-emerald-50/30';
@@ -1654,12 +1690,150 @@
           }
         });
 
-        // Update total counters dynamically
-        const totalCards = document.querySelectorAll('.donation-card').length;
+        // 2. Render Active / In-Transit Deliveries in Deliveries Tab
+        if (inTransit.length > 0 && activeShipmentContainer) {
+          const latestActive = inTransit[inTransit.length - 1];
+          activeShipmentContainer.innerHTML = `
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-brand-border pb-4">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 text-xs font-bold rounded bg-brand-amberLight text-brand-amber">${(latestActive.status || 'IN TRANSIT').replace('_', ' ')}</span>
+                  <span class="text-xs text-brand-secondary">Shipment #${latestActive.id}</span>
+                </div>
+                <h2 class="text-lg font-bold text-brand-dark mt-1">${latestActive.title} (${latestActive.quantity_kg || 20} kg) &bull; ${latestActive.donor_name || 'Partner Restaurant'}</h2>
+                <p class="text-xs text-brand-secondary">Driver: <strong>${latestActive.driver_name || 'Rahul Sharma'}</strong> (Delivery Courier) &bull; Location: ${latestActive.donor_address || 'Jaipur Corridor'}</p>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="text-right">
+                  <span class="text-xs text-brand-secondary block">Estimated Arrival</span>
+                  <span class="text-lg font-black text-brand-green" id="delivery-eta-timer">10-15 mins</span>
+                </div>
+                <button class="px-4 py-2.5 bg-brand-green hover:bg-brand-greenDark text-white text-xs font-bold rounded-lg shadow-sm transition-all flex items-center gap-2" id="btn-confirm-receipt" onclick="confirmFoodReceipt('${latestActive.id}')">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                  </svg>
+                  Confirm Receipt &amp; Verify Food
+                </button>
+              </div>
+            </div>
+            <div class="p-4 bg-brand-subtle rounded-lg border border-brand-border">
+              <div class="text-xs font-semibold text-brand-secondary uppercase tracking-wider mb-2">Transit Route Map (${latestActive.donor_address || 'Jaipur Corridor'})</div>
+              <div class="relative py-4 px-2">
+                <svg class="w-full h-10" fill="none" viewBox="0 0 600 40">
+                  <line stroke="#E5E5E5" stroke-linecap="round" stroke-width="4" x1="40" x2="560" y1="20" y2="20"></line>
+                  <line stroke="#16803C" stroke-linecap="round" stroke-width="4" x1="40" x2="420" y1="20" y2="20"></line>
+                  <line class="route-animated-line" stroke="#16803C" stroke-width="3" x1="420" x2="560" y1="20" y2="20"></line>
+                  <circle cx="40" cy="20" fill="#16803C" r="8"></circle>
+                  <circle cx="40" cy="20" fill="#FFFFFF" r="4"></circle>
+                  <circle cx="420" cy="20" fill="#16803C" r="12"></circle>
+                  <circle cx="420" cy="20" fill="#FFFFFF" r="6"></circle>
+                  <circle cx="560" cy="20" fill="#D1D5DB" r="8"></circle>
+                  <circle cx="560" cy="20" fill="#FFFFFF" r="4"></circle>
+                </svg>
+                <div class="flex justify-between text-xs pt-1 px-1">
+                  <div>
+                    <span class="font-bold text-brand-dark block">${latestActive.donor_name || 'Donor Restaurant'}</span>
+                    <span class="text-brand-secondary text-[11px]">${latestActive.donor_address || 'Jaipur'} (Origin)</span>
+                  </div>
+                  <div class="text-center font-medium text-brand-green text-xs">
+                    🚚 ${latestActive.driver_name || 'Driver Courier'} (En Route &bull; 1.2 km away)
+                  </div>
+                  <div class="text-right">
+                    <span class="font-bold text-brand-dark block">${currentNgoName}</span>
+                    <span class="text-brand-secondary text-[11px]">Jaipur Hub (Destination)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-3 pt-2">
+              <div class="p-3 border border-brand-green rounded bg-brand-greenLight/40">
+                <span class="text-[11px] font-bold text-brand-green block">STEP 1 &bull; COMPLETE</span>
+                <span class="text-xs font-semibold text-brand-dark mt-1 block">Accepted</span>
+                <span class="text-[11px] text-brand-secondary">Verified</span>
+              </div>
+              <div class="p-3 border border-brand-green rounded bg-brand-greenLight/40">
+                <span class="text-[11px] font-bold text-brand-green block">STEP 2 &bull; COMPLETE</span>
+                <span class="text-xs font-semibold text-brand-dark mt-1 block">Driver Assigned</span>
+                <span class="text-[11px] text-brand-secondary">${latestActive.driver_name || 'Assigned'}</span>
+              </div>
+              <div class="p-3 border border-brand-green rounded bg-brand-greenLight/40">
+                <span class="text-[11px] font-bold text-brand-green block">STEP 3 &bull; COMPLETE</span>
+                <span class="text-xs font-semibold text-brand-dark mt-1 block">Picked Up</span>
+                <span class="text-[11px] text-brand-secondary">${latestActive.donor_name || 'Donor'}</span>
+              </div>
+              <div class="p-3 border-2 border-brand-amber rounded bg-brand-amberLight/30 animate-pulse">
+                <span class="text-[11px] font-bold text-brand-amber block">STEP 4 &bull; CURRENT</span>
+                <span class="text-xs font-bold text-brand-dark mt-1 block">In Transit</span>
+                <span class="text-[11px] text-brand-dark font-medium">ETA 10 mins (85%)</span>
+              </div>
+              <div class="p-3 border border-brand-border rounded bg-brand-subtle text-brand-secondary" id="step-5-badge">
+                <span class="text-[11px] font-medium block">STEP 5 &bull; PENDING</span>
+                <span class="text-xs font-medium mt-1 block">Delivered &amp; Weighed</span>
+                <span class="text-[11px]">Awaiting receipt</span>
+              </div>
+            </div>
+          `;
+        }
+
+        // 3. Render Delivered Items into Completed Deliveries Table & History Tab
+        delivered.forEach(don => {
+          if (completedTableBody && !document.querySelector(`#completed-deliveries-table-body tr[data-id="${don.id}"]`)) {
+            const row = document.createElement('tr');
+            row.className = 'hover:bg-emerald-50/50 transition-colors bg-emerald-50/20';
+            row.dataset.id = don.id;
+            row.innerHTML = `
+              <td class="p-3 font-medium text-emerald-900">${don.id}</td>
+              <td class="p-3 font-bold">${don.title}</td>
+              <td class="p-3 font-bold text-emerald-800">${don.quantity_kg || 20} kg</td>
+              <td class="p-3 text-brand-secondary">${don.donor_name || 'Partner Restaurant'}</td>
+              <td class="p-3">${don.driver_name || 'Rahul Sharma'}</td>
+              <td class="p-3 text-brand-secondary">${new Date(don.created_at || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
+              <td class="p-3"><span class="px-2 py-0.5 rounded text-[11px] font-bold bg-brand-greenLight text-brand-green">DELIVERED ✓</span></td>
+            `;
+            completedTableBody.prepend(row);
+          }
+
+          if (historyTableBody && !document.querySelector(`#history-tab tr[data-id="${don.id}"]`)) {
+            const hRow = document.createElement('tr');
+            hRow.className = 'hover:bg-gray-50';
+            hRow.dataset.id = don.id;
+            hRow.innerHTML = `
+              <td class="p-3.5 font-medium">${new Date(don.created_at || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
+              <td class="p-3.5"><span class="text-brand-green font-semibold">Delivery Verified &amp; Stored</span></td>
+              <td class="p-3.5 font-bold">${don.title} (${don.quantity_kg || 20} kg)</td>
+              <td class="p-3.5">${don.donor_name || 'Partner Restaurant'}</td>
+              <td class="p-3.5">${don.driver_name || 'Rahul Sharma'}</td>
+              <td class="p-3.5 text-brand-green font-bold">✓ Inspected &amp; Received</td>
+            `;
+            historyTableBody.prepend(hRow);
+          }
+        });
+
+        // 4. Update Stats & Counters
+        const totalAvailCards = document.querySelectorAll('.donation-card').length;
         const availStat = document.getElementById('stat-available-donations');
-        if (availStat) availStat.textContent = totalCards;
+        if (availStat) availStat.textContent = totalAvailCards;
+
         const badgeCount = document.getElementById('donations-badge-count');
-        if (badgeCount) badgeCount.textContent = totalCards;
+        if (badgeCount) badgeCount.textContent = totalAvailCards;
+
+        const activeCount = inTransit.length;
+        const activeStat = document.getElementById('stat-incoming-deliveries');
+        if (activeStat) activeStat.textContent = activeCount;
+
+        const deliveriesBadge = document.getElementById('deliveries-active-count');
+        if (deliveriesBadge) deliveriesBadge.textContent = activeCount;
+
+        let totalReceivedKg = 20;
+        delivered.forEach(d => {
+          totalReceivedKg += Number(d.quantity_kg) || 20;
+        });
+
+        const foodReceivedStat = document.getElementById('stat-food-received');
+        if (foodReceivedStat) foodReceivedStat.textContent = `${totalReceivedKg} kg`;
+
+        const acceptedTodayStat = document.getElementById('stat-accepted-today');
+        if (acceptedTodayStat) acceptedTodayStat.textContent = inTransit.length + delivered.length + 1;
 
       } catch (e) {
         console.warn('Error loading live NGO donations:', e);
@@ -1724,9 +1898,11 @@
       });
     }
 
-    // Load Live NGO Donations immediately and auto-poll every 3 seconds
+    // Load Live NGO Donations immediately and auto-poll every 2.5 seconds
     loadLiveNGODonations();
-    setInterval(loadLiveNGODonations, 3000);
+    setInterval(loadLiveNGODonations, 2500);
+    window.addEventListener('storage', loadLiveNGODonations);
+    window.addEventListener('profileUpdated', loadLiveNGODonations);
   });
 </script>
 

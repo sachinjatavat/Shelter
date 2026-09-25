@@ -159,9 +159,46 @@ window.handleSignOut = function() {
   window.location.href = '/index.html';
 };
 
+window.syncProfileHeaderUI = function() {
+  const savedName = localStorage.getItem('user_name');
+  if (!savedName) return;
+
+  // 1. Update text content in header user display elements (EXCLUDE sidebar/aside and nav links)
+  document.querySelectorAll('header .user-name-display, #navUserName, .profile-name-text').forEach(el => {
+    if (el.tagName !== 'INPUT' && !el.closest('aside') && !el.closest('nav')) {
+      el.textContent = savedName;
+    }
+  });
+
+  document.querySelectorAll('header .font-label-lg, header .text-label-md').forEach(el => {
+    if (!el.closest('nav') && !el.closest('aside')) {
+      if (el.textContent.includes('Rahul Sharma') || el.textContent.includes('ABC Restaurant') || el.textContent.includes('Manager') || el.textContent.includes('User Name') || el.classList.contains('user-name-display')) {
+        el.textContent = savedName;
+      }
+    }
+  });
+
+  // 2. Update initial avatar badge
+  document.querySelectorAll('#userAvatarBadge, .user-avatar-initial').forEach(el => {
+    if (savedName && savedName.length > 0) {
+      el.textContent = savedName.charAt(0).toUpperCase();
+    }
+  });
+
+  // 3. Update dashboard greetings
+  document.querySelectorAll('main h1').forEach(el => {
+    const text = el.textContent;
+    if (text.includes('Good morning,') || text.includes('Welcome back,')) {
+      const prefix = text.includes('Good morning,') ? 'Good morning,' : 'Welcome back,';
+      el.textContent = `${prefix} ${savedName}`;
+    }
+  });
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   checkEmergencyCrisisState();
   setInterval(checkEmergencyCrisisState, 3000);
+  window.syncProfileHeaderUI();
 
   document.addEventListener('click', (e) => {
     const logoutTarget = e.target.closest('button[aria-label="Sign out"], button[aria-label="Logout"], .logout-btn, a[href="#logout"], a[href="/index.html"]');
@@ -178,5 +215,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
+});
+
+window.addEventListener('profileUpdated', () => {
+  window.syncProfileHeaderUI();
 });
 

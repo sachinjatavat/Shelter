@@ -160,8 +160,8 @@
     const savedName = localStorage.getItem('user_name');
     if (savedName) {
       // Find top header user name elements and replace static 'Rahul Sharma' or 'ABC Restaurant'
-      document.querySelectorAll('.font-label-lg, .text-label-md, .user-name-display').forEach(el => {
-        if (el.textContent.includes('Rahul Sharma') || el.textContent.includes('ABC Restaurant') || el.textContent.includes('System Administrator') || el.textContent.includes('User Name')) {
+      document.querySelectorAll('header .font-label-lg, header .text-label-md, header .user-name-display').forEach(el => {
+        if (!el.closest('aside') && !el.closest('nav') && (el.textContent.includes('Rahul Sharma') || el.textContent.includes('ABC Restaurant') || el.textContent.includes('System Administrator') || el.textContent.includes('User Name'))) {
           el.textContent = savedName;
         }
       });
