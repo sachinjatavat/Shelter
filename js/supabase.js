@@ -200,6 +200,9 @@ window.SupabaseService = {
     const cleanName = newName.trim();
     
     localStorage.setItem('user_name', cleanName);
+    if (role) {
+      localStorage.setItem(`${role}_name`, cleanName);
+    }
 
     try {
       await fetch(`${API_BASE_URL}/users/profile`, {
@@ -422,10 +425,10 @@ window.SupabaseService = {
 
   // NGO Claim Food
   async claimDonation(id, ngoName) {
-    const name = ngoName || localStorage.getItem('user_name') || 'Hope Shelter';
+    const name = ngoName || localStorage.getItem('ngo_name') || localStorage.getItem('user_name') || 'Shelter Care Center';
     
     const list = getLocalDonations();
-    const item = list.find(d => d.id === id);
+    let item = list.find(d => d.id === id);
     if (item) {
       const expiry = this.getExpiryInfo(item);
       if (expiry.is_expired) {
@@ -435,7 +438,29 @@ window.SupabaseService = {
       }
       item.recipient_ngo = name;
       item.status = 'CLAIMED';
-      localStorage.setItem('local_donations', JSON.stringify(list));
+    } else {
+      const card = typeof document !== 'undefined' ? document.querySelector(`.donation-card[data-id="${id}"]`) : null;
+      item = {
+        id: id,
+        title: card ? card.dataset.title : 'Cooked Meals & Soup',
+        category: card ? card.dataset.category : 'Cooked Meals',
+        quantity_kg: card ? Number(card.dataset.quantity) || 20 : 20,
+        portions: card ? (Number(card.dataset.quantity) || 20) * 2 : 40,
+        temp_requirement: 'Hot Insulated',
+        donor_name: card ? card.dataset.restaurant : 'Restaurant Partner',
+        donor_address: card ? card.dataset.location : 'Jaipur Corridor',
+        recipient_ngo: name,
+        driver_name: localStorage.getItem('driver_name') || 'Assigned Courier',
+        status: 'CLAIMED',
+        pickup_window: card ? card.dataset.expiry : 'Next 2 Hours',
+        created_at: new Date().toISOString()
+      };
+      list.unshift(item);
+    }
+    localStorage.setItem('local_donations', JSON.stringify(list));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('storage'));
+      window.dispatchEvent(new CustomEvent('profileUpdated'));
     }
 
     try {
@@ -446,16 +471,16 @@ window.SupabaseService = {
       });
       return await res.json();
     } catch (e) {
-      return { success: true, donation: { id, recipient_ngo: name, status: 'CLAIMED' } };
+      return { success: true, donation: item };
     }
   },
 
   // Driver Assignment
   async assignDriver(id, driverName) {
-    const name = driverName || localStorage.getItem('user_name') || 'Rahul Sharma';
+    const name = driverName || localStorage.getItem('driver_name') || localStorage.getItem('user_name') || 'Courier Driver';
 
     const list = getLocalDonations();
-    const item = list.find(d => d.id === id);
+    let item = list.find(d => d.id === id);
     if (item) {
       const expiry = this.getExpiryInfo(item);
       if (expiry.is_expired) {
@@ -465,7 +490,29 @@ window.SupabaseService = {
       }
       item.driver_name = name;
       item.status = 'EN_ROUTE';
-      localStorage.setItem('local_donations', JSON.stringify(list));
+    } else {
+      item = {
+        id: id,
+        title: 'Fresh Surplus Delivery',
+        category: 'Cooked Meals',
+        quantity_kg: 25,
+        portions: 50,
+        temp_requirement: 'Insulated Thermal Box',
+        donor_name: 'Restaurant Partner',
+        donor_address: '142 Market St, Commercial Corridor',
+        recipient_ngo: localStorage.getItem('ngo_name') || 'Shelter Care Center',
+        driver_name: name,
+        status: 'EN_ROUTE',
+        pickup_window: '45 mins',
+        created_at: new Date().toISOString()
+      };
+      list.unshift(item);
+    }
+    localStorage.setItem('local_donations', JSON.stringify(list));
+    localStorage.setItem('active_driver_mission_id', id);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('storage'));
+      window.dispatchEvent(new CustomEvent('profileUpdated'));
     }
 
     try {
@@ -476,7 +523,7 @@ window.SupabaseService = {
       });
       return await res.json();
     } catch (e) {
-      return { success: true, donation: { id, driver_name: name, status: 'EN_ROUTE' } };
+      return { success: true, donation: item };
     }
   },
 
@@ -485,10 +532,30 @@ window.SupabaseService = {
     const newStatus = status || 'DELIVERED';
 
     const list = getLocalDonations();
-    const item = list.find(d => d.id === id);
+    let item = list.find(d => d.id === id);
     if (item) {
       item.status = newStatus;
-      localStorage.setItem('local_donations', JSON.stringify(list));
+    } else {
+      item = {
+        id: id,
+        title: 'Completed Food Rescue',
+        category: 'Cooked Meals',
+        quantity_kg: 25,
+        donor_name: 'Restaurant Partner',
+        recipient_ngo: localStorage.getItem('ngo_name') || 'Shelter Hub',
+        driver_name: localStorage.getItem('driver_name') || 'Courier Driver',
+        status: newStatus,
+        created_at: new Date().toISOString()
+      };
+      list.unshift(item);
+    }
+    localStorage.setItem('local_donations', JSON.stringify(list));
+    if (newStatus === 'DELIVERED') {
+      localStorage.removeItem('active_driver_mission_id');
+    }
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('storage'));
+      window.dispatchEvent(new CustomEvent('profileUpdated'));
     }
 
     try {
@@ -499,7 +566,7 @@ window.SupabaseService = {
       });
       return await res.json();
     } catch (e) {
-      return { success: true, donation: { id, status: newStatus } };
+      return { success: true, donation: item };
     }
   }
 };

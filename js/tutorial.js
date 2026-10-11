@@ -101,7 +101,8 @@
 
   window.showUserTutorial = function (force = false) {
     const isNewUser = localStorage.getItem('is_new_user') === 'true';
-    if (!isNewUser && !force) return;
+    const tutorialDismissed = localStorage.getItem('tutorial_dismissed') === 'true';
+    if ((!isNewUser || tutorialDismissed) && !force) return;
     if (document.getElementById('welcome-tutorial-modal')) return;
 
     let role = localStorage.getItem('user_role') || 'restaurant';
@@ -162,7 +163,7 @@
   window.closeUserTutorial = function () {
     const modal = document.getElementById('welcome-tutorial-modal');
     if (modal) modal.remove();
-    localStorage.setItem('is_new_user', 'false');
+    localStorage.setItem('tutorial_dismissed', 'true');
   };
 
   document.addEventListener('DOMContentLoaded', () => {

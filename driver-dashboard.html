@@ -35,10 +35,6 @@
           <span class="material-symbols-outlined text-[20px]">calendar_month</span>
           <span>Pickup History</span>
         </a>
-        <a class="flex items-center gap-space-sm px-3 py-2 rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/driver-impact.html">
-          <span class="material-symbols-outlined text-[20px]">trending_up</span>
-          <span>Impact</span>
-        </a>
         <a class="flex items-center gap-space-sm px-3 py-2 rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/driver-notifications.html">
           <div class="flex items-center gap-space-sm flex-1">
             <span class="material-symbols-outlined text-[20px]">notifications</span>
@@ -491,7 +487,16 @@
 
   const acceptModal = document.getElementById('acceptModal');
 
-  function openAcceptModal(item, weight, donor, shelter, distance) {
+  function openAcceptModal(item, weight, donor, shelter, distance, donationId) {
+    window.currentDashboardAccept = {
+      id: donationId || ('DON-' + Math.floor(1000 + Math.random() * 9000)),
+      title: item,
+      quantity_kg: parseInt(weight) || 25,
+      donor_name: donor,
+      recipient_ngo: shelter,
+      donor_address: '142 Market St, Commercial District',
+      pickup_window: '45 mins'
+    };
     document.getElementById('modalItemName').textContent = item;
     document.getElementById('modalWeight').textContent = weight;
     document.getElementById('modalDonor').textContent = donor;
@@ -504,18 +509,50 @@
     acceptModal.classList.add('hidden');
   }
 
-  function confirmAcceptance() {
+  async function confirmAcceptance() {
     closeAcceptModal();
+    const driverName = localStorage.getItem('driver_name') || (localStorage.getItem('user_role') === 'driver' ? localStorage.getItem('user_name') : '') || localStorage.getItem('user_name') || 'Courier Driver';
+    const donation = window.currentDashboardAccept || {
+      id: 'DON-' + Math.floor(1000 + Math.random() * 9000),
+      title: 'Cooked Meals',
+      quantity_kg: 25,
+      donor_name: 'Restaurant Partner',
+      recipient_ngo: 'Shelter Hub'
+    };
+
+    const list = JSON.parse(localStorage.getItem('local_donations') || '[]');
+    let item = list.find(d => d.id === donation.id);
+    if (!item) {
+      item = {
+        ...donation,
+        driver_name: driverName,
+        status: 'EN_ROUTE',
+        created_at: new Date().toISOString()
+      };
+      list.unshift(item);
+    } else {
+      item.driver_name = driverName;
+      item.status = 'EN_ROUTE';
+    }
+    localStorage.setItem('local_donations', JSON.stringify(list));
+    localStorage.setItem('active_driver_mission_id', donation.id);
+
+    try {
+      if (window.SupabaseService) {
+        await window.SupabaseService.assignDriver(donation.id, driverName);
+      }
+    } catch (e) {}
+
     const notification = document.createElement('div');
     notification.className = 'fixed bottom-6 right-6 z-50 bg-primary text-on-primary px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 animate-bounce';
     notification.innerHTML = `
       <span class="material-symbols-outlined text-[20px]">check_circle</span>
-      <span class="font-label-lg text-label-lg">Pickup Accepted! Route added to active navigation.</span>
+      <span class="font-label-lg text-label-lg">Pickup Accepted! Starting route navigation...</span>
     `;
     document.body.appendChild(notification);
     setTimeout(() => {
-      notification.remove();
-    }, 4000);
+      window.location.href = '/driver-active.html';
+    }, 700);
   }
 
   function previewDetails(item, weight, donor, shelter, distance) {
@@ -556,9 +593,6 @@
       <a href="/driver-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
         <span class="w-2 h-2 rounded-full bg-amber-500"></span> 🚚 <b>Driver Courier Portal</b>
       </a>
-      <div class="px-2.5 py-1.5 text-[10px] font-semibold text-slate-400 border-t border-slate-800 mt-1 text-center">
-        Created by <span class="text-emerald-400 font-bold">Sachin, Krishna, Nitesh, Priyanshi</span>
-      </div>
     </div>
   </div>
 </div>
@@ -571,7 +605,9 @@
       const grid = document.getElementById('driver-pickups-grid');
       if (!grid || !list) return;
 
-      list.forEach(item => {
+      const availableItems = list.filter(item => !item.status || item.status === 'AVAILABLE' || item.status === 'PENDING' || item.status === 'MATCHED');
+
+      availableItems.forEach(item => {
         if (!document.querySelector(`.driver-live-card[data-id="${item.id}"]`)) {
           const card = document.createElement('div');
           card.className = 'driver-live-card bg-emerald-50/70 border-2 border-emerald-500/40 rounded-xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between';
@@ -606,7 +642,7 @@
                 </div>
               </div>
             </div>
-            <button class="w-full py-2.5 rounded-lg bg-primary-container text-on-primary hover:bg-primary font-label-lg text-label-lg transition-colors flex items-center justify-center gap-2 shadow-sm" onclick="openAcceptModal('${item.title}', '${item.quantity_kg || 25} kg', '${item.donor_name || 'Restaurant Partner'}', '${item.recipient_ngo || 'Hope Shelter'}', '2.1 km (~8 min)')" type="button">
+            <button class="w-full py-2.5 rounded-lg bg-primary-container text-on-primary hover:bg-primary font-label-lg text-label-lg transition-colors flex items-center justify-center gap-2 shadow-sm" onclick="openAcceptModal('${item.title}', '${item.quantity_kg || 25} kg', '${item.donor_name || 'Restaurant Partner'}', '${item.recipient_ngo || 'Hope Shelter'}', '2.1 km (~8 min)', '${item.id}')" type="button">
               <span class="material-symbols-outlined text-[18px]">add_task</span>
               <span>Accept Pickup</span>
             </button>
@@ -624,7 +660,7 @@
     setInterval(loadLiveDriverPickups, 2500);
     window.addEventListener('storage', loadLiveDriverPickups);
 
-    const savedName = localStorage.getItem('user_name');
+    const savedName = localStorage.getItem('driver_name') || (localStorage.getItem('user_role') === 'driver' ? localStorage.getItem('user_name') : '') || localStorage.getItem('user_name');
     if (savedName) {
       document.querySelectorAll('header .font-label-lg, header .text-label-md, header .user-name-display').forEach(el => {
         if (!el.closest('aside') && !el.closest('nav') && (el.textContent.includes('Rahul Sharma') || el.textContent.includes('ABC Restaurant') || el.textContent.includes('System Administrator') || el.textContent.includes('User Name'))) {
@@ -632,7 +668,7 @@
         }
       });
       document.querySelectorAll('h1').forEach(el => {
-        if (el.textContent.includes('Good morning, Rahul') || el.textContent.includes('Good morning,')) {
+        if (el.textContent.includes('Good morning,')) {
           el.textContent = `Good morning, ${savedName}`;
         }
       });
@@ -641,11 +677,6 @@
 </script>
 
   <script src="/js/motion.js"></script>
-
-<footer class="w-full bg-slate-900 text-slate-400 text-center py-4 border-t border-slate-800 text-xs font-medium mt-12 font-sans">
-  <p>© 2026 Surplus-To-Shelter &bull; Created by <strong class="text-white">Sachin, Krishna, Nitesh, Priyanshi</strong></p>
-</footer>
-
-  <script src="/js/tutorial.js"></script>
+<script src="/js/tutorial.js"></script>
   <script src="/js/new-user-cleaner.js"></script>
 </body></html>

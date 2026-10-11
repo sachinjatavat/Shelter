@@ -345,21 +345,6 @@
                   <input type="checkbox" id="rememberMe" checked class="w-4 h-4 rounded text-[#16803C] accent-[#16803C] border-borderline">
                   <span class="text-xs text-text-secondary">Remember this device</span>
                 </label>
-                <!-- Pre-fill helper buttons for easy reviewer testing -->
-                <div class="text-[11px] text-text-muted">
-                  <span class="font-mono bg-slate-100 px-1.5 py-0.5 rounded text-slate-600">Demo Ready</span>
-                </div>
-              </div>
-
-              <!-- Quick Demo Fill Helpers for testing all 4 roles -->
-              <div class="pt-1 pb-1">
-                <div class="text-[11px] text-text-muted mb-1 font-medium">Quick switch test accounts:</div>
-                <div class="flex flex-wrap gap-1.5 text-xs">
-                  <button type="button" onclick="fillTestAccount('restaurant')" class="px-2 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200 text-[11px]">Restaurant</button>
-                  <button type="button" onclick="fillTestAccount('ngo')" class="px-2 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200 text-[11px]">NGO / Shelter</button>
-                  <button type="button" onclick="fillTestAccount('driver')" class="px-2 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200 text-[11px]">Driver</button>
-                  
-                </div>
               </div>
 
               <!-- Submit Button with Spinner -->
@@ -501,22 +486,22 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Business Name <span class="text-danger">*</span></label>
-              <input type="text" required placeholder="e.g. Green Olive Bistro" value="Green Olive Bistro" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+              <input type="text" id="signupRestaurantBusinessName" required placeholder="e.g. Green Olive Bistro" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
             </div>
             <div>
               <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Owner / Manager Name <span class="text-danger">*</span></label>
-              <input type="text" required placeholder="e.g. Marcus Vance" value="Marcus Vance" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+              <input type="text" id="signupRestaurantOwner" required placeholder="e.g. Marcus Vance" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
             </div>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Email <span class="text-danger">*</span></label>
-              <input type="email" required placeholder="manager@business.com" value="marcus@greenolive.com" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+              <input type="email" id="signupRestaurantEmail" required placeholder="manager@business.com" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
             </div>
             <div>
               <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Phone Number <span class="text-danger">*</span></label>
-              <input type="tel" required placeholder="+1 (555) 019-2834" value="+1 (555) 439-1120" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+              <input type="tel" id="signupRestaurantPhone" required placeholder="+1 (555) 439-1120" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
             </div>
           </div>
 
@@ -615,23 +600,23 @@
         <form onsubmit="handleRegistrationSubmit(event, 'ngo')" class="space-y-4">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Organization Name <span class="text-danger">*</span></label>
-              <input type="text" required placeholder="e.g. Hope Community Kitchen" value="Hope Community Kitchen" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Organization / Shelter Name <span class="text-danger">*</span></label>
+              <input type="text" id="signupNgoOrgName" required placeholder="e.g. Hope Community Kitchen or Your Shelter Name" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
             </div>
             <div>
               <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Contact Person <span class="text-danger">*</span></label>
-              <input type="text" required placeholder="e.g. Sarah Jenkins" value="Sarah Jenkins" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+              <input type="text" id="signupNgoContact" required placeholder="e.g. Sarah Jenkins" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
             </div>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Email <span class="text-danger">*</span></label>
-              <input type="email" required placeholder="intake@shelterhope.org" value="sarah@hopekitchen.org" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+              <input type="email" id="signupNgoEmail" required placeholder="intake@shelterhope.org" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
             </div>
             <div>
               <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Phone Number <span class="text-danger">*</span></label>
-              <input type="tel" required placeholder="+1 (555) 234-5678" value="+1 (555) 884-1234" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+              <input type="tel" id="signupNgoPhone" required placeholder="+1 (555) 884-1234" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
             </div>
           </div>
 
@@ -764,17 +749,17 @@
         <form onsubmit="handleRegistrationSubmit(event, 'driver')" class="space-y-4">
           <div>
             <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Full Name <span class="text-danger">*</span></label>
-            <input type="text" required placeholder="e.g. Alex Rivera" placeholder="e.g. Krishna" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+            <input type="text" id="signupDriverName" required placeholder="e.g. Your Full Name (Driver / Courier)" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Email <span class="text-danger">*</span></label>
-              <input type="email" required placeholder="alex.rivera@courier.net" placeholder="krishna@driver.com" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+              <input type="email" id="signupDriverEmail" required placeholder="e.g. driver@courier.net" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
             </div>
             <div>
               <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Phone Number <span class="text-danger">*</span></label>
-              <input type="tel" required placeholder="+1 (555) 765-4321" placeholder="+91 98290 12345" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+              <input type="tel" id="signupDriverPhone" required placeholder="+91 98290 12345" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
             </div>
           </div>
 
@@ -1427,6 +1412,14 @@
         localStorage.setItem('user_name', userName);
         localStorage.setItem('user_email', email);
         localStorage.setItem('user_role', userRole);
+        localStorage.setItem(`${userRole}_name`, userName);
+
+        const isDefaultSeedAccount = ['manager@freshharvest.org', 'coordinator@hopeshelter.org', 'driver402@surplusrescue.org'].includes(email.toLowerCase());
+        if (!isDefaultSeedAccount) {
+          localStorage.setItem('is_new_user', 'true');
+        } else {
+          localStorage.removeItem('is_new_user');
+        }
 
         const roleMap = {
           restaurant: '/restaurant-dashboard.html',
@@ -1514,17 +1507,34 @@
       navigateTo(`signup-${role}`);
     }
 
-        async function handleRegistrationSubmit(event, role) {
+    async function handleRegistrationSubmit(event, role) {
       event.preventDefault();
-      const form = event.target;
-      
-      const nameInput = form.querySelector('input[type="text"]');
-      const emailInput = form.querySelector('input[type="email"]');
-      const phoneInput = form.querySelector('input[type="tel"]');
+      let name = '';
+      let email = '';
+      let phone = '';
 
-      let name = nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'Krishna';
-      let email = emailInput && emailInput.value.trim() ? emailInput.value.trim() : `krishna_${Date.now()}@driver.com`;
-      let phone = phoneInput && phoneInput.value.trim() ? phoneInput.value.trim() : '+91 98290 12345';
+      if (role === 'driver') {
+        const nameInput = document.getElementById('signupDriverName');
+        const emailInput = document.getElementById('signupDriverEmail');
+        const phoneInput = document.getElementById('signupDriverPhone');
+        name = nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'Courier Driver';
+        email = emailInput && emailInput.value.trim() ? emailInput.value.trim() : `driver_${Date.now()}@courier.net`;
+        phone = phoneInput && phoneInput.value.trim() ? phoneInput.value.trim() : '+91 98290 12345';
+      } else if (role === 'ngo') {
+        const nameInput = document.getElementById('signupNgoOrgName');
+        const emailInput = document.getElementById('signupNgoEmail');
+        const phoneInput = document.getElementById('signupNgoPhone');
+        name = nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'Shelter Care Center';
+        email = emailInput && emailInput.value.trim() ? emailInput.value.trim() : `ngo_${Date.now()}@shelter.org`;
+        phone = phoneInput && phoneInput.value.trim() ? phoneInput.value.trim() : '+91 98290 12345';
+      } else {
+        const nameInput = document.getElementById('signupRestaurantBusinessName');
+        const emailInput = document.getElementById('signupRestaurantEmail');
+        const phoneInput = document.getElementById('signupRestaurantPhone');
+        name = nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'Restaurant Kitchen';
+        email = emailInput && emailInput.value.trim() ? emailInput.value.trim() : `restaurant_${Date.now()}@bistro.com`;
+        phone = phoneInput && phoneInput.value.trim() ? phoneInput.value.trim() : '+91 98290 12345';
+      }
 
       const userData = { email, role, name, phone, address: 'Jaipur' };
 
@@ -1533,6 +1543,7 @@
       localStorage.setItem('user_email', email);
       localStorage.setItem('user_role', role);
       localStorage.setItem('is_new_user', 'true');
+      localStorage.setItem(`${role}_name`, name);
       localStorage.setItem('local_donations', JSON.stringify([]));
       localStorage.removeItem('emergency_crisis_event');
 
@@ -1545,18 +1556,17 @@
         console.warn('Registration API warning:', e);
       }
 
-      showToast(`Account Created`, `Welcome ${name}! Account saved to Supabase database.`);
+      showToast(`Account Created`, `Welcome ${name}! Your account is ready.`);
 
       const roleMap = {
         restaurant: '/restaurant-dashboard.html',
         ngo: '/ngo-dashboard.html',
         driver: '/driver-dashboard.html',
-        
       };
 
       setTimeout(() => {
         window.location.href = roleMap[role] || '/driver-dashboard.html';
-      }, 600);
+      }, 500);
     }
 
 
@@ -1670,9 +1680,6 @@
       <a href="/driver-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
         <span class="w-2 h-2 rounded-full bg-amber-500"></span> 🚚 <b>Driver Courier Portal</b>
       </a>
-      <div class="px-2.5 py-1.5 text-[10px] font-semibold text-slate-400 border-t border-slate-800 mt-1 text-center">
-        Created by <span class="text-emerald-400 font-bold">Sachin, Krishna, Nitesh, Priyanshi</span>
-      </div>
     </div>
   </div>
 </div>
@@ -1699,12 +1706,7 @@
 </script>
 
   <script src="/js/motion.js"></script>
-
-<footer class="w-full bg-slate-900 text-slate-400 text-center py-4 border-t border-slate-800 text-xs font-medium mt-12 font-sans">
-  <p>© 2026 Surplus-To-Shelter &bull; Created by <strong class="text-white">Sachin, Krishna, Nitesh, Priyanshi</strong></p>
-</footer>
-
-  <script src="/js/tutorial.js"></script>
+<script src="/js/tutorial.js"></script>
   <script src="/js/new-user-cleaner.js"></script>
 </body>
 </html>

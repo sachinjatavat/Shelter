@@ -37,10 +37,6 @@
           <span class="material-symbols-outlined text-[20px]">calendar_month</span>
           <span>Pickup History</span>
         </a>
-        <a class="flex items-center gap-space-sm px-3 py-2 rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/driver-impact.html">
-          <span class="material-symbols-outlined text-[20px]">trending_up</span>
-          <span>Impact</span>
-        </a>
         <a class="flex items-center gap-space-sm px-3 py-2 rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/driver-notifications.html">
           <div class="flex items-center gap-space-sm flex-1">
             <span class="material-symbols-outlined text-[20px]">notifications</span>
@@ -500,33 +496,36 @@
       stepCounter.innerText = 'Mission Complete';
       actionTitle.innerText = 'Delivery Successfully Completed!';
       actionDesc.innerText = 'Awesome job! 25 kg of fresh surplus food rescued and delivered to Hope Shelter. 50 people provided with warm meals today.';
-      mainBtnText.innerText = 'View Impact & Return to Dashboard';
+      mainBtnText.innerText = 'Return to Dashboard';
       mainBtn.className = 'w-full h-14 rounded-xl bg-on-surface text-inverse-on-surface hover:bg-on-surface-variant font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-md transition-all';
     }
   }
 
   async function handlePrimaryAction() {
+    const activeId = localStorage.getItem('active_driver_mission_id') || 'DON-9482';
+
     if (currentMissionStep === 3) {
       const pin = prompt("🔐 Enter 4-Digit Kitchen Handover PIN Code (e.g. 4829):", "4829");
       if (!pin) return;
       
       if (window.SupabaseService) {
-        await window.SupabaseService.updateStatus('DON-9482', 'PICKED_UP');
+        await window.SupabaseService.updateStatus(activeId, 'PICKED_UP');
       }
 
       currentMissionStep = 4;
       showToast(`🔐 PIN ${pin} Authenticated! Food Picked Up & Status Saved to Supabase.`);
     } else if (currentMissionStep === 4) {
       if (window.SupabaseService) {
-        await window.SupabaseService.updateStatus('DON-9482', 'DELIVERED');
+        await window.SupabaseService.updateStatus(activeId, 'DELIVERED');
       }
+      localStorage.removeItem('active_driver_mission_id');
       currentMissionStep = 5;
       showToast('🎉 Rescue Delivered! Status updated to DELIVERED in Supabase!');
     } else if (currentMissionStep === 5) {
       showToast('Redirecting to Driver Dashboard...');
       setTimeout(() => {
         window.location.href = '/driver-dashboard.html';
-      }, 800);
+      }, 600);
     }
     updateStepperUI();
   }
@@ -535,6 +534,21 @@
     if (window.GoogleMapsService) {
       window.GoogleMapsService.initMap('live-driver-map');
     }
+
+    // Populate active mission specifications if one is active
+    try {
+      const activeId = localStorage.getItem('active_driver_mission_id');
+      const list = JSON.parse(localStorage.getItem('local_donations') || '[]');
+      const mission = list.find(d => d.id === activeId) || list.find(d => d.status === 'EN_ROUTE' || d.status === 'ASSIGNED');
+      if (mission) {
+        const badge = document.getElementById('mission-status-badge');
+        if (badge) badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span> Mission #${mission.id} • En Route`;
+        const donorH2 = document.querySelector('h2.font-headline-md');
+        if (donorH2) donorH2.textContent = mission.donor_name || 'Restaurant Partner';
+        const foodH3 = document.querySelector('h3.font-headline-md');
+        if (foodH3) foodH3.textContent = mission.title || 'Cooked Prepared Meals';
+      }
+    } catch (e) {}
   });
 
   function jumpToStep(stepNumber) {
@@ -610,9 +624,6 @@
       <a href="/driver-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
         <span class="w-2 h-2 rounded-full bg-amber-500"></span> 🚚 <b>Driver Courier Portal</b>
       </a>
-      <div class="px-2.5 py-1.5 text-[10px] font-semibold text-slate-400 border-t border-slate-800 mt-1 text-center">
-        Created by <span class="text-emerald-400 font-bold">Sachin, Krishna, Nitesh, Priyanshi</span>
-      </div>
     </div>
   </div>
 </div>
@@ -620,17 +631,15 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const savedName = localStorage.getItem('user_name');
+    const savedName = localStorage.getItem('driver_name') || (localStorage.getItem('user_role') === 'driver' ? localStorage.getItem('user_name') : '') || localStorage.getItem('user_name');
     if (savedName) {
-      // Find top header user name elements and replace static 'Rahul Sharma' or 'ABC Restaurant'
       document.querySelectorAll('header .font-label-lg, header .text-label-md, header .user-name-display').forEach(el => {
         if (!el.closest('aside') && !el.closest('nav') && (el.textContent.includes('Rahul Sharma') || el.textContent.includes('ABC Restaurant') || el.textContent.includes('System Administrator') || el.textContent.includes('User Name'))) {
           el.textContent = savedName;
         }
       });
-      // Replace greeting if any
       document.querySelectorAll('h1').forEach(el => {
-        if (el.textContent.includes('Good morning, Rahul') || el.textContent.includes('Good morning,')) {
+        if (el.textContent.includes('Good morning,')) {
           el.textContent = `Good morning, ${savedName}`;
         }
       });
@@ -639,11 +648,6 @@
 </script>
 
   <script src="/js/motion.js"></script>
-
-<footer class="w-full bg-slate-900 text-slate-400 text-center py-4 border-t border-slate-800 text-xs font-medium mt-12 font-sans">
-  <p>© 2026 Surplus-To-Shelter &bull; Created by <strong class="text-white">Sachin, Krishna, Nitesh, Priyanshi</strong></p>
-</footer>
-
-  <script src="/js/tutorial.js"></script>
+<script src="/js/tutorial.js"></script>
   <script src="/js/new-user-cleaner.js"></script>
 </body></html>

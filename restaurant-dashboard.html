@@ -219,10 +219,6 @@
           <span class="material-symbols-outlined text-[20px] text-outline">local_shipping</span>
           <span>Pickups</span>
         </a>
-        <a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-body-md font-body-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/restaurant-impact.html">
-          <span class="material-symbols-outlined text-[20px] text-outline">query_stats</span>
-          <span>Impact</span>
-        </a>
         <a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-body-md font-body-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/restaurant-notifications.html">
           <div class="flex items-center gap-space-sm flex-1">
             <span class="material-symbols-outlined text-[20px] text-outline">notifications</span>
@@ -265,9 +261,6 @@
       </button>
 <button class="lifecycle-tab px-3 py-1.5 rounded-lg text-label-sm font-label-sm bg-surface-container-low text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" id="tab-track" onclick="openTrackingModal('Rice - 15 kg', 'Annapurna Food Bank')" type="button">
         4. Active Pickup &amp; Track
-      </button>
-<button class="lifecycle-tab px-3 py-1.5 rounded-lg text-label-sm font-label-sm bg-surface-container-low text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" id="tab-impact" onclick="openImpactModal()" type="button">
-        5. Live Delivery Impact
       </button>
 </div>
 </div>
@@ -899,50 +892,6 @@
 </div>
 </div>
 </div>
-<!-- Interactive Slide-over / Modal: [LIVE DELIVERY IMPACT MODAL] -->
-<div class="fixed inset-0 z-50 hidden flex items-center justify-center p-4" id="modal-impact">
-<div class="absolute inset-0 bg-[#111827]/40 backdrop-blur-xs" onclick="closeModal('modal-impact')"></div>
-<div class="relative bg-surface-container-lowest border border-outline-variant/40 rounded-xl w-full max-w-xl shadow-md z-10 overflow-hidden">
-<div class="px-6 py-4 border-b border-outline-variant/30 flex items-center justify-between bg-surface-container-low/40">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-primary-container text-[22px]">eco</span>
-<h3 class="font-headline-sm text-headline-sm text-on-surface">ABC Restaurant Impact Record</h3>
-</div>
-<button class="p-1 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container-low transition-colors" onclick="closeModal('modal-impact')" type="button">
-<span class="material-symbols-outlined text-[20px]">close</span>
-</button>
-</div>
-<div class="p-6 space-y-5">
-<div class="grid grid-cols-2 gap-4">
-<div class="border border-outline-variant/30 p-4 rounded-xl text-center">
-<span class="text-outline text-label-sm font-label-sm uppercase">Total Meals Provided</span>
-<div class="text-display-lg font-tabular-numeric text-primary-container font-semibold mt-1">4,820</div>
-<span class="text-label-sm text-on-surface-variant font-medium">To 12 partner shelters</span>
-</div>
-<div class="border border-outline-variant/30 p-4 rounded-xl text-center">
-<span class="text-outline text-label-sm font-label-sm uppercase">CO₂ Footprint Avoided</span>
-<div class="text-display-lg font-tabular-numeric text-on-surface font-semibold mt-1">3.1 <span class="text-headline-sm font-normal text-outline">tons</span></div>
-<span class="text-label-sm text-primary-container font-medium">EPA Landfill Model verified</span>
-</div>
-</div>
-<div class="p-4 bg-surface-container-low/50 rounded-xl border border-outline-variant/30">
-<h4 class="font-headline-sm text-headline-sm text-on-surface mb-2">Municipal ESG Sustainability Credit</h4>
-<p class="text-body-sm font-body-sm text-outline mb-3">Your kitchen qualifies for the Municipal Green Tax rebate based on 100% trace compliance this quarter.</p>
-<div class="w-full bg-outline-variant/40 rounded-full h-2 overflow-hidden">
-<div class="bg-primary-container h-2 rounded-full" style="width: 88%"></div>
-</div>
-<div class="flex justify-between items-center text-label-sm font-label-sm text-outline mt-1.5">
-<span>Current compliance score</span>
-<span class="font-semibold text-primary-container">88 / 100 pts (Tier 1 Gold)</span>
-</div>
-</div>
-<button class="w-full py-2.5 rounded-lg border border-outline-variant/40 hover:bg-surface-container-low text-on-surface text-label-md font-label-md font-medium transition-colors flex items-center justify-center gap-2" onclick="alert('Downloading signed quarterly verification audit certificate (PDF)...')" type="button">
-<span class="material-symbols-outlined text-[18px]">download</span>
-<span>Download Verified ESG Audit Certificate</span>
-</button>
-</div>
-</div>
-</div>
 <!-- Interactive Slide-over / Modal: [RECEIPT AUDIT SLIP] -->
 <div class="fixed inset-0 z-50 hidden flex items-center justify-center p-4" id="modal-receipt">
 <div class="absolute inset-0 bg-[#111827]/40 backdrop-blur-xs" onclick="closeModal('modal-receipt')"></div>
@@ -1027,11 +976,6 @@
         if (sub) sub.innerText = 'Batch: ' + itemName + ' • Recipient: ' + shelterName;
       }
       openModal('modal-track');
-    }
-
-    function openImpactModal() {
-      highlightTab('tab-impact');
-      openModal('modal-impact');
     }
 
     function openUrgentModal(item, qty, time) {
@@ -1189,9 +1133,6 @@
       <a href="/driver-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
         <span class="w-2 h-2 rounded-full bg-amber-500"></span> 🚚 <b>Driver Courier Portal</b>
       </a>
-      <div class="px-2.5 py-1.5 text-[10px] font-semibold text-slate-400 border-t border-slate-800 mt-1 text-center">
-        Created by <span class="text-emerald-400 font-bold">Sachin, Krishna, Nitesh, Priyanshi</span>
-      </div>
     </div>
   </div>
 </div>
@@ -1218,11 +1159,6 @@
 </script>
 
   <script src="/js/motion.js"></script>
-
-<footer class="w-full bg-slate-900 text-slate-400 text-center py-4 border-t border-slate-800 text-xs font-medium mt-12 font-sans">
-  <p>© 2026 Surplus-To-Shelter &bull; Created by <strong class="text-white">Sachin, Krishna, Nitesh, Priyanshi</strong></p>
-</footer>
-
-  <script src="/js/tutorial.js"></script>
+<script src="/js/tutorial.js"></script>
   <script src="/js/new-user-cleaner.js"></script>
 </body></html>

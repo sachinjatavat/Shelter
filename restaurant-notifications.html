@@ -219,10 +219,6 @@
           <span class="material-symbols-outlined text-[20px] text-outline">local_shipping</span>
           <span>Pickups</span>
         </a>
-        <a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-body-md font-body-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/restaurant-impact.html">
-          <span class="material-symbols-outlined text-[20px] text-outline">query_stats</span>
-          <span>Impact</span>
-        </a>
         <a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg transition-colors bg-secondary-container/60 text-on-surface font-label-md border-l-4 border-primary-container" href="/restaurant-notifications.html">
           <div class="flex items-center gap-space-sm flex-1">
             <span class="material-symbols-outlined text-[20px] text-outline">notifications</span>
@@ -335,9 +331,6 @@
       <a href="/driver-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
         <span class="w-2 h-2 rounded-full bg-amber-500"></span> 🚚 <b>Driver Courier Portal</b>
       </a>
-      <div class="px-2.5 py-1.5 text-[10px] font-semibold text-slate-400 border-t border-slate-800 mt-1 text-center">
-        Created by <span class="text-emerald-400 font-bold">Sachin, Krishna, Nitesh, Priyanshi</span>
-      </div>
     </div>
   </div>
 </div>
@@ -378,8 +371,7 @@
                   <h3 class="text-sm font-bold text-red-700 uppercase">RED ALERT: ${crisis.type}</h3>
                   <span class="text-xs text-red-600 font-bold">ACTIVE NOW</span>
                 </div>
-                <p class="text-xs text-red-900 mt-1 font-semibold">${crisis.ngo || 'Hope Shelter'} requested emergency relief: <strong>${crisis.portions}</strong>.</p>
-                <button onclick="if(window.quickDispatchEmergencyRelief){window.quickDispatchEmergencyRelief()}else{alert('🎉 EMERGENCY DISPATCH CONFIRMED!\\n\\n50 Emergency Meals allocated to Hope Shelter relief operation.\\nCourier Driver Rahul Sharma (+91 98290-XXXXX) dispatched for immediate pickup.');window.location.href='/restaurant-pickups.html';}" class="mt-2 px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg shadow-sm cursor-pointer">
+                <button onclick="if(window.quickDispatchEmergencyRelief){window.quickDispatchEmergencyRelief()}else{const drv=localStorage.getItem('driver_name')||'Assigned Courier';const ngo=localStorage.getItem('ngo_name')||'Shelter Relief Center';alert('🎉 EMERGENCY DISPATCH CONFIRMED!\\n\\n50 Emergency Meals allocated to '+ngo+' relief operation.\\nCourier Driver '+drv+' dispatched for immediate pickup.');window.location.href='/restaurant-pickups.html';}" class="mt-2 px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg shadow-sm cursor-pointer">
                   ⚡ Quick Respond (50 Meals)
                 </button>
               </div>
@@ -393,11 +385,6 @@
 </script>
 
   <script src="/js/motion.js"></script>
-
-<footer class="w-full bg-slate-900 text-slate-400 text-center py-4 border-t border-slate-800 text-xs font-medium mt-12 font-sans">
-  <p>© 2026 Surplus-To-Shelter &bull; Created by <strong class="text-white">Sachin, Krishna, Nitesh, Priyanshi</strong></p>
-</footer>
-
-  <script src="/js/tutorial.js"></script>
+<script src="/js/tutorial.js"></script>
   <script src="/js/new-user-cleaner.js"></script>
 </body></html>

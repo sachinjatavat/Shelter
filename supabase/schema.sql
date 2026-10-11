@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS public.impact_logs (
 );
 
 -- ============================================================================
--- INITIAL SEED DATA
+-- INITIAL SEED DATA (Idempotent: Safe to run repeatedly)
 -- ============================================================================
 INSERT INTO public.users (email, role, name, phone, address, lat, lng, capacity_meals, accepted_categories, is_active) VALUES
 ('manager@freshharvest.org', 'restaurant', 'Fresh Harvest Bistro', '+91 98290 12345', 'Plot 42, C-Scheme, Jaipur', 26.9124, 75.7873, 0, '', true),
@@ -116,21 +116,38 @@ INSERT INTO public.donations (id, title, category, quantity_kg, portions, temp_r
 ('DON-9484', '20 kg Fresh Organic Produce', 'Fresh Produce', 20, 40, 'Chilled (4°C)', 'FreshMart Organics', 'Malviya Nagar, Jaipur', 'Unassigned', 'Unassigned', 'AVAILABLE', '8:00 PM - 10:00 PM', '7301')
 ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO public.impact_logs (meals_rescued, co2_saved_kg, tax_deduction_inr, completed_deliveries, participating_restaurants, ngos_served, drivers_involved, avg_pickup_time_mins) VALUES
-(4850, 3200, 145200, 124, 18, 12, 15, 14.2);
+-- Seed Impact Logs only once
+INSERT INTO public.impact_logs (meals_rescued, co2_saved_kg, tax_deduction_inr, completed_deliveries, participating_restaurants, ngos_served, drivers_involved, avg_pickup_time_mins)
+SELECT 4850, 3200, 145200, 124, 18, 12, 15, 14.2
+WHERE NOT EXISTS (SELECT 1 FROM public.impact_logs);
 
--- Enable RLS Policies (Read Access for All)
+-- ============================================================================
+-- ROW LEVEL SECURITY (RLS) POLICIES
+-- Enables instant, full read/write access for web clients & backend server
+-- ============================================================================
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.donations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.matches ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.pickups ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.impact_logs ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Allow public read access on users" ON public.users FOR SELECT USING (true);
-CREATE POLICY "Allow public read access on donations" ON public.donations FOR SELECT USING (true);
-CREATE POLICY "Allow public read access on matches" ON public.matches FOR SELECT USING (true);
-CREATE POLICY "Allow public read access on pickups" ON public.pickups FOR SELECT USING (true);
-CREATE POLICY "Allow public read access on impact_logs" ON public.impact_logs FOR SELECT USING (true);
+-- Clean up any prior policies
+DROP POLICY IF EXISTS "Allow all access on users" ON public.users;
+DROP POLICY IF EXISTS "Allow all access on donations" ON public.donations;
+DROP POLICY IF EXISTS "Allow all access on matches" ON public.matches;
+DROP POLICY IF EXISTS "Allow all access on pickups" ON public.pickups;
+DROP POLICY IF EXISTS "Allow all access on impact_logs" ON public.impact_logs;
+DROP POLICY IF EXISTS "Allow public read access on users" ON public.users;
+DROP POLICY IF EXISTS "Allow public read access on donations" ON public.donations;
+DROP POLICY IF EXISTS "Allow public read access on matches" ON public.matches;
+DROP POLICY IF EXISTS "Allow public read access on pickups" ON public.pickups;
+DROP POLICY IF EXISTS "Allow public read access on impact_logs" ON public.impact_logs;
+DROP POLICY IF EXISTS "Allow public insert on donations" ON public.donations;
+DROP POLICY IF EXISTS "Allow public update on donations" ON public.donations;
 
-CREATE POLICY "Allow public insert on donations" ON public.donations FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow public update on donations" ON public.donations FOR UPDATE USING (true);
+-- Comprehensive read/write access policies
+CREATE POLICY "Allow all access on users" ON public.users FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow all access on donations" ON public.donations FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow all access on matches" ON public.matches FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow all access on pickups" ON public.pickups FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow all access on impact_logs" ON public.impact_logs FOR ALL USING (true) WITH CHECK (true);

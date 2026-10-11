@@ -36,10 +36,6 @@
           <span class="material-symbols-outlined text-[20px]">calendar_month</span>
           <span>Pickup History</span>
         </a>
-        <a class="flex items-center gap-space-sm px-3 py-2 rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/driver-impact.html">
-          <span class="material-symbols-outlined text-[20px]">trending_up</span>
-          <span>Impact</span>
-        </a>
         <a class="flex items-center gap-space-sm px-3 py-2 rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-low hover:text-on-surface transition-colors" href="/driver-notifications.html">
           <div class="flex items-center gap-space-sm flex-1">
             <span class="material-symbols-outlined text-[20px]">notifications</span>
@@ -806,7 +802,16 @@
   }
 
   // Accept Modal Logic
-  function openAcceptModal(food, qty, donor, donorAddr, shelter, distTravel, expiry) {
+  function openAcceptModal(food, qty, donor, donorAddr, shelter, distTravel, expiry, donationId) {
+    window.currentAcceptDonation = {
+      id: donationId || ('DON-' + Math.floor(1000 + Math.random() * 9000)),
+      title: food,
+      quantity_kg: parseInt(qty) || 25,
+      donor_name: donor,
+      donor_address: donorAddr,
+      recipient_ngo: shelter,
+      pickup_window: expiry || '45 mins'
+    };
     document.getElementById('modalFood').textContent = food + ' (' + qty + ')';
     document.getElementById('modalDonor').textContent = donor + ' (' + donorAddr + ')';
     document.getElementById('modalShelter').textContent = shelter;
@@ -821,20 +826,47 @@
 
   async function confirmAcceptPickup() {
     closeAcceptModal();
-    const driverName = localStorage.getItem('user_name') || 'Rahul Sharma';
+    const driverName = localStorage.getItem('driver_name') || (localStorage.getItem('user_role') === 'driver' ? localStorage.getItem('user_name') : '') || localStorage.getItem('user_name') || 'Courier Driver';
+    const donation = window.currentAcceptDonation || {
+      id: 'DON-' + Math.floor(1000 + Math.random() * 9000),
+      title: 'Cooked Meals',
+      quantity_kg: 25,
+      donor_name: 'Green Leaf Restaurant',
+      donor_address: '142 Market St',
+      recipient_ngo: localStorage.getItem('ngo_name') || 'Hope Shelter'
+    };
+
+    // Save and register active mission
+    const list = JSON.parse(localStorage.getItem('local_donations') || '[]');
+    let item = list.find(d => d.id === donation.id);
+    if (!item) {
+      item = {
+        ...donation,
+        driver_name: driverName,
+        status: 'EN_ROUTE',
+        created_at: new Date().toISOString()
+      };
+      list.unshift(item);
+    } else {
+      item.driver_name = driverName;
+      item.status = 'EN_ROUTE';
+    }
+    localStorage.setItem('local_donations', JSON.stringify(list));
+    localStorage.setItem('active_driver_mission_id', donation.id);
+
     try {
       if (window.SupabaseService) {
-        await window.SupabaseService.assignDriver('DON-9482', driverName);
+        await window.SupabaseService.assignDriver(donation.id, driverName);
       }
     } catch(e) {
       console.warn('Driver assignment notice:', e);
     }
     const toast = document.getElementById('toastSuccess');
-    toast.classList.remove('hidden');
+    if (toast) toast.classList.remove('hidden');
     setTimeout(() => {
-      toast.classList.add('hidden');
+      if (toast) toast.classList.add('hidden');
       window.location.href = '/driver-active.html';
-    }, 1200);
+    }, 800);
   }
 
   // Details Modal Logic
@@ -891,9 +923,6 @@
       <a href="/driver-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
         <span class="w-2 h-2 rounded-full bg-amber-500"></span> 🚚 <b>Driver Courier Portal</b>
       </a>
-      <div class="px-2.5 py-1.5 text-[10px] font-semibold text-slate-400 border-t border-slate-800 mt-1 text-center">
-        Created by <span class="text-emerald-400 font-bold">Sachin, Krishna, Nitesh, Priyanshi</span>
-      </div>
     </div>
   </div>
 </div>
@@ -905,17 +934,20 @@
     setInterval(loadLiveDonations, 2500);
     window.addEventListener('storage', loadLiveDonations);
 
-    const savedName = localStorage.getItem('user_name');
+    const savedName = localStorage.getItem('driver_name') || (localStorage.getItem('user_role') === 'driver' ? localStorage.getItem('user_name') : '') || localStorage.getItem('user_name');
     if (savedName) {
-      // Find top header user name elements and replace static 'Rahul Sharma' or 'ABC Restaurant'
       document.querySelectorAll('header .font-label-lg, header .text-label-md, header .user-name-display').forEach(el => {
         if (!el.closest('aside') && !el.closest('nav') && (el.textContent.includes('Rahul Sharma') || el.textContent.includes('ABC Restaurant') || el.textContent.includes('System Administrator') || el.textContent.includes('User Name'))) {
           el.textContent = savedName;
         }
       });
-      // Replace greeting if any
+      document.querySelectorAll('.font-headline-md').forEach(el => {
+        if (el.textContent.includes('Rahul') || el.textContent.includes('(Available)')) {
+          el.textContent = `${savedName} (Available)`;
+        }
+      });
       document.querySelectorAll('h1').forEach(el => {
-        if (el.textContent.includes('Good morning, Rahul') || el.textContent.includes('Good morning,')) {
+        if (el.textContent.includes('Good morning,')) {
           el.textContent = `Good morning, ${savedName}`;
         }
       });
@@ -924,11 +956,6 @@
 </script>
 
   <script src="/js/motion.js"></script>
-
-<footer class="w-full bg-slate-900 text-slate-400 text-center py-4 border-t border-slate-800 text-xs font-medium mt-12 font-sans">
-  <p>© 2026 Surplus-To-Shelter &bull; Created by <strong class="text-white">Sachin, Krishna, Nitesh, Priyanshi</strong></p>
-</footer>
-
-  <script src="/js/tutorial.js"></script>
+<script src="/js/tutorial.js"></script>
   <script src="/js/new-user-cleaner.js"></script>
 </body></html>
