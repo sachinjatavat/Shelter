@@ -156,9 +156,9 @@
             <p class="text-xs text-on-surface-variant mt-1">Complete audit archive of all posted donations (food, clothes, blankets, books, medicines, and funds), recipient shelter receipts, and tax records.</p>
           </div>
           <div class="flex items-center gap-2.5">
-            <button onclick="window.generate80GReceipt ? window.generate80GReceipt() : alert('Generating 80G Tax Exemption Certificate PDF...')" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs shadow-sm transition-all cursor-pointer">
+            <button onclick="window.generate80GReceipt ? window.generate80GReceipt('CONSOLIDATED_FOOD') : alert('Generating Consolidated 80G Food Tax Exemption Certificate PDF...')" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs shadow-sm transition-all cursor-pointer" title="Consolidated Section 80G Food Rescue Tax Exemption Certificate (Food Only)">
               <span class="material-symbols-outlined text-[17px] text-emerald-400">receipt_long</span>
-              <span>Consolidated 80G Certificate</span>
+              <span>Consolidated 80G Food Certificate</span>
             </button>
             <a href="./restaurant-post.html" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary-container hover:bg-primary text-white font-semibold text-xs shadow-sm transition-all">
               <span class="material-symbols-outlined text-[17px]">add_circle</span>
@@ -402,6 +402,25 @@
         else if (catStr.includes('hygiene')) catIcon = 'sanitizer';
         else if (catStr.includes('fund') || catStr.includes('money')) catIcon = 'payments';
 
+        // Strict check: Section 80G Tax Certificate is ONLY for Food. Non-food gets In-Kind Delivery Slip.
+        const isFood = (typeof window.isFoodDonation === 'function') ? window.isFoodDonation(d) : false;
+        let actionBtnHtml = '';
+        if (isFood) {
+          actionBtnHtml = `
+            <button onclick="window.generate80GReceipt ? window.generate80GReceipt('${d.id}') : alert('Downloading 80G Food Receipt for ${d.id}')" class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-[11px] transition-colors inline-flex items-center gap-1 mr-1" title="Download Official Section 80G Food Tax Exemption Certificate">
+              <span class="material-symbols-outlined text-[14px]">receipt_long</span>
+              <span>80G Food Receipt</span>
+            </button>
+          `;
+        } else {
+          actionBtnHtml = `
+            <button onclick="window.viewInKindSlip ? window.viewInKindSlip('${d.id}') : alert('Viewing In-Kind Delivery Slip for ${d.id}')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-[11px] transition-colors inline-flex items-center gap-1 mr-1" title="View In-Kind Humanitarian Relief Delivery Slip (Non-Food Aid)">
+              <span class="material-symbols-outlined text-[14px]">local_shipping</span>
+              <span>Delivery Slip</span>
+            </button>
+          `;
+        }
+
         tr.innerHTML = `
           <td class="p-3.5 font-mono font-bold text-slate-800">${d.id}</td>
           <td class="p-3.5">
@@ -425,10 +444,7 @@
           <td class="p-3.5 text-outline text-[11px]">${d.created_at ? new Date(d.created_at).toLocaleDateString() : 'Today'}</td>
           <td class="p-3.5">${statusBadge}</td>
           <td class="p-3.5 text-right whitespace-nowrap">
-            <button onclick="window.generate80GReceipt ? window.generate80GReceipt('${d.id}') : alert('Downloading 80G Receipt for ${d.id}')" class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-[11px] transition-colors inline-flex items-center gap-1 mr-1">
-              <span class="material-symbols-outlined text-[14px]">receipt</span>
-              <span>80G Receipt</span>
-            </button>
+            ${actionBtnHtml}
           </td>
         `;
         tbody.appendChild(tr);
@@ -535,30 +551,41 @@
       const qtyEl = document.getElementById('metric-total-quantity');
       const taxEl = document.getElementById('metric-tax-claimed');
       const sheltersEl = document.getElementById('metric-shelters-supported');
+      const subTaxEl = document.getElementById('metric-sub-tax');
 
       if (!donations || donations.length === 0) {
         if (totalEl) totalEl.textContent = '0';
         if (qtyEl) qtyEl.textContent = '0 kg';
         if (taxEl) taxEl.textContent = '₹0';
         if (sheltersEl) sheltersEl.textContent = '0';
+        if (subTaxEl) subTaxEl.textContent = '0 kg Food Rescued';
         return;
       }
 
       const count = donations.length;
       let totalKg = 0;
+      let foodKg = 0;
       const sheltersSet = new Set();
 
       donations.forEach(d => {
-        totalKg += Number(d.quantity_kg) || 20;
+        const kg = Number(d.quantity_kg) || 20;
+        totalKg += kg;
+        const isFood = (typeof window.isFoodDonation === 'function') ? window.isFoodDonation(d) : false;
+        if (isFood) {
+          foodKg += kg;
+        }
         if (d.recipient_ngo) sheltersSet.add(d.recipient_ngo);
       });
 
-      const taxDeduction = totalKg * 140 * 0.5; // ₹140/kg FMV * 50% 80G deduction
+      // Section 80G tax deduction applies EXCLUSIVELY to food rescue batches!
+      // Clothing, blankets, and furniture are non-food in-kind aid and strictly excluded.
+      const taxDeduction = foodKg * 140 * 0.5; // ₹140/kg FMV * 50% 80G deduction
 
       if (totalEl) totalEl.textContent = count;
       if (qtyEl) qtyEl.textContent = `${totalKg} kg`;
       if (taxEl) taxEl.textContent = `₹${Math.round(taxDeduction).toLocaleString('en-IN')}`;
       if (sheltersEl) sheltersEl.textContent = Math.max(1, sheltersSet.size);
+      if (subTaxEl) subTaxEl.textContent = `${foodKg} kg Verified Food (Non-food excluded)`;
     }
 
     document.addEventListener('DOMContentLoaded', () => {

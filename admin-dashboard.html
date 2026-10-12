@@ -154,9 +154,9 @@
           <h2 class="text-xl font-bold text-on-surface">System Performance &amp; Impact Telemetry</h2>
           <p class="text-xs text-outline mt-0.5">Aggregate platform metrics across all 8 donation types and partner portals.</p>
         </div>
-        <button onclick="window.generate80GReceipt()" class="px-3.5 py-1.5 rounded-lg bg-emerald-800 text-white text-xs font-semibold hover:bg-emerald-900 shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">
+        <button onclick="window.generate80GReceipt('CONSOLIDATED_FOOD')" class="px-3.5 py-1.5 rounded-lg bg-emerald-800 text-white text-xs font-semibold hover:bg-emerald-900 shadow-sm transition-all flex items-center gap-1.5 cursor-pointer" title="Sample Section 80G Food Rescue Tax Exemption Certificate">
           <span class="material-symbols-outlined text-[16px]">receipt_long</span>
-          <span>Sample 80G Certificate</span>
+          <span>Sample 80G Food Certificate</span>
         </button>
       </div>
 
@@ -670,7 +670,7 @@
         <td class="py-3 px-3 font-bold text-on-surface">${r.amount}</td>
         <td class="py-3 px-3 text-outline">${r.proof}</td>
         <td class="py-3 px-3 text-right">
-          <button onclick="window.generate80GReceipt()" class="text-xs text-primary-container font-semibold hover:underline">Download PDF</button>
+          ${r.type.includes('Food') ? '<button onclick="window.generate80GReceipt()" class="text-xs text-primary-container font-semibold hover:underline">80G Food PDF</button>' : '<button onclick="window.viewInKindSlip()" class="text-xs text-slate-600 font-semibold hover:underline">Delivery Slip</button>'}
         </td>
       </tr>
     `).join('');
