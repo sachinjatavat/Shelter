@@ -3,6 +3,9 @@
 -- Execute this SQL in Supabase SQL Editor: https://supabase.com/dashboard
 -- ============================================================================
 
+-- [OPTIONAL RESET]: If you ever want a 100% clean reset, uncomment the line below:
+-- DROP TABLE IF EXISTS public.subscriptions, public.advertisements, public.sponsorships, public.ngo_verifications, public.monetary_donations, public.impact_logs, public.pickups, public.matches, public.donations, public.users CASCADE;
+
 -- 1. USERS TABLE
 CREATE TABLE IF NOT EXISTS public.users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -24,12 +27,20 @@ CREATE TABLE IF NOT EXISTS public.users (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Migration for existing users table
+-- Migration for existing users table: ensure ALL columns exist even if table was created previously
 DO $$
 BEGIN
   IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'users') THEN
     ALTER TABLE public.users DROP CONSTRAINT IF EXISTS users_role_check;
     ALTER TABLE public.users ADD CONSTRAINT users_role_check CHECK (role IN ('restaurant', 'ngo', 'driver', 'admin'));
+    ALTER TABLE public.users ADD COLUMN IF NOT EXISTS phone TEXT;
+    ALTER TABLE public.users ADD COLUMN IF NOT EXISTS address TEXT;
+    ALTER TABLE public.users ADD COLUMN IF NOT EXISTS lat NUMERIC DEFAULT 26.9124;
+    ALTER TABLE public.users ADD COLUMN IF NOT EXISTS lng NUMERIC DEFAULT 75.7873;
+    ALTER TABLE public.users ADD COLUMN IF NOT EXISTS capacity_meals INT DEFAULT 100;
+    ALTER TABLE public.users ADD COLUMN IF NOT EXISTS accepted_categories TEXT DEFAULT 'Food,Clothes,Books,Hygiene,Household Goods,Blankets';
+    ALTER TABLE public.users ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT TRUE;
+    ALTER TABLE public.users ADD COLUMN IF NOT EXISTS active_deliveries INT DEFAULT 0;
     ALTER TABLE public.users ADD COLUMN IF NOT EXISTS verification_status TEXT DEFAULT 'VERIFIED';
     ALTER TABLE public.users ADD COLUMN IF NOT EXISTS approved_categories TEXT DEFAULT 'Food,Clothes,Books,Hygiene,Household Goods,Blankets';
     ALTER TABLE public.users ADD COLUMN IF NOT EXISTS subscription_tier TEXT DEFAULT 'FREE';
@@ -94,7 +105,7 @@ CREATE TABLE IF NOT EXISTS public.donations (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Migration for existing donations table
+-- Migration for existing donations table: ensure ALL columns exist even if table was created previously
 DO $$
 BEGIN
   IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'donations') THEN
@@ -102,8 +113,24 @@ BEGIN
     ALTER TABLE public.donations DROP CONSTRAINT IF EXISTS donations_status_check;
     ALTER TABLE public.donations ADD CONSTRAINT donations_status_check CHECK (status IN ('AVAILABLE', 'MATCHED', 'CLAIMED', 'EN_ROUTE', 'PICKED_UP', 'DELIVERED', 'COMPLETED', 'EXPIRED'));
     ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS donation_type TEXT DEFAULT 'food';
+    ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS quantity_kg NUMERIC DEFAULT 0;
+    ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS portions INT DEFAULT 0;
     ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS item_condition TEXT DEFAULT 'Good';
     ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS unit TEXT DEFAULT 'items';
+    ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS temp_requirement TEXT DEFAULT 'Ambient';
+    ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS donor_lat NUMERIC DEFAULT 26.9124;
+    ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS donor_lng NUMERIC DEFAULT 75.7873;
+    ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS recipient_ngo TEXT DEFAULT 'Unassigned';
+    ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS ngo_id TEXT;
+    ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS driver_name TEXT DEFAULT 'Unassigned';
+    ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS driver_id TEXT;
+    ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS match_score INT DEFAULT 0;
+    ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS distance_km NUMERIC DEFAULT 0;
+    ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS matched_at TIMESTAMPTZ;
+    ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS match_status TEXT DEFAULT 'UNMATCHED';
+    ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS pickup_window TEXT DEFAULT 'Next 2 Hours';
+    ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS expiry_minutes INT DEFAULT 240;
+    ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS pin_code TEXT DEFAULT '4829';
     ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS medical_safety_verified BOOLEAN DEFAULT FALSE;
     ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS expiry_date TEXT;
     ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS safety_disclaimer_accepted BOOLEAN DEFAULT FALSE;
@@ -115,6 +142,13 @@ BEGIN
     ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS payment_status TEXT DEFAULT 'PENDING';
     ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS payment_provider TEXT;
     ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS payment_reference TEXT;
+    ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS pickup_token TEXT;
+    ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS delivery_token TEXT;
+    ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS pickup_verified_at TIMESTAMPTZ;
+    ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS pickup_verified_by TEXT;
+    ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS delivery_verified_at TIMESTAMPTZ;
+    ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS delivery_verified_by TEXT;
+    ALTER TABLE public.donations ADD COLUMN IF NOT EXISTS assignment_history JSONB DEFAULT '[]'::jsonb;
   END IF;
 END $$;
 
@@ -141,6 +175,19 @@ CREATE TABLE IF NOT EXISTS public.pickups (
   status TEXT DEFAULT 'ASSIGNED',
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Migration for existing pickups table
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'pickups') THEN
+    ALTER TABLE public.pickups ADD COLUMN IF NOT EXISTS driver_name TEXT;
+    ALTER TABLE public.pickups ADD COLUMN IF NOT EXISTS driver_id TEXT;
+    ALTER TABLE public.pickups ADD COLUMN IF NOT EXISTS reassigned_from TEXT;
+    ALTER TABLE public.pickups ADD COLUMN IF NOT EXISTS vehicle_number TEXT DEFAULT 'RJ-14-EV-9401';
+    ALTER TABLE public.pickups ADD COLUMN IF NOT EXISTS eta_minutes INT DEFAULT 12;
+    ALTER TABLE public.pickups ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'ASSIGNED';
+  END IF;
+END $$;
 
 -- 5. IMPACT LOGS TABLE (Real Dynamic Analytics)
 CREATE TABLE IF NOT EXISTS public.impact_logs (
