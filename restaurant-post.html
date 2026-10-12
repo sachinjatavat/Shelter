@@ -401,35 +401,7 @@
 </div>
 </div>
 </div>
-<!-- Food Condition (Radio Pills) -->
-<div>
-<span class="block font-label-md text-label-md text-on-surface mb-2">
-                Food Condition <span class="text-error">*</span>
-</span>
-<div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5" id="condition-group">
-<label class="relative flex items-center p-3 rounded-lg border border-primary-container bg-secondary-container/20 cursor-pointer hover:bg-secondary-container/30 transition-colors">
-<input checked="" class="accent-primary-container w-4 h-4 mr-2.5" name="condition" onchange="updatePreview()" type="radio" value="Freshly Prepared"/>
-<div>
-<div class="font-label-md text-label-md text-on-surface font-semibold">Freshly Prepared</div>
-<div class="font-body-sm text-body-sm text-on-surface-variant">Cooked within 2h</div>
-</div>
-</label>
-<label class="relative flex items-center p-3 rounded-lg border border-outline-variant/60 bg-surface-container-lowest cursor-pointer hover:bg-surface-container-low transition-colors">
-<input class="accent-primary-container w-4 h-4 mr-2.5" name="condition" onchange="updatePreview()" type="radio" value="Prepared Earlier Today"/>
-<div>
-<div class="font-label-md text-label-md text-on-surface font-semibold">Prepared Earlier Today</div>
-<div class="font-body-sm text-body-sm text-outline">Chilled &amp; stored properly</div>
-</div>
-</label>
-<label class="relative flex items-center p-3 rounded-lg border border-outline-variant/60 bg-surface-container-lowest cursor-pointer hover:bg-surface-container-low transition-colors">
-<input class="accent-primary-container w-4 h-4 mr-2.5" name="condition" onchange="updatePreview()" type="radio" value="Packaged / Sealed"/>
-<div>
-<div class="font-label-md text-label-md text-on-surface font-semibold">Packaged / Sealed</div>
-<div class="font-body-sm text-body-sm text-outline">Original intact seal</div>
-</div>
-</label>
-</div>
-</div>
+
 <!-- Dietary Information (Checkbox Tags) -->
 <div>
 <span class="block font-label-md text-label-md text-on-surface mb-2">
@@ -511,46 +483,7 @@
 </div>
 </div>
 </div>
-<!-- Description / Packaging details -->
-<div>
-<label class="block font-label-md text-label-md text-on-surface mb-1" for="food-description">
-                Packaging &amp; Handling Notes
-              </label>
-<textarea class="w-full p-3 bg-surface-container-lowest border border-outline-variant/60 rounded-lg font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all" id="food-description" oninput="updatePreview()" placeholder="Freshly cooked penne pasta in tomato basil sauce. Packed in sanitary food-grade containers." rows="3">Freshly cooked penne pasta in tomato basil sauce. Packed in sanitary food-grade containers.</textarea>
-</div>
-<!-- Upload Food Image -->
-<div>
-  <label class="block font-label-md text-label-md text-on-surface mb-1">
-    Visual Inspection Photo <span class="text-error">*</span>
-  </label>
-  <div id="image-dropzone" class="border-2 border-dashed border-outline-variant/70 rounded-xl p-5 text-center bg-surface-container-low/40 hover:bg-surface-container-low/80 transition-colors flex flex-col items-center justify-center relative">
-    <div id="upload-prompt-view" class="flex flex-col items-center">
-      <div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container mb-2">
-        <span class="material-symbols-outlined text-[24px]">photo_camera</span>
-      </div>
-      <div class="font-label-md text-label-md text-on-surface mb-0.5">Upload food photo (JPG, PNG up to 10MB)</div>
-      <div class="font-body-sm text-body-sm text-outline mb-3">Clear image of food in containers speeds up verification</div>
-      <div class="flex items-center gap-2">
-        <label class="inline-flex items-center gap-1.5 px-4 py-2 bg-primary-container text-white rounded-lg text-label-md font-label-md hover:bg-primary cursor-pointer shadow-sm transition-all">
-          <span class="material-symbols-outlined text-[16px]">upload_file</span>
-          <span>Choose Image File</span>
-          <input id="food-image-input" accept="image/*" class="hidden" type="file" onchange="handleImageUpload(event)"/>
-        </label>
-      </div>
-    </div>
 
-    <!-- Active Image Preview Container -->
-    <div id="image-preview-wrapper" class="hidden w-full flex flex-col items-center gap-2">
-      <img id="uploaded-image-preview" src="" alt="Selected food photo" class="max-h-48 rounded-lg border border-outline-variant/40 object-cover shadow-sm"/>
-      <div class="flex items-center gap-2">
-        <span id="image-filename" class="text-xs font-semibold text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded">Photo Selected ✓</span>
-        <button type="button" onclick="removeUploadedImage()" class="text-xs text-red-600 hover:underline font-semibold">Remove / Change</button>
-      </div>
-      <div class="px-2.5 py-1.5 text-[10px] font-semibold text-slate-400 border-t border-slate-800 mt-1 text-center">
-      </div>
-    </div>
-  </div>
-</div>
 </div>
 </div>
 </div>
@@ -882,13 +815,9 @@ Live Preview
 <div class="mb-4">
 <div class="flex items-baseline justify-between gap-2">
 <h3 class="font-headline-md text-headline-md text-on-surface leading-tight" id="preview-name">Pasta</h3>
-<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-secondary-container text-on-secondary-container font-medium whitespace-nowrap" id="preview-condition-badge">
-              Freshly Prepared
-            </span>
+<span class="hidden font-label-sm text-label-sm px-2 py-0.5 rounded bg-secondary-container text-on-secondary-container font-medium whitespace-nowrap" id="preview-condition-badge"></span>
 </div>
-<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mt-1" id="preview-desc">
-            Freshly cooked penne pasta in tomato basil sauce. Packed in sanitary food-grade containers.
-          </p>
+<p class="hidden font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mt-1" id="preview-desc"></p>
 <div class="flex flex-wrap gap-1 mt-2" id="preview-tags-container">
 <span class="px-2 py-0.5 bg-surface-container-low text-on-surface-variant rounded text-[11px] font-medium border border-outline-variant/30">Vegetarian</span>
 <span class="px-2 py-0.5 bg-surface-container-low text-on-surface-variant rounded text-[11px] font-medium border border-outline-variant/30">Contains Dairy</span>
@@ -1282,7 +1211,7 @@ Live Preview
         const location = document.getElementById('pickup-location').value || 'ABC Restaurant, Jaipur';
         const readyTime = document.getElementById('ready-time').value || '2:30 PM';
         const safeUntil = document.getElementById('safe-until').value || '6:30 PM';
-        const desc = document.getElementById('food-description').value || '';
+        const desc = document.getElementById('food-description')?.value || '';
 
         const donationData = {
           title: `${qty} ${unit} - ${foodName}`,
