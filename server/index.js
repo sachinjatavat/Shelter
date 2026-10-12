@@ -1376,6 +1376,23 @@ app.delete('/api/donations/:id', async (req, res) => {
   }
 });
 
+// Instant WhatsApp & SMS Dispatch Notification Webhook
+app.post('/api/notifications/whatsapp', async (req, res) => {
+  const { donation_id, phone, message, target } = req.body;
+  const dispatchId = `WA-DISPATCH-${Date.now()}`;
+  console.log(`📲 [WhatsApp Dispatch Alert] Target: ${target || 'universal'} | Batch: ${donation_id || 'N/A'}`);
+  
+  res.json({
+    success: true,
+    dispatch_id: dispatchId,
+    target: target || 'universal',
+    donation_id: donation_id || null,
+    wa_link: `https://wa.me/?text=${encodeURIComponent(message || '')}`,
+    status: 'DISPATCHED_WEBHOOK_ACK',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Explicit Auto-Match Endpoint
 app.post('/api/donations/auto-match', async (req, res) => {
   const { donation_id, donation_data } = req.body;

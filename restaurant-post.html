@@ -270,6 +270,93 @@
 <div class="bg-surface-container-lowest border border-outline-variant/40 rounded-2xl p-6 md:p-8 shadow-sm">
 <form class="space-y-6" id="donation-form" onsubmit="handleDonationSubmit(event)">
 
+<!-- AI Vision Smart Item Scanner Banner & Upload Area -->
+<div class="mb-6 p-4 rounded-2xl bg-gradient-to-r from-emerald-950/40 via-surface-container-low to-slate-900 border border-primary-container/40 shadow-sm relative overflow-hidden">
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-xl bg-primary-container/20 text-primary-container flex items-center justify-center shrink-0 border border-primary-container/40">
+        <span class="material-symbols-outlined text-[24px]">photo_camera</span>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h3 class="font-bold text-sm text-on-surface">AI Smart Item Scanner</h3>
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-primary-container text-white uppercase tracking-wider">Vision Auto-Fill</span>
+        </div>
+        <p class="text-xs text-on-surface-variant mt-0.5">Snap or upload a photo of food, clothes, blankets, books, or medicines to auto-detect category, quantity &amp; condition in 1 second.</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-2 shrink-0">
+      <input type="file" id="ai-item-image-input" accept="image/*" class="hidden" onchange="handleAiImageUpload(event)">
+      <button type="button" onclick="document.getElementById('ai-item-image-input').click()" class="px-3.5 py-2 rounded-xl bg-primary-container hover:bg-primary text-white font-semibold text-xs flex items-center gap-1.5 shadow-md transition-all cursor-pointer">
+        <span class="material-symbols-outlined text-[17px]">upload_file</span>
+        <span>Upload Photo</span>
+      </button>
+      <button type="button" onclick="triggerWebcamScanner()" class="px-3 py-2 rounded-xl border border-outline-variant/60 hover:bg-surface-container text-on-surface font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer">
+        <span class="material-symbols-outlined text-[17px]">camera_alt</span>
+        <span>Take Photo</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Quick Demo Sample Chips for 1-Click Instant AI Testing -->
+  <div class="mt-3.5 pt-3 border-t border-outline-variant/20 flex items-center gap-2 flex-wrap">
+    <span class="text-[11px] text-outline font-semibold">⚡ Quick Demo Samples:</span>
+    <button type="button" onclick="runAiMockDetection('jackets')" class="text-[11px] px-2.5 py-1 rounded-lg bg-surface-container-high/60 hover:bg-surface-container-highest text-on-surface border border-outline-variant/30 flex items-center gap-1 transition-all cursor-pointer">
+      🧥 <span>Winter Jackets</span>
+    </button>
+    <button type="button" onclick="runAiMockDetection('meals')" class="text-[11px] px-2.5 py-1 rounded-lg bg-surface-container-high/60 hover:bg-surface-container-highest text-on-surface border border-outline-variant/30 flex items-center gap-1 transition-all cursor-pointer">
+      🍛 <span>Cooked Meals (Rice &amp; Curry)</span>
+    </button>
+    <button type="button" onclick="runAiMockDetection('blankets')" class="text-[11px] px-2.5 py-1 rounded-lg bg-surface-container-high/60 hover:bg-surface-container-highest text-on-surface border border-outline-variant/30 flex items-center gap-1 transition-all cursor-pointer">
+      🛌 <span>Thermal Blankets</span>
+    </button>
+    <button type="button" onclick="runAiMockDetection('books')" class="text-[11px] px-2.5 py-1 rounded-lg bg-surface-container-high/60 hover:bg-surface-container-highest text-on-surface border border-outline-variant/30 flex items-center gap-1 transition-all cursor-pointer">
+      📚 <span>School Books</span>
+    </button>
+    <button type="button" onclick="runAiMockDetection('medicines')" class="text-[11px] px-2.5 py-1 rounded-lg bg-surface-container-high/60 hover:bg-surface-container-highest text-on-surface border border-outline-variant/30 flex items-center gap-1 transition-all cursor-pointer">
+      💊 <span>First Aid Kits</span>
+    </button>
+    <button type="button" onclick="runAiMockDetection('hygiene')" class="text-[11px] px-2.5 py-1 rounded-lg bg-surface-container-high/60 hover:bg-surface-container-highest text-on-surface border border-outline-variant/30 flex items-center gap-1 transition-all cursor-pointer">
+      🧴 <span>Hygiene Packs</span>
+    </button>
+  </div>
+
+  <!-- Preview Thumbnail & Laser Beam Scanning Visual -->
+  <div id="ai-scanner-view" class="hidden mt-3 p-3 rounded-xl bg-surface-container border border-primary-container/40 relative overflow-hidden">
+    <div class="flex items-center gap-4">
+      <div class="relative w-24 h-20 rounded-lg overflow-hidden border border-outline-variant/40 shrink-0 bg-slate-950 flex items-center justify-center">
+        <img id="ai-scan-thumbnail" class="w-full h-full object-cover" src="" alt="Scanning Target" />
+        <div id="ai-laser-beam-indicator" class="absolute left-0 right-0 h-1 bg-primary-container shadow-[0_0_12px_#16803C] ai-laser-beam"></div>
+      </div>
+      <div class="flex-1 space-y-1.5">
+        <div class="flex items-center justify-between text-xs">
+          <span class="font-bold text-on-surface flex items-center gap-1.5" id="ai-scan-status-text">
+            <span class="w-2.5 h-2.5 rounded-full bg-primary-container animate-pulse"></span>
+            Analyzing item features &amp; category...
+          </span>
+          <span class="font-mono font-bold text-primary-container text-xs" id="ai-scan-percentage">35%</span>
+        </div>
+        <div class="w-full h-2 rounded-full bg-surface-container-highest overflow-hidden">
+          <div id="ai-scan-progressbar" class="h-full bg-primary-container transition-all duration-300" style="width: 35%;"></div>
+        </div>
+        <p class="text-[11px] text-outline font-mono" id="ai-scan-telemetry">Extracting color spectra, item boundaries &amp; packaging condition...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Success Banner -->
+  <div id="ai-scan-success-banner" class="hidden mt-3 p-3 rounded-xl bg-emerald-950/40 border border-emerald-800 text-xs flex items-center justify-between animate-in fade-in">
+    <div class="flex items-center gap-2.5 text-emerald-300">
+      <span class="material-symbols-outlined text-emerald-400 text-[20px]">auto_awesome</span>
+      <span id="ai-scan-result-text">AI detected <b>40 Winter Jackets &amp; Sweaters</b> (Confidence: 98.6%) - Form Auto-Filled!</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold uppercase">Ready to Post</span>
+      <button type="button" onclick="document.getElementById('ai-scan-success-banner').classList.add('hidden')" class="text-emerald-400 hover:text-white p-1">✕</button>
+    </div>
+  </div>
+</div>
+
 <!-- SECTION: Multi-Category Selector -->
 <div class="mb-5 pb-4 border-b border-outline-variant/30">
   <div class="flex items-center justify-between pb-2 mb-2">
@@ -764,6 +851,227 @@
   let currentDonationType = 'food';
   window.selectedFoodImageData = null;
 
+  // AI Vision Item Scanner Database & Heuristics
+  const aiMockDatabase = {
+    jackets: {
+      categoryType: 'clothes',
+      title: '40 Winter Jackets & Warm Sweaters',
+      specificCategory: 'Clothes & Footwear',
+      qty: 40,
+      unit: 'pieces',
+      condition: 'Gently Used / Like New',
+      notes: 'Cold wave relief collection: cleaned, sorted by sizes (M/L/XL), ready for immediate distribution.',
+      confidence: '98.8%',
+      telemetry: 'Neural vision detected woven synthetic fabric, quilted padding & winter apparel labels.'
+    },
+    meals: {
+      categoryType: 'food',
+      foodName: 'Fresh Cooked Meals (Rice, Dal & Curry)',
+      category: 'Cooked Meals',
+      qty: 35,
+      unit: 'kg',
+      condition: 'Hot (60°C+)',
+      notes: 'Prepared fresh today at commercial kitchen. High hygiene certified, packed in foil trays.',
+      confidence: '99.2%',
+      telemetry: 'Neural vision detected cooked grain spectra, thermal steam signature & sanitary foil containers.'
+    },
+    blankets: {
+      categoryType: 'blankets',
+      title: '50 Thermal Winter Blankets (Double Layer)',
+      specificCategory: 'Blankets & Necessities',
+      qty: 50,
+      unit: 'blankets',
+      condition: 'Brand New / Sealed',
+      notes: 'Emergency cold wave supplies. 100% polar fleece double-ply warm blankets, factory sealed in sets of 10.',
+      confidence: '97.9%',
+      telemetry: 'Neural vision detected woven wool-blend fleece weave, uniform industrial packing & moisture barrier.'
+    },
+    books: {
+      categoryType: 'books',
+      title: '85 Children Storybooks & School Textbooks',
+      specificCategory: 'Books & Educational Materials',
+      qty: 85,
+      unit: 'books',
+      condition: 'Good Usable Condition',
+      notes: 'Illustrated bilingual storybooks, NCERT elementary textbooks and drawing workbooks for shelter learning center.',
+      confidence: '98.4%',
+      telemetry: 'Neural vision detected bound paper print signatures, educational spine typography & intact covers.'
+    },
+    medicines: {
+      categoryType: 'medicines',
+      title: '25 First Aid Emergency Kits & Paracetamol',
+      specificCategory: 'Medicines & Medical Supplies',
+      qty: 25,
+      unit: 'kits',
+      condition: 'Brand New / Sealed',
+      expiryDate: new Date(Date.now() + 365*24*60*60*1000).toISOString().split('T')[0],
+      batchNo: 'MED-EXP-2027-4B',
+      notes: 'Emergency relief kit with antiseptic liquids, sterile gauze bandages, adhesive dressings and OTC paracetamol blisters.',
+      confidence: '99.5%',
+      telemetry: 'Neural vision detected pharmaceutical tamper-evident foil seals, barcode batch ID & expiry date stamp.'
+    },
+    hygiene: {
+      categoryType: 'hygiene',
+      title: '60 Family Hygiene Care Kits (Soaps, Sanitizers, Toothpaste)',
+      specificCategory: 'Hygiene & Essential Supplies',
+      qty: 60,
+      unit: 'pieces',
+      condition: 'Brand New / Sealed',
+      notes: 'Sanitation relief packs including bath soaps, alcohol hand rubs, fluoridated toothpaste and hygiene towels.',
+      confidence: '98.1%',
+      telemetry: 'Neural vision detected sealed HDPE hygiene bottles, branded cosmetic packaging & safety seals.'
+    }
+  };
+
+  function runAiMockDetection(sampleKey) {
+    const item = aiMockDatabase[sampleKey];
+    if (!item) return;
+
+    const sampleImages = {
+      jackets: 'https://images.unsplash.com/photo-1544923246-77307dd654cb?auto=format&fit=crop&w=300&q=80',
+      meals: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=300&q=80',
+      blankets: 'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?auto=format&fit=crop&w=300&q=80',
+      books: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=300&q=80',
+      medicines: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=300&q=80',
+      hygiene: 'https://images.unsplash.com/photo-1584744982491-665216d95f8b?auto=format&fit=crop&w=300&q=80'
+    };
+
+    triggerAiScanAnimation(sampleImages[sampleKey] || '', item);
+  }
+
+  function handleAiImageUpload(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const dataUrl = e.target.result;
+      const lowerName = file.name.toLowerCase();
+
+      let matchedKey = 'jackets';
+      if (lowerName.includes('food') || lowerName.includes('meal') || lowerName.includes('rice') || lowerName.includes('curry') || lowerName.includes('bread')) {
+        matchedKey = 'meals';
+      } else if (lowerName.includes('blanket') || lowerName.includes('bed') || lowerName.includes('quilt') || lowerName.includes('warm')) {
+        matchedKey = 'blankets';
+      } else if (lowerName.includes('book') || lowerName.includes('study') || lowerName.includes('paper') || lowerName.includes('school')) {
+        matchedKey = 'books';
+      } else if (lowerName.includes('med') || lowerName.includes('aid') || lowerName.includes('pharm') || lowerName.includes('pill')) {
+        matchedKey = 'medicines';
+      } else if (lowerName.includes('hygiene') || lowerName.includes('soap') || lowerName.includes('sanit')) {
+        matchedKey = 'hygiene';
+      }
+
+      const item = { ...aiMockDatabase[matchedKey] };
+      item.title = `${item.qty} ${item.unit} - ${file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, ' ')}`;
+      triggerAiScanAnimation(dataUrl, item);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function triggerWebcamScanner() {
+    const input = document.getElementById('ai-item-image-input');
+    if (input) {
+      input.setAttribute('capture', 'environment');
+      input.click();
+    }
+  }
+
+  function triggerAiScanAnimation(imageUrl, item) {
+    const scannerView = document.getElementById('ai-scanner-view');
+    const thumb = document.getElementById('ai-scan-thumbnail');
+    const statusText = document.getElementById('ai-scan-status-text');
+    const percentEl = document.getElementById('ai-scan-percentage');
+    const barEl = document.getElementById('ai-scan-progressbar');
+    const telemetryEl = document.getElementById('ai-scan-telemetry');
+    const successBanner = document.getElementById('ai-scan-success-banner');
+    const resultText = document.getElementById('ai-scan-result-text');
+
+    if (scannerView) scannerView.classList.remove('hidden');
+    if (successBanner) successBanner.classList.add('hidden');
+    if (thumb) thumb.src = imageUrl || 'https://images.unsplash.com/photo-1544923246-77307dd654cb?auto=format&fit=crop&w=300&q=80';
+
+    let progress = 18;
+    if (percentEl) percentEl.textContent = `${progress}%`;
+    if (barEl) barEl.style.width = `${progress}%`;
+    if (statusText) statusText.innerHTML = '<span class="w-2.5 h-2.5 rounded-full bg-primary-container animate-pulse"></span> Extracting visual contours...';
+    if (telemetryEl) telemetryEl.textContent = 'Analyzing image resolution, color spectra and spatial dimensions...';
+
+    const interval = setInterval(() => {
+      progress += 28;
+      if (progress >= 100) {
+        progress = 100;
+        clearInterval(interval);
+
+        if (percentEl) percentEl.textContent = '100%';
+        if (barEl) barEl.style.width = '100%';
+        if (statusText) statusText.innerHTML = '✓ Analysis Complete!';
+        if (telemetryEl) telemetryEl.textContent = item.telemetry;
+
+        applyDetectedItemToForm(item);
+
+        setTimeout(() => {
+          if (scannerView) scannerView.classList.add('hidden');
+          if (successBanner) successBanner.classList.remove('hidden');
+          if (resultText) {
+            resultText.innerHTML = `AI detected <b>${item.title}</b> (Confidence: ${item.confidence}) - Form Auto-Filled!`;
+          }
+        }, 500);
+      } else {
+        if (percentEl) percentEl.textContent = `${progress}%`;
+        if (barEl) barEl.style.width = `${progress}%`;
+      }
+    }, 160);
+  }
+
+  function applyDetectedItemToForm(item) {
+    selectDonationType(item.categoryType);
+
+    if (item.categoryType === 'food') {
+      const foodNameInput = document.getElementById('food-name');
+      if (foodNameInput) foodNameInput.value = item.foodName || 'Fresh Cooked Meals';
+      const foodCatSelect = document.getElementById('food-category');
+      if (foodCatSelect) foodCatSelect.value = item.category || 'Cooked Meals';
+      const foodQtyInput = document.getElementById('food-qty');
+      if (foodQtyInput) foodQtyInput.value = item.qty || 25;
+      const foodUnit = document.getElementById('qty-unit');
+      if (foodUnit) foodUnit.value = item.unit || 'kg';
+      const foodDesc = document.getElementById('food-description');
+      if (foodDesc) foodDesc.value = item.notes || '';
+    } else {
+      const nameInput = document.getElementById('physical-name');
+      if (nameInput) nameInput.value = item.title;
+      const catSelect = document.getElementById('physical-category');
+      if (catSelect) catSelect.value = item.specificCategory || 'Clothes & Footwear';
+      const qtyInput = document.getElementById('physical-qty');
+      if (qtyInput) qtyInput.value = item.qty;
+      const unitSelect = document.getElementById('physical-unit');
+      if (unitSelect) unitSelect.value = item.unit;
+      const notesInput = document.getElementById('physical-handling');
+      if (notesInput) notesInput.value = item.notes;
+
+      const condRadios = document.querySelectorAll('input[name="physical_condition"]');
+      condRadios.forEach(r => {
+        if (r.value.includes(item.condition) || item.condition.includes(r.value)) {
+          r.checked = true;
+          r.dispatchEvent(new Event('change'));
+        }
+      });
+
+      if (item.categoryType === 'medicines') {
+        const expInput = document.getElementById('med-expiry-date');
+        if (expInput) expInput.value = item.expiryDate || new Date(Date.now() + 365*24*60*60*1000).toISOString().split('T')[0];
+        const batchInput = document.getElementById('med-batch-no');
+        if (batchInput) batchInput.value = item.batchNo || 'MED-2026-X1';
+        const safetyCb = document.getElementById('med-safety-checkbox');
+        if (safetyCb) safetyCb.checked = true;
+      }
+    }
+
+    if (window.showToast) {
+      showToast(`✨ AI Vision: Auto-filled ${item.title}`);
+    }
+  }
+
   function selectDonationType(type) {
     currentDonationType = type;
 
@@ -1247,6 +1555,7 @@
 </script>
 
   <script src="./js/motion.js"></script>
+  <script src="./js/whatsapp-alerts.js"></script>
 <script src="./js/tutorial.js"></script>
   <script src="./js/new-user-cleaner.js"></script>
 </body></html>

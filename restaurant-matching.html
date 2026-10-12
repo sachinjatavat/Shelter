@@ -625,13 +625,17 @@
 
       <!-- Action Buttons -->
       <div class="flex flex-col sm:flex-row gap-2.5 pt-2">
-        <button onclick="window.location.href='./restaurant-pickups.html'" class="flex-1 py-2.5 px-4 rounded-xl bg-primary-container hover:bg-primary text-white font-medium text-xs flex items-center justify-center gap-2 shadow-sm transition-all" type="button">
-          <span class="material-symbols-outlined text-[18px]">local_shipping</span>
-          <span>Open Full Pickups Dashboard</span>
+        <button onclick="openWhatsAppAlertModal({ donationId: 'D-8821', title: 'Relief Essentials & Supplies', ngoName: 'Hope Shelter', driverName: 'Rahul Sharma', vehicle: 'Tata Ace EV Van (RJ-14-EV-9401)', pin: '4829', eta: '12 mins' })" class="flex-1 py-2.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all" type="button">
+          <span class="material-symbols-outlined text-[18px]">chat</span>
+          <span>1-Click WhatsApp Pass</span>
         </button>
-        <button onclick="alert('Calling Rahul Sharma (+91 98290 88402)...')" class="py-2.5 px-4 rounded-xl border border-outline-variant/40 hover:bg-surface-container-low text-on-surface font-medium text-xs flex items-center justify-center gap-1.5 transition-all" type="button">
+        <button onclick="window.location.href='./restaurant-pickups.html'" class="py-2.5 px-4 rounded-xl bg-primary-container hover:bg-primary text-white font-medium text-xs flex items-center justify-center gap-2 shadow-sm transition-all" type="button">
+          <span class="material-symbols-outlined text-[18px]">local_shipping</span>
+          <span>Pickups View</span>
+        </button>
+        <button onclick="alert('Calling Rahul Sharma (+91 98290 88402)...')" class="py-2.5 px-3 rounded-xl border border-outline-variant/40 hover:bg-surface-container-low text-on-surface font-medium text-xs flex items-center justify-center gap-1 transition-all" type="button">
           <span class="material-symbols-outlined text-[16px]">call</span>
-          <span>Call Driver</span>
+          <span>Call</span>
         </button>
       </div>
     </div>
@@ -749,6 +753,7 @@
 </script>
 
   <script src="./js/motion.js"></script>
+  <script src="./js/whatsapp-alerts.js"></script>
 <script src="./js/tutorial.js"></script>
   <script src="./js/new-user-cleaner.js"></script>
 </body></html>

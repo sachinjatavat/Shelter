@@ -332,6 +332,10 @@
           Driver Rahul Sharma is equipped with temperature-controlled thermal containers (4°C - 65°C). Please ensure packaging is sealed before handoff.
         </p>
         <div class="space-y-2">
+          <button onclick="openWhatsAppAlertModal({ donationId: 'DON-9482', title: '50 Prepared Meals', quantity: '25 kg', ngoName: 'Hope Shelter', driverName: 'Rahul Sharma', vehicle: 'Tata Ace EV Van (RJ-14-EV-9401)', pin: '4829', eta: '12 mins' })" class="w-full py-2.5 px-4 rounded-lg bg-[#25D366] hover:bg-[#20bd5a] text-slate-950 font-bold text-xs shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer">
+            <span class="material-symbols-outlined text-[18px]">chat</span>
+            <span>Send 1-Click WhatsApp Pass</span>
+          </button>
           <button onclick="alert('Calling Driver Rahul Sharma (+91 98290-XXXXX)...')" class="w-full py-2.5 px-4 rounded-lg bg-secondary-container text-on-secondary-container font-semibold text-xs hover:bg-secondary-container/80 transition-colors flex items-center justify-center gap-2">
             <span class="material-symbols-outlined text-[18px]">phone</span> Call Driver Now
           </button>
@@ -410,6 +414,7 @@
 </script>
 
   <script src="./js/motion.js"></script>
+  <script src="./js/whatsapp-alerts.js"></script>
 <script src="./js/tutorial.js"></script>
   <script src="./js/new-user-cleaner.js"></script>
 </body></html>
