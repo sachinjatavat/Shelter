@@ -427,6 +427,31 @@
         });
       }
     }
+
+    // 5. Restaurant History Page (restaurant-history.html)
+    if (path.includes('restaurant-history') && info.isNew) {
+      if (myDonations.length === 0) {
+        const emptyHistory = document.getElementById('empty-donor-history');
+        const tableWrapper = document.getElementById('donor-history-table-wrapper');
+        const tbody = document.getElementById('donor-history-tbody');
+        const countBadge = document.getElementById('history-count-badge');
+
+        if (tbody) tbody.innerHTML = '';
+        if (emptyHistory) emptyHistory.classList.remove('hidden');
+        if (tableWrapper) tableWrapper.classList.add('hidden');
+        if (countBadge) countBadge.textContent = '0 Records';
+
+        const totalEl = document.getElementById('metric-total-donations');
+        const qtyEl = document.getElementById('metric-total-quantity');
+        const taxEl = document.getElementById('metric-tax-claimed');
+        const sheltersEl = document.getElementById('metric-shelters-supported');
+
+        if (totalEl) totalEl.textContent = '0';
+        if (qtyEl) qtyEl.textContent = '0 kg';
+        if (taxEl) taxEl.textContent = '₹0';
+        if (sheltersEl) sheltersEl.textContent = '0';
+      }
+    }
   }
 
   function cleanAndSyncNGOPortal(info, allDonations) {

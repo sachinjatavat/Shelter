@@ -32,6 +32,7 @@ By integrating **multi-category aid routing**, **100% free OpenStreetMap live an
   - 💳 **Monetary Contributions**: Direct verified shelter funding with escrow sandbox.
 - **Smart Recipient Matching (`restaurant-matching.html`)**: Evaluates nearby verified NGOs by distance, live capacity, and immediate necessity ranking.
 - **🗺️ Live Animated GPS Route Radar**: Real-time Leaflet route map showing delivery courier van advancing along city coordinates with live ETA countdown and target shelter switching.
+- **Donation History (`restaurant-history.html`)**: Complete verified relief ledger with category filters, delivery timeline, 80G tax receipt downloads, and clean zero-state isolation for new donor accounts.
 - **Active Pickup Tracker (`restaurant-pickups.html`)**: Real-time monitoring of assigned courier drivers, live vehicle telemetry, and 1-click WhatsApp dispatch passes.
 - **ESG Impact & 80G Tax Hub (`restaurant-impact.html`)**: Real-time calculation of tax deductions earned, CO₂ reduced, landfill diversion, and 1-click printable PDF 80G tax certificates.
 
@@ -163,6 +164,7 @@ donate/
 ├── restaurant-post.html           # Multi-Category Donation Posting Form
 ├── restaurant-matching.html       # Smart Recipient Matching & Live GPS Radar
 ├── restaurant-donations.html      # Active Donation Manifest Feed
+├── restaurant-history.html        # Donor Past Donation History & 80G Receipts
 ├── restaurant-pickups.html        # Live Driver Dispatch & WhatsApp Pass Hub
 ├── restaurant-notifications.html  # Alerts & Emergency Crisis Feed
 ├── restaurant-impact.html         # ESG Impact Dashboard & 80G Tax Certificates
