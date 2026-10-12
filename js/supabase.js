@@ -4,6 +4,19 @@
  */
 
 const API_BASE_URL = 'http://localhost:5000/api';
+const SUPABASE_URL = 'https://juhjxcxbrirzfppjghlj.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable__Q6ZFUUsSS6a28VjJRCL-w_DixWn7_Y';
+
+// Direct browser Supabase client (used if @supabase/supabase-js CDN is present)
+let directSupabaseClient = null;
+if (typeof supabase !== 'undefined' && supabase.createClient) {
+  try {
+    directSupabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    window.supabaseDirectClient = directSupabaseClient;
+  } catch (err) {
+    console.warn('Direct Supabase client init:', err);
+  }
+}
 
 // Helper for local storage persistence
 function getLocalDonations() {
@@ -30,13 +43,44 @@ function saveLocalDonation(donation) {
 }
 
 window.SupabaseService = {
-  // Health Check
+  // Direct client accessor
+  getDirectClient() {
+    if (!directSupabaseClient && typeof supabase !== 'undefined' && supabase.createClient) {
+      try {
+        directSupabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        window.supabaseDirectClient = directSupabaseClient;
+      } catch (e) {}
+    }
+    return directSupabaseClient || window.supabaseDirectClient;
+  },
+
+  // Health Check with real Express & Supabase diagnostics
   async getHealth() {
     try {
       const res = await fetch(`${API_BASE_URL}/health`);
-      return await res.json();
+      if (!res.ok) throw new Error('API status ' + res.status);
+      const data = await res.json();
+      return {
+        ...data,
+        isServerRunning: true
+      };
     } catch (e) {
-      return { status: 'online', database: 'Local Persistence (Offline Mode)' };
+      // Check direct Supabase connection if Express is offline
+      const direct = window.SupabaseService.getDirectClient();
+      let directConnected = false;
+      if (direct) {
+        try {
+          const { error } = await direct.from('users').select('id').limit(1);
+          if (!error) directConnected = true;
+        } catch (err) {}
+      }
+
+      return {
+        status: directConnected ? 'online' : 'offline',
+        isServerRunning: false,
+        supabaseConnected: directConnected,
+        database: directConnected ? 'Supabase PostgreSQL (Direct Cloud SDK)' : 'Local Persistence (Offline Fallback)'
+      };
     }
   },
 
@@ -169,7 +213,15 @@ window.SupabaseService = {
       const res = await fetch(`${API_BASE_URL}/users`);
       const data = await res.json();
       apiUsers = data.users || [];
-    } catch (e) {}
+    } catch (e) {
+      const direct = window.SupabaseService.getDirectClient();
+      if (direct) {
+        try {
+          const { data } = await direct.from('users').select('*');
+          if (data && data.length) apiUsers = data;
+        } catch (err) {}
+      }
+    }
 
     const localUsers = JSON.parse(localStorage.getItem('local_users') || '[]');
     const combined = [...apiUsers];
@@ -186,7 +238,15 @@ window.SupabaseService = {
       const res = await fetch(`${API_BASE_URL}/pickups`);
       const data = await res.json();
       if (data && data.pickups) return data.pickups;
-    } catch (e) {}
+    } catch (e) {
+      const direct = window.SupabaseService.getDirectClient();
+      if (direct) {
+        try {
+          const { data } = await direct.from('pickups').select('*');
+          if (data && data.length) return data;
+        } catch (err) {}
+      }
+    }
 
     return [
       { id: 'PU-101', donation_id: 'DON-9482', driver_name: 'Rahul Sharma', vehicle_number: 'RJ-14-EV-9401', eta_minutes: 12, status: 'EN_ROUTE' },
@@ -232,7 +292,13 @@ window.SupabaseService = {
         apiDonations = data.donations;
       }
     } catch (e) {
-      console.warn('API fetch failed, reading local cache:', e);
+      const direct = window.SupabaseService.getDirectClient();
+      if (direct) {
+        try {
+          const { data } = await direct.from('donations').select('*').order('created_at', { ascending: false });
+          if (data && data.length) apiDonations = data;
+        } catch (err) {}
+      }
     }
 
     const localList = getLocalDonations();

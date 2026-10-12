@@ -12,6 +12,8 @@
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Official Supabase JS SDK for Direct Cloud Verification -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="stylesheet" href="./css/animations.css">
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col">
@@ -19,7 +21,7 @@
   <!-- TOP BAR -->
   <header class="h-16 bg-slate-900 border-b border-slate-800 px-6 flex items-center justify-between sticky top-0 z-50">
     <div class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded bg-[#16803C] flex items-center justify-center text-white font-bold text-lg">
+      <div class="w-9 h-9 rounded bg-[#16803C] flex items-center justify-center text-white font-bold text-lg shadow-sm">
         🗄️
       </div>
       <div>
@@ -31,16 +33,37 @@
     </div>
 
     <div class="flex items-center gap-3">
-      <div id="connectionBadge" class="px-3 py-1 rounded-full bg-slate-800 text-slate-300 text-xs font-semibold border border-slate-700 flex items-center gap-1.5">
+      <div id="connectionBadge" class="px-3 py-1 rounded-full bg-slate-800 text-slate-300 text-xs font-semibold border border-slate-700 flex items-center gap-1.5 shadow-sm">
         <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> Checking Health...
       </div>
-      <a href="./index.html" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-colors flex items-center gap-1">
+      <a href="./index.html" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-colors flex items-center gap-1 shadow-sm">
         <span class="material-symbols-outlined text-[16px]">arrow_back</span> Return to App
       </a>
     </div>
   </header>
 
   <div class="flex-1 p-6 max-w-7xl w-full mx-auto space-y-6">
+
+    <!-- REAL-TIME STATUS & DIAGNOSTIC BANNER -->
+    <div id="statusAlertBox" class="rounded-xl border p-4 text-xs flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-md bg-slate-900 border-slate-800 transition-all">
+      <div class="flex items-center gap-3">
+        <div id="alertIcon" class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg shrink-0 border border-emerald-500/30">
+          ⚡
+        </div>
+        <div>
+          <div id="alertTitle" class="font-bold text-sm text-white">Database & Backend Diagnostic</div>
+          <div id="alertMessage" class="text-slate-400 mt-0.5">Checking backend API (http://localhost:5000) and Supabase Cloud...</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 self-start md:self-auto shrink-0 flex-wrap">
+        <button onclick="checkHealth(); loadTableData();" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold flex items-center gap-1 cursor-pointer transition-colors">
+          <span class="material-symbols-outlined text-[15px]">sync</span> Run Diagnostic
+        </button>
+        <button onclick="seedSampleDataToSupabase()" id="btnSeedData" class="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white font-semibold flex items-center gap-1 cursor-pointer transition-colors shadow-sm">
+          <span class="material-symbols-outlined text-[15px]">cloud_upload</span> Sync Data to Supabase
+        </button>
+      </div>
+    </div>
 
     <!-- SUPABASE QUICK LINKS & METRICS -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -49,47 +72,55 @@
         <div class="text-xl font-bold text-white flex items-center gap-2">
           <span class="text-emerald-400">⚡ Supabase PostgreSQL</span>
         </div>
-        <p class="text-xs text-slate-400 mt-1">Cloud Database &amp; Express API Proxy</p>
+        <p class="text-xs text-slate-400 mt-1 font-mono truncate" id="supabaseUrlText">https://juhjxcxbrirzfppjghlj.supabase.co</p>
       </div>
 
       <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
         <div class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Backend Server Status</div>
         <div class="text-xl font-bold text-emerald-400 font-mono" id="serverStatusText">http://localhost:5000</div>
-        <p class="text-xs text-slate-400 mt-1" id="serverDetails">Connected to API</p>
+        <p class="text-xs text-slate-400 mt-1" id="serverDetails">Checking connection...</p>
       </div>
 
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
-        <div class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Cloud Console URL</div>
-        <a href="https://supabase.com/dashboard" target="_blank" class="text-sm font-bold text-emerald-400 hover:underline flex items-center gap-1 mt-1">
-          <span>https://supabase.com/dashboard</span>
-          <span class="material-symbols-outlined text-[16px]">open_in_new</span>
-        </a>
-        <p class="text-xs text-slate-400 mt-1">View SQL Editor &amp; Table Editor online</p>
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Cloud Project Dashboard</div>
+          <div class="flex items-center gap-3 mt-1.5">
+            <a href="https://supabase.com/dashboard/project/juhjxcxbrirzfppjghlj/editor" target="_blank" class="text-xs px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-slate-700 font-semibold flex items-center gap-1">
+              <span>Table Editor</span>
+              <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+            </a>
+            <a href="https://supabase.com/dashboard/project/juhjxcxbrirzfppjghlj/sql" target="_blank" class="text-xs px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-slate-700 font-semibold flex items-center gap-1">
+              <span>SQL Editor</span>
+              <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+            </a>
+          </div>
+        </div>
+        <p class="text-[11px] text-slate-500 mt-2">Manage tables, policies &amp; logs online</p>
       </div>
     </div>
 
     <!-- TABLE SELECTOR TABS -->
-    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between flex-wrap gap-3">
-      <div class="flex items-center gap-2" id="tableTabs">
-        <button onclick="switchTable('donations')" id="tab-donations" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 text-white shadow-sm">
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between flex-wrap gap-3 shadow-sm">
+      <div class="flex items-center gap-2 flex-wrap" id="tableTabs">
+        <button onclick="switchTable('donations')" id="tab-donations" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 text-white shadow-sm cursor-pointer transition-colors">
           📦 public.donations
         </button>
-        <button onclick="switchTable('users')" id="tab-users" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">
+        <button onclick="switchTable('users')" id="tab-users" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 cursor-pointer transition-colors">
           👥 public.users
         </button>
-        <button onclick="switchTable('pickups')" id="tab-pickups" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">
+        <button onclick="switchTable('pickups')" id="tab-pickups" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 cursor-pointer transition-colors">
           🚚 public.pickups
         </button>
-        <button onclick="switchTable('impact')" id="tab-impact" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">
+        <button onclick="switchTable('impact')" id="tab-impact" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 cursor-pointer transition-colors">
           📈 public.impact_logs
         </button>
       </div>
 
       <div class="flex items-center gap-2">
-        <button onclick="promptAddNewDriver()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold flex items-center gap-1 shadow-sm">
+        <button onclick="promptAddNewDriver()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold flex items-center gap-1 shadow-sm cursor-pointer transition-colors">
           <span class="material-symbols-outlined text-[16px]">person_add</span> Add New Driver
         </button>
-        <button onclick="loadTableData()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1 border border-slate-700">
+        <button onclick="loadTableData()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1 border border-slate-700 cursor-pointer transition-colors">
           <span class="material-symbols-outlined text-[16px]">refresh</span> Refresh Table Data
         </button>
       </div>
@@ -102,7 +133,7 @@
           <span class="material-symbols-outlined text-emerald-400">table_chart</span>
           <h2 class="font-bold text-sm text-white" id="currentTableName">Table: public.donations</h2>
         </div>
-        <span class="text-xs text-slate-400 font-mono" id="rowCount">3 rows loaded</span>
+        <span class="text-xs text-slate-400 font-mono" id="rowCount">Loading data...</span>
       </div>
 
       <div class="overflow-x-auto">
@@ -117,30 +148,26 @@
       </div>
     </div>
 
-    <!-- SQL CREATION SCRIPT DISPLAY -->
+    <!-- SQL CREATION SCRIPT DISPLAY WITH 1-CLICK RUN -->
     <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm space-y-3">
-      <div class="flex items-center justify-between">
-        <h3 class="font-bold text-sm text-white flex items-center gap-2">
-          <span class="material-symbols-outlined text-emerald-400">code</span> Supabase PostgreSQL Schema Script (`supabase/schema.sql`)
-        </h3>
-        <button onclick="navigator.clipboard.writeText(document.getElementById('sqlSnippet').innerText); alert('SQL Script Copied!')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 border border-slate-700">
-          Copy SQL Script
-        </button>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <h3 class="font-bold text-sm text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-emerald-400">code</span> Supabase PostgreSQL Schema Script (`supabase/schema.sql`)
+          </h3>
+          <p class="text-xs text-slate-400 mt-0.5">Run this script in your Supabase SQL Editor to initialize all tables, RLS permissions &amp; seed data.</p>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <button onclick="copySqlScript()" class="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-700 flex items-center gap-1 cursor-pointer transition-colors">
+            <span class="material-symbols-outlined text-[15px]">content_copy</span> Copy SQL Script
+          </button>
+          <a href="https://supabase.com/dashboard/project/juhjxcxbrirzfppjghlj/sql" target="_blank" class="px-3 py-1.5 rounded bg-emerald-600 hover:bg-emerald-500 text-xs font-semibold text-white flex items-center gap-1 shadow-sm transition-colors">
+            <span>Open SQL Editor</span>
+            <span class="material-symbols-outlined text-[15px]">launch</span>
+          </a>
+        </div>
       </div>
-      <pre class="bg-slate-950 p-4 rounded-lg text-xs font-mono text-emerald-400 overflow-x-auto border border-slate-800/80 max-h-60" id="sqlSnippet">
-CREATE TABLE IF NOT EXISTS public.donations (
-  id TEXT PRIMARY KEY,
-  title TEXT NOT NULL,
-  category TEXT NOT NULL,
-  quantity_kg NUMERIC NOT NULL,
-  portions INT NOT NULL,
-  temp_requirement TEXT,
-  donor_name TEXT NOT NULL,
-  recipient_ngo TEXT,
-  driver_name TEXT,
-  status TEXT DEFAULT 'AVAILABLE',
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);</pre>
+      <pre class="bg-slate-950 p-4 rounded-lg text-xs font-mono text-emerald-400 overflow-x-auto border border-slate-800/80 max-h-80" id="sqlSnippet">Loading schema.sql...</pre>
     </div>
 
   </div>
@@ -152,32 +179,90 @@ CREATE TABLE IF NOT EXISTS public.donations (
     document.addEventListener('DOMContentLoaded', () => {
       checkHealth();
       loadTableData();
+      loadSchemaSql();
     });
 
+    async function loadSchemaSql() {
+      try {
+        const res = await fetch('./supabase/schema.sql');
+        if (res.ok) {
+          const text = await res.text();
+          document.getElementById('sqlSnippet').textContent = text;
+        }
+      } catch (e) {
+        document.getElementById('sqlSnippet').textContent = `-- Execute this in Supabase SQL Editor:
+ALTER TABLE public.donations DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.users DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.pickups DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.impact_logs DISABLE ROW LEVEL SECURITY;
+-- For complete schema, view supabase/schema.sql`;
+      }
+    }
+
+    function copySqlScript() {
+      const code = document.getElementById('sqlSnippet').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        alert('✓ Complete SQL Schema Script Copied to Clipboard!\n\nNext step:\n1. Open Supabase SQL Editor (Click "Open SQL Editor")\n2. Paste and click "RUN"');
+      });
+    }
+
     async function checkHealth() {
-      const health = await SupabaseService.getHealth();
       const badge = document.getElementById('connectionBadge');
       const statusText = document.getElementById('serverStatusText');
       const details = document.getElementById('serverDetails');
+      const alertBox = document.getElementById('statusAlertBox');
+      const alertTitle = document.getElementById('alertTitle');
+      const alertMsg = document.getElementById('alertMessage');
+      const alertIcon = document.getElementById('alertIcon');
 
-      if (health.status === 'online') {
-        badge.className = 'px-3 py-1 rounded-full bg-emerald-950 text-emerald-400 text-xs font-semibold border border-emerald-800 flex items-center gap-1.5';
-        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Backend Server Online (${health.database})`;
+      const health = await SupabaseService.getHealth();
+
+      if (health.isServerRunning) {
+        badge.className = 'px-3 py-1 rounded-full bg-emerald-950 text-emerald-400 text-xs font-semibold border border-emerald-800 flex items-center gap-1.5 shadow-sm';
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Backend Online (${health.database})`;
         statusText.textContent = 'http://localhost:5000 (Connected)';
+        statusText.className = 'text-xl font-bold text-emerald-400 font-mono';
         details.textContent = `Database Mode: ${health.database}`;
+
+        alertBox.className = 'rounded-xl border p-4 text-xs flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-md bg-emerald-950/30 border-emerald-800 text-emerald-200';
+        alertIcon.className = 'w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg shrink-0 border border-emerald-500/30';
+        alertIcon.innerHTML = '✅';
+        alertTitle.textContent = 'Backend Server Online & Connected to Supabase';
+        alertMsg.textContent = 'Express API (port 5000) and Supabase PostgreSQL are active and synchronizing live multi-category donations and shelter demands.';
+      } else if (health.supabaseConnected) {
+        badge.className = 'px-3 py-1 rounded-full bg-cyan-950 text-cyan-400 text-xs font-semibold border border-cyan-800 flex items-center gap-1.5 shadow-sm';
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span> Direct Supabase Cloud SDK Connected`;
+        statusText.textContent = 'http://localhost:5000 (Server Stopped)';
+        statusText.className = 'text-xl font-bold text-amber-400 font-mono';
+        details.textContent = 'Direct Cloud SDK connected. Start backend: npm run server';
+
+        alertBox.className = 'rounded-xl border p-4 text-xs flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-md bg-cyan-950/30 border-cyan-800 text-cyan-200';
+        alertIcon.className = 'w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-lg shrink-0 border border-cyan-500/30';
+        alertIcon.innerHTML = '⚡';
+        alertTitle.textContent = 'Direct Supabase Cloud Connected (Backend Server Stopped)';
+        alertMsg.textContent = 'Browser is connected directly to Supabase Cloud! To enable Express backend API proxy and webhooks, open your terminal and run: npm run server';
       } else {
-        badge.className = 'px-3 py-1 rounded-full bg-amber-950 text-amber-400 text-xs font-semibold border border-amber-800 flex items-center gap-1.5';
-        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400"></span> Backend Offline (Using Browser Data)`;
+        badge.className = 'px-3 py-1 rounded-full bg-amber-950 text-amber-400 text-xs font-semibold border border-amber-800 flex items-center gap-1.5 shadow-sm';
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400"></span> Local Persistence (Offline Fallback)`;
+        statusText.textContent = 'http://localhost:5000 (Not Running)';
+        statusText.className = 'text-xl font-bold text-amber-400 font-mono';
+        details.textContent = 'Offline Fallback. Run "npm run server" in terminal';
+
+        alertBox.className = 'rounded-xl border p-4 text-xs flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-md bg-amber-950/30 border-amber-800 text-amber-200';
+        alertIcon.className = 'w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg shrink-0 border border-amber-500/30';
+        alertIcon.innerHTML = '⚠️';
+        alertTitle.textContent = 'Backend Server is Offline';
+        alertMsg.textContent = 'The Express backend server at http://localhost:5000 is stopped. Run "npm run server" in your terminal to connect your live Supabase database.';
       }
     }
 
     function switchTable(tbl) {
       activeTable = tbl;
       document.querySelectorAll('#tableTabs button').forEach(b => {
-        b.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700';
+        b.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 cursor-pointer transition-colors';
       });
       const activeBtn = document.getElementById(`tab-${tbl}`);
-      if (activeBtn) activeBtn.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 text-white shadow-sm';
+      if (activeBtn) activeBtn.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 text-white shadow-sm cursor-pointer transition-colors';
 
       document.getElementById('currentTableName').textContent = `Table: public.${tbl}`;
       loadTableData();
@@ -200,6 +285,68 @@ CREATE TABLE IF NOT EXISTS public.donations (
 
       alert(`✓ New Driver Registered Successfully!\nDriver "${name.trim()}" added to database. Switched to public.pickups table.`);
       switchTable('pickups');
+    }
+
+    async function seedSampleDataToSupabase() {
+      const btn = document.getElementById('btnSeedData');
+      btn.disabled = true;
+      btn.innerHTML = `<span class="material-symbols-outlined text-[15px] animate-spin">sync</span> Syncing...`;
+
+      try {
+        const sampleDonations = [
+          {
+            id: 'DON-CLO-' + Math.floor(1000 + Math.random() * 9000),
+            title: '40 Winter Jackets & Warm Sweaters',
+            category: 'Clothes & Footwear',
+            donation_type: 'physical',
+            quantity_kg: 15,
+            portions: 40,
+            donor_name: 'Metro Apparel Jaipur',
+            donor_address: 'MI Road, Jaipur',
+            recipient_ngo: 'Hope Shelter & Care Center',
+            pickup_window: 'Next 2 Hours',
+            status: 'AVAILABLE'
+          },
+          {
+            id: 'DON-BLK-' + Math.floor(1000 + Math.random() * 9000),
+            title: '50 Thermal Winter Blankets (Double Layer)',
+            category: 'Blankets & Bedding',
+            donation_type: 'physical',
+            quantity_kg: 40,
+            portions: 50,
+            donor_name: 'Sunrise Textile Mills',
+            donor_address: 'Sanganer, Jaipur',
+            recipient_ngo: 'Hope Shelter & Care Center',
+            pickup_window: 'Next 3 Hours',
+            status: 'AVAILABLE'
+          },
+          {
+            id: 'DON-FOOD-' + Math.floor(1000 + Math.random() * 9000),
+            title: 'Cooked Meals (Dal, Rice & Rotis - 60 portions)',
+            category: 'Cooked Meals',
+            donation_type: 'food',
+            quantity_kg: 28,
+            portions: 60,
+            donor_name: 'Fresh Harvest Bistro',
+            donor_address: 'Plot 42, C-Scheme, Jaipur',
+            recipient_ngo: 'Hope Shelter & Care Center',
+            pickup_window: 'Next 1 Hour',
+            status: 'AVAILABLE'
+          }
+        ];
+
+        for (const item of sampleDonations) {
+          await SupabaseService.postDonation(item);
+        }
+
+        alert('✓ Successfully synced multi-category sample donations into database!');
+        loadTableData();
+      } catch (e) {
+        alert('Sync error: ' + (e.message || e));
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span class="material-symbols-outlined text-[15px]">cloud_upload</span> Sync Data to Supabase`;
+      }
     }
 
     async function loadTableData() {
@@ -246,28 +393,26 @@ CREATE TABLE IF NOT EXISTS public.donations (
     }
   </script>
 
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const savedName = localStorage.getItem('user_name');
-    if (savedName) {
-      // Find top header user name elements and replace static 'Rahul Sharma' or 'ABC Restaurant'
-      document.querySelectorAll('.font-label-lg, .text-label-md, .user-name-display').forEach(el => {
-        if (el.textContent.includes('Rahul Sharma') || el.textContent.includes('ABC Restaurant') || el.textContent.includes('System Administrator') || el.textContent.includes('User Name')) {
-          el.textContent = savedName;
-        }
-      });
-      // Replace greeting if any
-      document.querySelectorAll('h1').forEach(el => {
-        if (el.textContent.includes('Good morning, Rahul') || el.textContent.includes('Good morning,')) {
-          el.textContent = `Good morning, ${savedName}`;
-        }
-      });
-    }
-  });
-</script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedName = localStorage.getItem('user_name');
+      if (savedName) {
+        document.querySelectorAll('.font-label-lg, .text-label-md, .user-name-display').forEach(el => {
+          if (el.textContent.includes('Rahul Sharma') || el.textContent.includes('ABC Restaurant') || el.textContent.includes('System Administrator') || el.textContent.includes('User Name')) {
+            el.textContent = savedName;
+          }
+        });
+        document.querySelectorAll('h1').forEach(el => {
+          if (el.textContent.includes('Good morning, Rahul') || el.textContent.includes('Good morning,')) {
+            el.textContent = `Good morning, ${savedName}`;
+          }
+        });
+      }
+    });
+  </script>
 
   <script src="./js/motion.js"></script>
-<script src="./js/tutorial.js"></script>
+  <script src="./js/tutorial.js"></script>
   <script src="./js/new-user-cleaner.js"></script>
 </body>
 </html>
