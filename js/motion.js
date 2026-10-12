@@ -2,6 +2,14 @@
    SURPLUS-TO-SHELTER UNIFIED BUTTON INTERACTION & GLOBAL HANDLERS
    ========================================================================== */
 
+// Auto-inject Universal Search & NGO Autocomplete Engine if not already present
+if (!window.SurplusSearchEngine && !document.getElementById('script-surplus-search')) {
+  const searchScript = document.createElement('script');
+  searchScript.id = 'script-surplus-search';
+  searchScript.src = './js/search.js';
+  document.head.appendChild(searchScript);
+}
+
 // 1. Global Functions (Accessible Everywhere)
 window.triggerSendDonation = function(btn) {
   let ngoName = 'Hope Shelter';

@@ -184,6 +184,7 @@ donate/
 ├── js/
 │   ├── app.js                     # Unified Multi-Portal Navigation & State Controller
 │   ├── maps.js                    # Leaflet + OpenStreetMap Live Animated Route Map Engine
+│   ├── search.js                  # Universal Smart Search & Verified NGO Autocomplete Engine
 │   ├── whatsapp-alerts.js         # 1-Click WhatsApp & SMS Dispatch Alerts Module
 │   ├── motion.js                  # Global Interactivity & Emergency Crisis Sync
 │   ├── pdf-generator.js           # 80G Tax Deduction Certificate PDF Generator
