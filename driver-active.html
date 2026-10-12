@@ -346,22 +346,9 @@
 </div>
 <span class="font-body-sm text-body-sm text-outline">Total: 4.2 km • 14 min</span>
 </div>
-<!-- Dynamic Map Visual with live GPS Telemetry -->
-<div class="relative w-full h-56 rounded-lg overflow-hidden bg-surface-container shadow-inner">
+<!-- Dynamic Map Visual with live GPS Telemetry & Animated Delivery Van -->
+<div class="relative w-full h-80 sm:h-96 min-h-[360px] rounded-xl overflow-hidden bg-surface-container shadow-inner border border-surface-container-high">
   <div id="live-driver-map" class="w-full h-full z-10"></div>
-  <!-- Route Floating Micro-Stats Badge -->
-  <div class="absolute top-2.5 left-2.5 bg-surface-container-lowest/90 backdrop-blur-md px-3 py-1.5 rounded-lg shadow-md flex items-center gap-3 z-[400]">
-    <div class="flex items-center gap-1">
-      <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-      <span class="font-label-sm text-label-sm text-on-surface font-bold">2.4 km to Donor</span>
-    </div>
-    <span class="text-outline text-xs">•</span>
-    <span class="font-label-sm text-label-sm text-on-surface-variant font-medium">8 min drive</span>
-  </div>
-  <div class="absolute bottom-2.5 right-2.5 bg-primary-container text-on-primary px-3 py-1.5 rounded-lg font-label-sm text-label-sm font-bold flex items-center gap-1.5 shadow-md z-[400]">
-    <span class="material-symbols-outlined text-[16px]">navigation</span>
-    Live Telemetry Active
-  </div>
 </div>
 <!-- Route Legs Breakdown -->
 <div class="flex items-center justify-between pt-space-sm px-space-xs text-center font-body-sm text-body-sm mt-1">
@@ -659,4 +646,5 @@
 <script src="./js/tutorial.js"></script>
   <script src="./js/new-user-cleaner.js"></script>
   <script src="./js/whatsapp-alerts.js"></script>
+  <script src="./js/maps.js"></script>
 </body></html>

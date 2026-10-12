@@ -257,6 +257,46 @@
 </div>
 </div>
 </div>
+<!-- LIVE ANIMATED GPS ROUTE RADAR & DISPATCH SIMULATOR -->
+<div class="bg-surface-container-lowest rounded-2xl p-space-md sm:p-space-lg shadow-sm border border-emerald-500/20 mb-space-lg overflow-hidden">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-space-sm">
+    <div class="flex items-center gap-2.5">
+      <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
+        <span class="material-symbols-outlined text-[24px]">explore</span>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h2 class="text-headline-sm font-headline-sm text-on-surface font-bold">🗺️ Live Animated GPS Route Radar</h2>
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+            100% Free OpenStreetMap
+          </span>
+        </div>
+        <p class="text-body-sm font-body-sm text-on-surface-variant">
+          Watch delivery courier van moving smoothly along real street coordinates with dynamic ETA &amp; turn-by-turn velocity
+        </p>
+      </div>
+    </div>
+    <!-- Target Shelter Switcher Tabs -->
+    <div class="flex items-center gap-1.5 bg-surface-container-low p-1 rounded-xl self-start sm:self-center">
+      <button type="button" onclick="switchMatchingRoute('hope_shelter', this)" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-emerald-600 text-white shadow-sm" id="tab-route-hope">
+        🤝 Hope Shelter (2.1 km)
+      </button>
+      <button type="button" onclick="switchMatchingRoute('annapurna', this)" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-on-surface-variant hover:text-on-surface" id="tab-route-annapurna">
+        🍲 Annapurna (4.2 km)
+      </button>
+      <button type="button" onclick="switchMatchingRoute('community_care', this)" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-on-surface-variant hover:text-on-surface" id="tab-route-community">
+        📦 Community (1.8 km)
+      </button>
+    </div>
+  </div>
+
+  <!-- Interactive Map Container -->
+  <div class="relative w-full h-80 sm:h-96 min-h-[350px] rounded-xl overflow-hidden bg-slate-900 shadow-inner border border-surface-container-high">
+    <div id="matching-live-map" class="w-full h-full z-10"></div>
+  </div>
+</div>
+
 <!-- Recommended Recipients Grid -->
 <div class="flex flex-col gap-space-md mb-space-xl">
 <div class="flex items-center justify-between">
@@ -750,10 +790,30 @@
     const modal = document.getElementById('modal-driver-tracking');
     if (modal) modal.classList.add('hidden');
   }
+
+  // Initialize Live Animated GPS Route Radar
+  document.addEventListener('DOMContentLoaded', () => {
+    if (window.SurplusLiveRouteMap) {
+      window.SurplusLiveRouteMap.initMap('matching-live-map', { destination: 'hope_shelter' });
+    }
+  });
+
+  function switchMatchingRoute(destKey, btnEl) {
+    if (window.SurplusLiveRouteMap) {
+      window.SurplusLiveRouteMap.switchDestination('matching-live-map', destKey);
+    }
+    document.querySelectorAll('[id^="tab-route-"]').forEach(b => {
+      b.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-on-surface-variant hover:text-on-surface';
+    });
+    if (btnEl) {
+      btnEl.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-emerald-600 text-white shadow-sm';
+    }
+  }
 </script>
 
   <script src="./js/motion.js"></script>
   <script src="./js/whatsapp-alerts.js"></script>
+  <script src="./js/maps.js"></script>
 <script src="./js/tutorial.js"></script>
   <script src="./js/new-user-cleaner.js"></script>
 </body></html>
