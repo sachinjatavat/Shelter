@@ -265,10 +265,9 @@
 </div>
 </div>
 </div>
-<!-- Two-Column Layout -->
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-<!-- LEFT COLUMN: Donation Form (65%) -->
-<div class="lg:col-span-8 bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-6 shadow-sm">
+<!-- Form Container -->
+<div class="max-w-4xl mx-auto w-full">
+<div class="bg-surface-container-lowest border border-outline-variant/40 rounded-2xl p-6 md:p-8 shadow-sm">
 <form class="space-y-6" id="donation-form" onsubmit="handleDonationSubmit(event)">
 
 <!-- SECTION: Multi-Category Selector -->
@@ -753,153 +752,6 @@
 </div>
 </form>
 </div>
-<!-- RIGHT COLUMN: Donation Preview (35% Sticky) -->
-<div class="lg:col-span-4 sticky top-20 space-y-4">
-<div class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-5 shadow-sm space-y-4">
-<!-- Preview Header -->
-<div class="flex items-center justify-between pb-3.5 mb-4 border-b border-outline-variant/20">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-outline text-[18px]">visibility</span>
-<span class="font-headline-sm text-headline-sm text-on-surface">Donation Preview</span>
-</div>
-<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-label-sm font-label-sm bg-primary-container/10 text-primary-container font-medium">
-<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
-Live Preview
-</span>
-</div>
-
-<!-- AI Food Freshness & Expiry Risk Score Card -->
-<div class="p-4 rounded-xl border border-emerald-500/40 bg-emerald-50/60 shadow-sm space-y-3">
-  <div class="flex items-center justify-between">
-    <div class="flex items-center gap-2">
-      <span class="material-symbols-outlined text-emerald-600 text-[22px] animate-pulse">psychology</span>
-      <span class="font-headline-sm text-headline-sm font-bold text-slate-900">AI Freshness Score</span>
-    </div>
-    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-600 text-white shadow-sm" id="ai-freshness-badge">94% EXCELLENT</span>
-  </div>
-  
-  <!-- Progress Gauge -->
-  <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
-    <div id="ai-freshness-bar" class="bg-emerald-600 h-2.5 rounded-full transition-all duration-500" style="width: 94%;"></div>
-  </div>
-  
-  <div class="grid grid-cols-2 gap-2 text-[11px] pt-1 border-t border-emerald-200/60">
-    <div class="bg-white/90 p-2 rounded border border-emerald-100">
-      <span class="text-slate-500 block uppercase font-semibold text-[10px]">HACCP Risk Level</span>
-      <span class="font-bold text-emerald-700" id="ai-risk-level">Low Spoilage Risk</span>
-    </div>
-    <div class="bg-white/90 p-2 rounded border border-emerald-100">
-      <span class="text-slate-500 block uppercase font-semibold text-[10px]">Ambient Temp (Q10)</span>
-      <span class="font-bold text-slate-800" id="ai-temp-factor">1.0x (Optimal 24°C)</span>
-    </div>
-  </div>
-  
-  <p class="text-[11px] text-slate-600 italic">
-    *Calculated via WHO/HACCP microbial decay model: Prep condition + temperature acceleration rate.
-  </p>
-</div>
-
-<!-- Food Visual Card -->
-<div class="relative rounded-lg overflow-hidden mb-4 border border-outline-variant/30 bg-surface-container-low">
-<img class="w-full h-44 object-cover" data-alt="A clean, appetizing stainless steel gastro container filled with freshly prepared hot penne pasta tossed in bright red tomato basil pomodoro sauce, steaming gently under professional kitchen pendant lighting, sanitary commercial prep counter setting." id="preview-image" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLyg7bsFK4jKnN0fEIutpgIxqdh27AovZfuWE1QiTJIp47d-oRAHyegPRXpo95kDrHDC7xXpHMxZb_Zd3yVODL8xGPDUvV5doU-WNdWef-ZTyGIQHH9I3La0Tfmpu7IRYBUFA0SlkYT51iAdJ2KTX7RgnN_3U1zdJy0ipOIiy4ZmXgrg4YyZ22XqObUNvHkTibo7x_YI9VA4d9oTRtgFDlI7I2xvU4ef4NHPguNAaLQnMxy3O3K8xbnw"/>
-<div class="absolute top-2.5 right-2.5">
-<span class="px-2.5 py-1 rounded bg-surface-container-lowest/95 backdrop-blur-sm border border-outline-variant/30 text-on-surface font-label-sm text-label-sm font-semibold shadow-sm" id="preview-category-badge">
-              Cooked Meals
-            </span>
-</div>
-<div class="absolute bottom-2.5 left-2.5 bg-inverse-surface/85 backdrop-blur-sm text-inverse-on-surface px-2 py-0.5 rounded font-tabular-numeric text-label-sm">
-            Batch ID: #SUR-4091
-          </div>
-</div>
-<!-- Food Title & Dietary tags -->
-<div class="mb-4">
-<div class="flex items-baseline justify-between gap-2">
-<h3 class="font-headline-md text-headline-md text-on-surface leading-tight" id="preview-name">Pasta</h3>
-<span class="hidden font-label-sm text-label-sm px-2 py-0.5 rounded bg-secondary-container text-on-secondary-container font-medium whitespace-nowrap" id="preview-condition-badge"></span>
-</div>
-<p class="hidden font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mt-1" id="preview-desc"></p>
-<div class="flex flex-wrap gap-1 mt-2" id="preview-tags-container">
-<span class="px-2 py-0.5 bg-surface-container-low text-on-surface-variant rounded text-[11px] font-medium border border-outline-variant/30">Vegetarian</span>
-<span class="px-2 py-0.5 bg-surface-container-low text-on-surface-variant rounded text-[11px] font-medium border border-outline-variant/30">Contains Dairy</span>
-</div>
-</div>
-<!-- Key Details Grid List -->
-<div class="space-y-2 py-3 border-y border-outline-variant/20 mb-4">
-<div class="flex items-center justify-between text-body-sm font-body-sm">
-<span class="text-outline flex items-center gap-1.5">
-<span class="material-symbols-outlined text-[16px]">scale</span>
-              Total Quantity
-            </span>
-<span class="font-tabular-numeric text-tabular-numeric font-semibold text-on-surface" id="preview-qty">20 kg (~40 servings)</span>
-</div>
-<div class="flex items-center justify-between text-body-sm font-body-sm">
-<span class="text-outline flex items-center gap-1.5">
-<span class="material-symbols-outlined text-[16px]">store</span>
-              Pickup Location
-            </span>
-<span class="font-label-md text-label-md text-on-surface truncate max-w-[170px]" id="preview-location" title="ABC Restaurant, 42 Commercial Avenue">ABC Restaurant</span>
-</div>
-<div class="flex items-center justify-between text-body-sm font-body-sm">
-<span class="text-outline flex items-center gap-1.5">
-<span class="material-symbols-outlined text-[16px]">hourglass_top</span>
-              Ready From
-            </span>
-<span class="font-tabular-numeric text-tabular-numeric text-on-surface" id="preview-ready">2:30 PM</span>
-</div>
-<div class="flex items-center justify-between text-body-sm font-body-sm">
-<span class="text-outline flex items-center gap-1.5">
-<span class="material-symbols-outlined text-[16px]">alarm_off</span>
-              Safe Until
-            </span>
-<span class="font-tabular-numeric text-tabular-numeric font-semibold text-on-surface" id="preview-safe">6:30 PM</span>
-</div>
-</div>
-<!-- Expiry Urgency Indicator (Safe State Box) -->
-<div class="p-3.5 rounded-lg border border-outline-variant/30 bg-[#F0FDF4] mb-4">
-<div class="flex items-center justify-between mb-1.5">
-<div class="flex items-center gap-1.5">
-<span class="material-symbols-outlined text-primary-container text-[18px]">verified_user</span>
-<span class="font-label-sm font-semibold uppercase tracking-wider text-on-surface">Safety Window</span>
-</div>
-<span class="px-2 py-0.5 rounded text-label-sm font-label-sm bg-primary-container text-on-primary font-semibold tracking-wide">
-              SAFE
-            </span>
-</div>
-<div class="flex items-baseline gap-2 mb-1.5">
-<span class="font-headline-sm text-headline-sm font-tabular-numeric text-primary-container" id="preview-countdown">3h 42m remaining</span>
-</div>
-<!-- Explanatory note -->
-<p class="font-body-sm text-[11px] leading-tight text-on-surface-variant">
-            If &lt; 2 hrs: <strong class="text-amber-700">EXPIRING SOON</strong>. If &lt; 45 mins: <strong class="text-error">CRITICAL</strong>. Shelters receive rapid notifications based on this tier.
-          </p>
-</div>
-<!-- Summary Checklist -->
-<div class="bg-surface-container-low/60 rounded-lg p-3 space-y-1.5">
-<div class="flex items-center gap-2 text-label-sm font-label-sm text-on-surface">
-<span class="material-symbols-outlined text-primary-container text-[16px]">check_circle</span>
-<span>Verified Food Safety Standard</span>
-</div>
-<div class="flex items-center gap-2 text-label-sm font-label-sm text-on-surface">
-<span class="material-symbols-outlined text-primary-container text-[16px]">check_circle</span>
-<span>Thermal insulated containers ready</span>
-</div>
-<div class="flex items-center gap-2 text-label-sm font-label-sm text-on-surface">
-<span class="material-symbols-outlined text-primary-container text-[16px]">check_circle</span>
-<span>Ready for NGO pickup dispatch</span>
-</div>
-</div>
-</div>
-<!-- Quick Tips Card -->
-<div class="bg-surface-container-low/40 border border-outline-variant/30 rounded-xl p-4 flex gap-3">
-<span class="material-symbols-outlined text-primary-container text-[20px] shrink-0">tips_and_updates</span>
-<div>
-<h4 class="font-label-md text-label-md text-on-surface font-semibold mb-0.5">Direct Relay NGO Guarantee</h4>
-<p class="font-body-sm text-body-sm text-outline leading-snug">
-            3 verified NGOs within 4.2 km are currently operational and receiving alerts for cooked meal donations.
-          </p>
-</div>
-</div>
-</div>
 </div>
 <!-- Toast Notification Template -->
 <div class="fixed bottom-6 right-6 bg-inverse-surface text-inverse-on-surface px-4 py-3 rounded-lg shadow-lg font-label-md text-label-md flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none z-50" id="toast">
@@ -1073,98 +925,10 @@ Live Preview
   }
 
   function updatePreview() {
-    const previewName = document.getElementById('preview-name');
-    const previewCategory = document.getElementById('preview-category-badge');
-    const previewCondition = document.getElementById('preview-condition-badge');
-    const previewQty = document.getElementById('preview-qty');
-    const previewLocation = document.getElementById('preview-location');
-    const previewReady = document.getElementById('preview-ready');
-    const previewSafe = document.getElementById('preview-safe');
-    const previewDesc = document.getElementById('preview-desc');
-    const freshnessCard = document.getElementById('ai-freshness-bar')?.closest('.border');
-
-    if (currentDonationType === 'food') {
-      const foodName = document.getElementById('food-name')?.value.trim() || 'Pasta';
-      const category = document.getElementById('food-category')?.value || 'Cooked Meals';
-      const qty = document.getElementById('food-qty')?.value || '20';
-      const unit = document.getElementById('qty-unit')?.value || 'kg';
-      const location = document.getElementById('pickup-location')?.value || 'ABC Restaurant, Jaipur';
-      const ready = document.getElementById('ready-time')?.value || '2:30 PM';
-      const safe = document.getElementById('safe-until')?.value || '6:30 PM';
-      const desc = document.getElementById('food-description')?.value || '';
-      const conditionChecked = document.querySelector('input[name="condition"]:checked');
-      const condition = conditionChecked ? conditionChecked.value : 'Freshly Prepared';
-
-      if (previewName) previewName.textContent = foodName;
-      if (previewCategory) previewCategory.textContent = category;
-      if (previewCondition) previewCondition.textContent = condition;
-
-      let approxText = '';
-      if (unit === 'kg') {
-        const servings = Math.round(Number(qty) * 2);
-        approxText = ` (~${servings} servings)`;
-      }
-      if (previewQty) previewQty.textContent = `${qty} ${unit}${approxText}`;
-
-      const shortLoc = location.split(',')[0] || 'ABC Restaurant';
-      if (previewLocation) {
-        previewLocation.textContent = shortLoc;
-        previewLocation.title = location;
-      }
-      if (previewReady) previewReady.textContent = ready;
-      if (previewSafe) previewSafe.textContent = safe;
-      if (previewDesc) previewDesc.textContent = desc || 'Fresh surplus food ready for immediate transit.';
-      if (freshnessCard) freshnessCard.classList.remove('hidden');
-
-      calculateAIFreshnessScore();
-    } else if (currentDonationType === 'money') {
-      const recipient = document.getElementById('money-recipient')?.value || 'Hope Shelter';
-      const amount = document.getElementById('money-amount')?.value || '2500';
-      const isAnon = document.getElementById('money-is-anonymous')?.checked;
-      const hideAmt = document.getElementById('money-hide-amount')?.checked;
-      const purpose = document.getElementById('money-purpose')?.value;
-
-      if (previewName) previewName.textContent = `Monetary Contribution: ${recipient}`;
-      if (previewCategory) previewCategory.textContent = 'Monetary Donation';
-      if (previewCondition) previewCondition.textContent = isAnon ? 'Anonymous Donor' : 'Direct Electronic Rail';
-
-      if (previewQty) previewQty.textContent = hideAmt ? 'Confidential Amount (Tax Exempt)' : `₹${Number(amount).toLocaleString('en-IN')} (Escrow Direct)`;
-      if (previewLocation) {
-        previewLocation.textContent = 'Non-Profit Escrow Rail';
-        previewLocation.title = 'Direct Escrow to NGO - No Driver Dispatch Required';
-      }
-      if (previewReady) previewReady.textContent = 'Instant Transfer';
-      if (previewSafe) previewSafe.textContent = 'Sec 80G Certified';
-      if (previewDesc) previewDesc.textContent = purpose || 'Direct monetary aid to shelter for operational necessities and meal supplies.';
-      if (freshnessCard) freshnessCard.classList.add('hidden');
-    } else {
-      // Physical Goods & Medicines
-      const physName = document.getElementById('physical-name')?.value.trim() || 'Physical Donation';
-      const category = document.getElementById('physical-category')?.value || 'Clothes & Footwear';
-      const qty = document.getElementById('physical-qty')?.value || '10';
-      const unit = document.getElementById('physical-unit')?.value || 'pieces';
-      const location = document.getElementById('physical-location')?.value || 'Main Reception Desk';
-      const ready = document.getElementById('physical-pickup-window')?.value || '10:00 AM - 6:00 PM';
-      const desc = document.getElementById('physical-handling')?.value || '';
-      const conditionChecked = document.querySelector('input[name="physical_condition"]:checked');
-      const condition = conditionChecked ? conditionChecked.value : 'Brand New / Sealed';
-
-      if (previewName) previewName.textContent = physName;
-      if (previewCategory) previewCategory.textContent = category;
-      if (previewCondition) previewCondition.textContent = condition;
-      if (previewQty) previewQty.textContent = `${qty} ${unit}`;
-
-      const shortLoc = location.split(',')[0] || 'Pickup Bay';
-      if (previewLocation) {
-        previewLocation.textContent = shortLoc;
-        previewLocation.title = location;
-      }
-      if (previewReady) previewReady.textContent = ready;
-      if (previewSafe) previewSafe.textContent = category === 'Medicines & Medical Supplies' ? 'Verified Regulated' : 'Dry Storage';
-      if (previewDesc) previewDesc.textContent = desc || 'Quality inspected and safely packaged for dispatch.';
-      if (freshnessCard) freshnessCard.classList.add('hidden');
-    }
+    // Preview column removed to provide clean, full-width donation posting
+    return;
   }
+
 
   function updatePreviewTags() {
     const checkboxes = document.querySelectorAll('#section-food-form input[type="checkbox"]:checked');
@@ -1410,7 +1174,16 @@ Live Preview
     } catch (e) {
       console.warn('Payment config check fallback:', e);
     }
-    updatePreview();
+    // Check URL parameters for pre-selected donation category
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const catParam = urlParams.get('cat');
+      if (catParam) {
+        selectDonationType(catParam);
+      }
+    } catch (e) {
+      console.warn('URL cat parameter check:', e);
+    }
   });
 </script></main></div>
 <!-- Floating Universal Portal Switcher Widget -->

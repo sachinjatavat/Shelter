@@ -17,11 +17,11 @@ window.triggerSendDonation = function(btn) {
 
   const donationItem = {
     id: 'DON-' + Math.floor(1000 + Math.random() * 9000),
-    title: 'Surplus Food Batch (' + ngoName + ')',
-    category: 'Cooked Meals',
+    title: 'Relief Supply Package (' + ngoName + ')',
+    category: 'Community Relief',
     quantity_kg: 25,
     portions: 40,
-    donor_name: localStorage.getItem('user_name') || 'Fresh Harvest Bistro',
+    donor_name: localStorage.getItem('user_name') || 'Generous Donor Partner',
     donor_address: 'C-Scheme, Jaipur',
     recipient_ngo: ngoName,
     driver_name: 'Rahul Sharma',
@@ -30,7 +30,7 @@ window.triggerSendDonation = function(btn) {
     created_at: new Date().toISOString()
   };
 
-  alert(`DONATION DISPATCH CONFIRMED!\n\nYour surplus food donation has been assigned to ${ngoName}.\n\nCourier Driver Rahul Sharma (+91 98290-XXXXX) has been dispatched for immediate pickup.\nTracking details are live on your Pickups dashboard.`);
+  alert(`DONATION DISPATCH CONFIRMED!\n\nYour relief donation package has been assigned to ${ngoName}.\n\nCourier Driver Rahul Sharma (+91 98290-XXXXX) has been dispatched for pickup.\nTracking details are live on your Pickups dashboard.`);
 
   if (window.SupabaseService && typeof window.SupabaseService.createDonation === 'function') {
     try {
@@ -64,7 +64,7 @@ window.triggerViewDetails = function(btn) {
     }
   }
 
-  alert(`RECIPIENT SPECIFICATIONS:\n\nOrganisation: ${ngoName}\nVerification: 100% Certified NGO Partner\nAvailable Capacity: 45 meals remaining today\nDriver Vehicle: Thermal Insulated EV Van (#RJ-14-EV-9401)\nEstimated Pickup ETA: 12 minutes\nHandling Notes: Sanitary food-grade thermal containers provided.`);
+  alert(`RECIPIENT SPECIFICATIONS:\n\nOrganisation: ${ngoName}\nVerification: 100% Certified NGO Partner\nIntake Capacity: Available across clothes, blankets, books, food & hygiene\nDriver Vehicle: Courier Transit EV Van (#RJ-14-EV-9401)\nEstimated Pickup ETA: 12 minutes\nHandling Notes: Inspected and categorized for direct shelter delivery.`);
 };
 
 window.quickDispatchEmergencyRelief = function() {
