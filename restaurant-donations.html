@@ -624,6 +624,72 @@
 </div>
 </div>
 </div>
+
+<!-- SECTION: All Donation Listings & Multi-Category Ledger -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm mb-space-xl border border-outline-variant/30">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-outline-variant/20 mb-4">
+    <div>
+      <h2 class="text-headline-md font-headline-md text-on-surface">Donation History &amp; Category Ledger</h2>
+      <p class="text-body-sm text-outline mt-0.5">Filter all past and active contributions by donation type.</p>
+    </div>
+    <span class="text-label-sm font-label-sm text-outline" id="ledger-count-indicator">Showing all items</span>
+  </div>
+
+  <!-- Category Filter Pills -->
+  <div class="flex flex-wrap gap-2 pb-4 border-b border-outline-variant/20 mb-4" id="category-filter-bar">
+    <button type="button" onclick="filterDonationsByCategory('all')" data-cat="all" class="cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary-container text-white border border-primary-container transition-all cursor-pointer">
+      All Types
+    </button>
+    <button type="button" onclick="filterDonationsByCategory('Food & Meals')" data-cat="Food & Meals" class="cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-surface-container-lowest text-on-surface border border-outline-variant/60 hover:bg-surface-container-low transition-all cursor-pointer">
+      🍲 Food &amp; Meals
+    </button>
+    <button type="button" onclick="filterDonationsByCategory('Clothes & Footwear')" data-cat="Clothes & Footwear" class="cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-surface-container-lowest text-on-surface border border-outline-variant/60 hover:bg-surface-container-low transition-all cursor-pointer">
+      👕 Clothes
+    </button>
+    <button type="button" onclick="filterDonationsByCategory('Books & Educational Materials')" data-cat="Books & Educational Materials" class="cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-surface-container-lowest text-on-surface border border-outline-variant/60 hover:bg-surface-container-low transition-all cursor-pointer">
+      📚 Books
+    </button>
+    <button type="button" onclick="filterDonationsByCategory('Medicines & Medical Supplies')" data-cat="Medicines & Medical Supplies" class="cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-surface-container-lowest text-on-surface border border-outline-variant/60 hover:bg-surface-container-low transition-all cursor-pointer">
+      💊 Medicines
+    </button>
+    <button type="button" onclick="filterDonationsByCategory('Hygiene & Essential Supplies')" data-cat="Hygiene & Essential Supplies" class="cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-surface-container-lowest text-on-surface border border-outline-variant/60 hover:bg-surface-container-low transition-all cursor-pointer">
+      🧼 Hygiene
+    </button>
+    <button type="button" onclick="filterDonationsByCategory('Household Goods & Furniture')" data-cat="Household Goods & Furniture" class="cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-surface-container-lowest text-on-surface border border-outline-variant/60 hover:bg-surface-container-low transition-all cursor-pointer">
+      🪑 Household
+    </button>
+    <button type="button" onclick="filterDonationsByCategory('Blankets & Necessities')" data-cat="Blankets & Necessities" class="cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-surface-container-lowest text-on-surface border border-outline-variant/60 hover:bg-surface-container-low transition-all cursor-pointer">
+      🛏️ Blankets
+    </button>
+    <button type="button" onclick="filterDonationsByCategory('Monetary')" data-cat="Monetary" class="cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-surface-container-lowest text-on-surface border border-outline-variant/60 hover:bg-surface-container-low transition-all cursor-pointer">
+      💳 Monetary (80G)
+    </button>
+  </div>
+
+  <!-- Dynamic Donations Container / Table -->
+  <div class="overflow-x-auto">
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="border-b border-outline-variant/20 text-xs font-semibold text-outline uppercase tracking-wider">
+          <th class="py-3 px-3">Category</th>
+          <th class="py-3 px-3">Item / Contribution</th>
+          <th class="py-3 px-3">Details / Conditions</th>
+          <th class="py-3 px-3">Recipient / Routing</th>
+          <th class="py-3 px-3">Status</th>
+          <th class="py-3 px-3 text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="donations-ledger-tbody" class="divide-y divide-outline-variant/15 text-sm">
+        <!-- Rendered via JavaScript -->
+        <tr>
+          <td colspan="6" class="py-8 text-center text-outline">
+            <span class="material-symbols-outlined text-[24px] animate-spin">sync</span>
+            <span class="block mt-1 text-xs">Loading donations from database...</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 </div>
 </div>
@@ -737,10 +803,13 @@
         <span class="w-2 h-2 rounded-full bg-slate-400"></span> 🔐 <b>Auth / Login Page</b>
       </a>
       <a href="/restaurant-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
-        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 🏪 <b>Restaurant Portal</b>
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 🎁 <b>Donor Portal (Food, Clothes, Funds)</b>
       </a>
       <a href="/ngo-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
         <span class="w-2 h-2 rounded-full bg-blue-500"></span> 🤝 <b>NGO / Shelter Portal</b>
+      </a>
+            <a href="/admin-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-purple-500"></span> 🛡️ <b>Admin Command Center</b>
       </a>
       <a href="/db-viewer.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
         <span class="w-2 h-2 rounded-full bg-cyan-400"></span> 🗄️ <b>Supabase DB Inspector</b>
@@ -754,6 +823,169 @@
 
 
 <script>
+  let allDonationsList = [];
+  let currentActiveCategory = 'all';
+
+  const categoryIcons = {
+    'Food & Meals': 'restaurant',
+    'Cooked Meals': 'restaurant',
+    'Produce & Groceries': 'eco',
+    'Bakery & Dairy': 'bakery_dining',
+    'Clothes & Footwear': 'checkroom',
+    'Books & Educational Materials': 'menu_book',
+    'Medicines & Medical Supplies': 'medication',
+    'Hygiene & Essential Supplies': 'sanitizer',
+    'Household Goods & Furniture': 'chair',
+    'Blankets & Necessities': 'bed',
+    'Monetary': 'payments'
+  };
+
+  const categoryColorClasses = {
+    'Food & Meals': 'bg-emerald-50 text-emerald-800 border-emerald-200',
+    'Cooked Meals': 'bg-emerald-50 text-emerald-800 border-emerald-200',
+    'Clothes & Footwear': 'bg-blue-50 text-blue-800 border-blue-200',
+    'Books & Educational Materials': 'bg-amber-50 text-amber-900 border-amber-200',
+    'Medicines & Medical Supplies': 'bg-red-50 text-red-900 border-red-200',
+    'Hygiene & Essential Supplies': 'bg-teal-50 text-teal-900 border-teal-200',
+    'Household Goods & Furniture': 'bg-purple-50 text-purple-900 border-purple-200',
+    'Blankets & Necessities': 'bg-orange-50 text-orange-900 border-orange-200',
+    'Monetary': 'bg-emerald-100 text-emerald-900 border-emerald-300'
+  };
+
+  async function loadDonationsLedger() {
+    const tbody = document.getElementById('donations-ledger-tbody');
+    try {
+      let items = [];
+      if (window.SupabaseService && window.SupabaseService.getDonations) {
+        items = await window.SupabaseService.getDonations();
+      }
+      if (!items || items.length === 0) {
+        // Fallback default sample for complete demo experience
+        items = [
+          { id: 'DON-8821', title: '20 kg - Pasta', category: 'Cooked Meals', donation_type: 'food', temp_requirement: 'Freshly Prepared', donor_address: 'ABC Restaurant', status: 'In Transit', pickup_window: '2:30 PM' },
+          { id: 'DON-8822', title: '35 pairs - Winter Shoes & Jackets', category: 'Clothes & Footwear', donation_type: 'physical', item_condition: 'Gently Used / Clean', donor_address: 'Reception Bay', status: 'Matched', pickup_window: '10:00 AM - 5:00 PM' },
+          { id: 'DON-8823', title: '50 units - Paracetamol & First Aid Kits', category: 'Medicines & Medical Supplies', donation_type: 'physical', item_condition: 'Brand New / Sealed', medical_safety_verified: true, donor_address: 'Medical Bay 2', status: 'Approved for Clinic', pickup_window: '11:00 AM - 4:00 PM' },
+          { id: 'DON-8824', title: '₹5,000 Direct Support', category: 'Monetary', donation_type: 'money', amount: 5000, currency: 'INR', is_anonymous: false, payment_status: 'PAID', donor_address: 'Direct Escrow', status: 'Completed (80G Issued)' }
+        ];
+      }
+      allDonationsList = items;
+      renderDonationsTable(allDonationsList);
+    } catch (err) {
+      console.error('Failed to load donations ledger:', err);
+      if (tbody) {
+        tbody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-red-600 text-xs">Error loading donations from server.</td></tr>`;
+      }
+    }
+  }
+
+  function filterDonationsByCategory(cat) {
+    currentActiveCategory = cat;
+
+    // Update active filter pill style
+    document.querySelectorAll('.cat-filter-btn').forEach(btn => {
+      const bCat = btn.getAttribute('data-cat');
+      if (bCat === cat) {
+        btn.className = 'cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary-container text-white border border-primary-container transition-all cursor-pointer';
+      } else {
+        btn.className = 'cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-surface-container-lowest text-on-surface border border-outline-variant/60 hover:bg-surface-container-low transition-all cursor-pointer';
+      }
+    });
+
+    if (cat === 'all') {
+      renderDonationsTable(allDonationsList);
+    } else {
+      const filtered = allDonationsList.filter(item => {
+        const itemCat = item.category || '';
+        if (cat === 'Food & Meals') {
+          return itemCat === 'Food & Meals' || itemCat === 'Cooked Meals' || item.donation_type === 'food';
+        }
+        if (cat === 'Monetary') {
+          return itemCat === 'Monetary' || itemCat === 'Monetary Donations' || item.donation_type === 'money';
+        }
+        return itemCat.toLowerCase().includes(cat.toLowerCase());
+      });
+      renderDonationsTable(filtered);
+    }
+  }
+
+  function renderDonationsTable(items) {
+    const tbody = document.getElementById('donations-ledger-tbody');
+    const countIndicator = document.getElementById('ledger-count-indicator');
+    if (countIndicator) {
+      countIndicator.textContent = `Showing ${items.length} contribution${items.length === 1 ? '' : 's'}`;
+    }
+
+    if (!tbody) return;
+    if (!items || items.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" class="py-8 text-center text-outline">
+            <span class="material-symbols-outlined text-[28px] text-outline/60">inventory_2</span>
+            <p class="mt-1 text-xs">No donations found in this category.</p>
+          </td>
+        </tr>`;
+      return;
+    }
+
+    tbody.innerHTML = items.map(item => {
+      const isMoney = item.donation_type === 'money' || item.category === 'Monetary' || item.category === 'Monetary Donations';
+      const catKey = isMoney ? 'Monetary' : (item.category || 'Food & Meals');
+      const icon = categoryIcons[catKey] || (isMoney ? 'payments' : 'inventory_2');
+      const colorCls = categoryColorClasses[catKey] || 'bg-surface-container-low text-on-surface border-outline-variant/30';
+
+      const statusBadge = isMoney
+        ? `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">
+             <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> PAID (Escrow)
+           </span>`
+        : `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-container/10 text-primary-container border border-primary-container/20">
+             <span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span> ${item.status || 'Active Dispatch'}
+           </span>`;
+
+      const detailsText = isMoney
+        ? (item.hide_amount ? 'Confidential Amount • 80G Certified' : `₹${(item.amount || 2500).toLocaleString('en-IN')} Direct Transfer`)
+        : (item.item_condition || item.temp_requirement || (item.quantity_kg ? `${item.quantity_kg} kg` : 'Sanitary Pack'));
+
+      const routingText = isMoney
+        ? 'Verified Shelter Escrow (No Driver Needed)'
+        : (item.donor_address || 'Pickup Bay #2');
+
+      const actionButtons = isMoney
+        ? `<button onclick="window.generate80GReceipt()" class="px-3 py-1.5 rounded-lg bg-emerald-800 text-white text-xs font-semibold hover:bg-emerald-900 shadow-sm transition-all inline-flex items-center gap-1">
+             <span class="material-symbols-outlined text-[14px]">receipt_long</span> 80G Tax PDF
+           </button>`
+        : `<button onclick="trackLiveDriverPickup('${item.id || 'D-8821'}')" class="px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface text-xs font-semibold border border-outline-variant/40 transition-all inline-flex items-center gap-1">
+             <span class="material-symbols-outlined text-[14px] text-primary-container">local_shipping</span> Track Courier
+           </button>`;
+
+      return `
+        <tr class="hover:bg-surface-container-low/40 transition-colors">
+          <td class="py-3 px-3">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold border ${colorCls}">
+              <span class="material-symbols-outlined text-[15px]">${icon}</span>
+              <span>${catKey}</span>
+            </span>
+          </td>
+          <td class="py-3 px-3">
+            <div class="font-semibold text-on-surface">${item.title || item.name || 'Donation Item'}</div>
+            <div class="text-[11px] text-outline font-mono">ID: #${item.id || 'DON-NEW'}</div>
+          </td>
+          <td class="py-3 px-3">
+            <div class="text-xs text-on-surface">${detailsText}</div>
+            <div class="text-[11px] text-outline">${item.medical_safety_verified ? '🛡️ Medical Safety Cleared' : (item.pickup_window || 'Ready for Dispatch')}</div>
+          </td>
+          <td class="py-3 px-3">
+            <div class="text-xs text-on-surface font-medium">${routingText}</div>
+          </td>
+          <td class="py-3 px-3">
+            ${statusBadge}
+          </td>
+          <td class="py-3 px-3 text-right">
+            ${actionButtons}
+          </td>
+        </tr>`;
+    }).join('');
+  }
+
   function triggerSendDonation(btn) {
     if (window.triggerSendDonation) {
       window.triggerSendDonation(btn);
@@ -808,6 +1040,7 @@
         }
       });
     }
+    loadDonationsLedger();
   });
 
   function trackLiveDriverPickup(donationId) {

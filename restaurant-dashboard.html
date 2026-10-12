@@ -196,7 +196,7 @@
         <span class="font-headline-sm text-headline-sm tracking-tight uppercase text-on-surface">Surplus-To-Shelter</span>
       </div>
       <div class="mt-space-xs pl-7">
-        <span class="inline-flex items-center px-2 py-0.5 rounded-lg text-label-sm font-label-sm bg-secondary-container text-on-secondary-container tracking-wider uppercase">Restaurant Portal</span>
+        <span class="inline-flex items-center px-2 py-0.5 rounded-lg text-label-sm font-label-sm bg-secondary-container text-on-secondary-container tracking-wider uppercase">Donor Portal</span>
       </div>
     </div>
     
@@ -242,7 +242,7 @@
       </a>
     </nav>
   </div>
-</aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest border-b border-outline-variant/30 z-40 flex items-center justify-between px-space-lg"><div class="flex items-center w-96"><div class="relative w-full"><span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-[18px]">search</span><input class="w-full h-10 pl-9 pr-3 rounded-lg border border-outline-variant/50 bg-surface-container-lowest text-body-sm font-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container" placeholder="Search donations, NGOs, drivers..." type="search"/></div></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-sm"><div class="text-right"><div class="text-label-md font-label-md text-on-surface leading-tight user-name-display">Manager</div><div class="text-label-sm font-label-sm text-primary-container leading-tight">Verified Partner</div></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 bg-surface-container-lowest min-h-screen p-8"><div class="flex flex-col w-full">
+</aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest border-b border-outline-variant/30 z-40 flex items-center justify-between px-space-lg"><div class="flex items-center w-96"><div class="relative w-full"><span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-[18px]">search</span><input class="w-full h-10 pl-9 pr-3 rounded-lg border border-outline-variant/50 bg-surface-container-lowest text-body-sm font-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container" placeholder="Search donations, NGOs, drivers..." type="search"/></div></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-sm"><div class="text-right"><div class="text-label-md font-label-md text-on-surface leading-tight user-name-display">Manager</div><div class="text-label-sm font-label-sm text-primary-container leading-tight">Verified Donor</div></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 bg-surface-container-lowest min-h-screen p-8"><div class="flex flex-col w-full">
 <!-- Top Operational Banner / Interactive Workflow Pipeline Switcher -->
 <div class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-3 mb-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-3">
 <div class="flex items-center gap-2 text-label-sm font-label-sm text-outline">
@@ -254,7 +254,7 @@
         1. Dashboard Overview
       </button>
 <button class="lifecycle-tab px-3 py-1.5 rounded-lg text-label-sm font-label-sm bg-surface-container-low text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" id="tab-post" onclick="openPostModal()" type="button">
-        2. Post Food Batch
+        2. Post Donation (Food, Clothes, Funds)
       </button>
 <button class="lifecycle-tab px-3 py-1.5 rounded-lg text-label-sm font-label-sm bg-surface-container-low text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" id="tab-match" onclick="openMatchingModal('Pasta - 20 kg')" type="button">
         3. Recipient Matching
@@ -267,8 +267,8 @@
 <!-- Header Area -->
 <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-outline-variant/20 gap-4">
 <div>
-<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Good morning, ABC Restaurant</h1>
-<p class="font-body-md text-body-md text-outline mt-0.5">Manage your surplus food and track its journey to the community.</p>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Good morning, ABC Donor Partner</h1>
+<p class="font-body-md text-body-md text-outline mt-0.5">Manage your donations across food, clothing, essential goods &amp; funds, and track their community impact.</p>
 </div>
 <div class="flex items-center gap-3">
 <button class="px-3 py-2 rounded-lg border border-outline-variant/40 text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface text-label-md font-label-md inline-flex items-center gap-1.5 transition-colors" onclick="quickRefreshData()" title="Sync real-time dispatch queue" type="button">
@@ -286,35 +286,35 @@
 <!-- Card 1 -->
 <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-5 shadow-sm hover:border-outline-variant/70 transition-colors">
 <div class="flex items-center justify-between">
-<span class="text-body-sm font-label-md text-outline">Today's Donations</span>
+<span class="text-body-sm font-label-md text-outline">Total Donations</span>
 <div class="w-8 h-8 rounded-lg bg-secondary-container/60 flex items-center justify-center">
 <span class="material-symbols-outlined text-primary-container text-[18px]">package_2</span>
 </div>
 </div>
-<div class="mt-2 text-display-lg font-tabular-numeric text-on-surface font-semibold" id="kpi-donations">8</div>
+<div class="mt-2 text-display-lg font-tabular-numeric text-on-surface font-semibold" id="kpi-donations">12</div>
 <div class="mt-2 flex items-center gap-1.5 text-label-sm font-label-sm text-primary-container">
 <span class="material-symbols-outlined text-[16px]">trending_up</span>
-<span>+2 from yesterday</span>
+<span>Active multi-category log</span>
 </div>
 </div>
 <!-- Card 2 -->
 <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-5 shadow-sm hover:border-outline-variant/70 transition-colors">
 <div class="flex items-center justify-between">
-<span class="text-body-sm font-label-md text-outline">Food Rescued</span>
+<span class="text-body-sm font-label-md text-outline">Food &amp; Goods Donated</span>
 <div class="w-8 h-8 rounded-lg bg-secondary-container/60 flex items-center justify-center">
-<span class="material-symbols-outlined text-primary-container text-[18px]">scale</span>
+<span class="material-symbols-outlined text-primary-container text-[18px]">inventory_2</span>
 </div>
 </div>
-<div class="mt-2 text-display-lg font-tabular-numeric text-on-surface font-semibold">142 <span class="text-headline-sm font-headline-sm font-normal text-outline">kg</span></div>
+<div class="mt-2 text-display-lg font-tabular-numeric text-on-surface font-semibold">245 <span class="text-headline-sm font-headline-sm font-normal text-outline">kg / items</span></div>
 <div class="mt-2 flex items-center gap-1.5 text-label-sm font-label-sm text-on-secondary-container">
 <span class="material-symbols-outlined text-[16px]">check_circle</span>
-<span>Surplus saved today</span>
+<span>Food, clothes &amp; blankets</span>
 </div>
 </div>
 <!-- Card 3 -->
 <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-5 shadow-sm hover:border-outline-variant/70 transition-colors">
 <div class="flex items-center justify-between">
-<span class="text-body-sm font-label-md text-outline">Active Pickups</span>
+<span class="text-body-sm font-label-md text-outline">Physical Courier Pickups</span>
 <div class="w-8 h-8 rounded-lg bg-secondary-container/60 flex items-center justify-center">
 <span class="material-symbols-outlined text-primary-container text-[18px]">local_shipping</span>
 </div>
@@ -322,21 +322,21 @@
 <div class="mt-2 text-display-lg font-tabular-numeric text-on-surface font-semibold">3</div>
 <div class="mt-2 flex items-center gap-1.5 text-label-sm font-label-sm text-primary-container">
 <span class="material-symbols-outlined text-[16px]">near_me</span>
-<span>Drivers dispatched</span>
+<span>Goods couriers dispatched</span>
 </div>
 </div>
 <!-- Card 4 -->
 <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-5 shadow-sm hover:border-outline-variant/70 transition-colors">
 <div class="flex items-center justify-between">
-<span class="text-body-sm font-label-md text-outline">Meals Rescued</span>
+<span class="text-body-sm font-label-md text-outline">Monetary Aid Raised</span>
 <div class="w-8 h-8 rounded-lg bg-secondary-container/60 flex items-center justify-center">
-<span class="material-symbols-outlined text-primary-container text-[18px]">favorite</span>
+<span class="material-symbols-outlined text-primary-container text-[18px]">payments</span>
 </div>
 </div>
-<div class="mt-2 text-display-lg font-tabular-numeric text-on-surface font-semibold">286</div>
+<div class="mt-2 text-display-lg font-tabular-numeric text-on-surface font-semibold">₹35,000</div>
 <div class="mt-2 flex items-center gap-1.5 text-label-sm font-label-sm text-on-secondary-container">
-<span class="material-symbols-outlined text-[16px]">group</span>
-<span>Estimated distributed</span>
+<span class="material-symbols-outlined text-[16px]">account_balance</span>
+<span>Direct online to shelters</span>
 </div>
 </div>
 </div>
@@ -344,8 +344,8 @@
 <div class="mb-8">
 <div class="flex items-center justify-between mb-3">
 <div class="flex items-center gap-2">
-<h2 class="font-headline-md text-headline-md text-on-surface">Active Donations</h2>
-<span class="px-2 py-0.5 rounded-lg bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">4 in dispatch</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Active Donations Pipeline</h2>
+<span class="px-2 py-0.5 rounded-lg bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">4 in progress</span>
 </div>
 <button class="font-label-md text-label-md text-primary-container hover:text-primary transition-colors flex items-center gap-1" onclick="alert('Viewing comprehensive list of all active pipeline donations.')" type="button">
 <span>View All</span>
@@ -357,22 +357,25 @@
 <table class="w-full text-left border-collapse">
 <thead>
 <tr class="bg-surface-container-low/70 border-b border-outline-variant/30 h-10">
-<th class="px-4 py-2 text-label-sm font-label-sm text-outline uppercase tracking-wider">Food Item</th>
-<th class="px-4 py-2 text-label-sm font-label-sm text-outline uppercase tracking-wider text-right">Quantity</th>
-<th class="px-4 py-2 text-label-sm font-label-sm text-outline uppercase tracking-wider">Recipient (Shelter)</th>
-<th class="px-4 py-2 text-label-sm font-label-sm text-outline uppercase tracking-wider">Expiry Window</th>
+<th class="px-4 py-2 text-label-sm font-label-sm text-outline uppercase tracking-wider">Donation Item</th>
+<th class="px-4 py-2 text-label-sm font-label-sm text-outline uppercase tracking-wider text-right">Quantity / Value</th>
+<th class="px-4 py-2 text-label-sm font-label-sm text-outline uppercase tracking-wider">Recipient Shelter</th>
+<th class="px-4 py-2 text-label-sm font-label-sm text-outline uppercase tracking-wider">Schedule / Logistics</th>
 <th class="px-4 py-2 text-label-sm font-label-sm text-outline uppercase tracking-wider">Status</th>
 <th class="px-4 py-2 text-label-sm font-label-sm text-outline uppercase tracking-wider text-right">Action</th>
 </tr>
 </thead>
 <tbody class="divide-y divide-outline-variant/20 font-body-md text-body-md text-on-surface">
-<!-- Row 1 -->
+<!-- Row 1: Food -->
 <tr class="hover:bg-surface-container-low/40 transition-colors">
 <td class="px-4 py-3.5 font-label-md text-on-surface flex items-center gap-2.5">
-<span class="material-symbols-outlined text-outline text-[20px]">restaurant</span>
-<span>Pasta (Cooked Penne)</span>
+<span class="material-symbols-outlined text-primary-container text-[20px]">restaurant</span>
+<div>
+  <span class="font-bold block">Pasta (Cooked Penne)</span>
+  <span class="text-xs text-outline">Food &amp; Meals</span>
+</div>
 </td>
-<td class="px-4 py-3.5 text-right font-tabular-numeric font-medium text-on-surface">20 kg</td>
+<td class="px-4 py-3.5 text-right font-tabular-numeric font-medium text-on-surface">20 kg (40 meals)</td>
 <td class="px-4 py-3.5">
 <div class="font-medium text-on-surface">Hope Shelter</div>
 <div class="text-label-sm font-label-sm text-outline">2.1 km away • ETA 18m</div>
@@ -394,91 +397,100 @@
                 </button>
 </td>
 </tr>
-<!-- Row 2 -->
+<!-- Row 2: Clothes -->
 <tr class="hover:bg-surface-container-low/40 transition-colors">
 <td class="px-4 py-3.5 font-label-md text-on-surface flex items-center gap-2.5">
-<span class="material-symbols-outlined text-outline text-[20px]">grain</span>
-<span>Steamed Basmati Rice</span>
+<span class="material-symbols-outlined text-blue-600 text-[20px]">checkroom</span>
+<div>
+  <span class="font-bold block">40 Winter Jackets &amp; Sweaters</span>
+  <span class="text-xs text-outline">Clothes &amp; Apparel</span>
+</div>
 </td>
-<td class="px-4 py-3.5 text-right font-tabular-numeric font-medium text-on-surface">15 kg</td>
+<td class="px-4 py-3.5 text-right font-tabular-numeric font-medium text-on-surface">15 kg (40 pieces)</td>
 <td class="px-4 py-3.5">
-<div class="font-medium text-on-surface">Annapurna Food Bank</div>
-<div class="text-label-sm font-label-sm text-outline">4.2 km away • Courier in transit</div>
+<div class="font-medium text-on-surface">Hope Shelter</div>
+<div class="text-label-sm font-label-sm text-outline">Courier Assigned • Physical Pickup</div>
 </td>
 <td class="px-4 py-3.5">
-<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-label-sm font-label-sm bg-secondary-container/60 text-on-secondary-fixed border border-secondary-container">
-<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
-<span>2h 15m remaining</span>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-label-sm font-label-sm bg-blue-50 text-blue-800 border border-blue-200">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+<span>Pickup Window: 10 AM - 6 PM</span>
 </span>
 </td>
 <td class="px-4 py-3.5">
-<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-label-sm font-label-sm bg-secondary-container text-on-secondary-fixed border border-primary-fixed-dim/60 font-medium">
-<span class="material-symbols-outlined text-[14px]">two_wheeler</span>
-<span>Driver Assigned</span>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-label-sm font-label-sm bg-blue-100 text-blue-900 border border-blue-200 font-medium">
+<span class="material-symbols-outlined text-[14px]">local_shipping</span>
+<span>Driver Dispatched</span>
 </span>
 </td>
 <td class="px-4 py-3.5 text-right">
-<button class="px-3 py-1.5 rounded-lg bg-primary-container hover:bg-primary text-on-primary text-label-md font-label-md transition-colors inline-flex items-center gap-1" onclick="openTrackingModal('Steamed Basmati Rice - 15 kg', 'Annapurna Food Bank')" type="button">
+<button class="px-3 py-1.5 rounded-lg bg-primary-container hover:bg-primary text-on-primary text-label-md font-label-md transition-colors inline-flex items-center gap-1" onclick="openTrackingModal('40 Winter Jackets - 15 kg', 'Hope Shelter')" type="button">
 <span class="material-symbols-outlined text-[16px]">location_on</span>
-<span>Track Pickup</span>
+<span>Track Courier</span>
 </button>
 </td>
 </tr>
-<!-- Row 3 -->
-<tr class="hover:bg-surface-container-low/40 transition-colors bg-tertiary-fixed/10">
-<td class="px-4 py-3.5 font-label-md text-on-surface flex items-center gap-2.5">
-<span class="material-symbols-outlined text-tertiary text-[20px]">bakery_dining</span>
-<span>Artisan Sourdough Bread</span>
-</td>
-<td class="px-4 py-3.5 text-right font-tabular-numeric font-medium text-on-surface">10 kg</td>
-<td class="px-4 py-3.5">
-<div class="font-medium text-on-surface">Community Kitchen</div>
-<div class="text-label-sm font-label-sm text-outline">1.8 km away • Direct volunteer pick</div>
-</td>
-<td class="px-4 py-3.5">
-<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-label-sm font-label-sm bg-error-container text-on-error-container border border-error/20 font-medium">
-<span class="material-symbols-outlined text-[14px]">timer</span>
-<span>45m remaining</span>
-</span>
-</td>
-<td class="px-4 py-3.5">
-<span class="inline-flex items-center px-2.5 py-0.5 rounded text-label-sm font-label-sm bg-error-container/80 text-on-error-container border border-error/30 font-medium">
-                  Expiring Soon
-                </span>
-</td>
-<td class="px-4 py-3.5 text-right">
-<button class="px-3 py-1.5 rounded-lg border border-error/40 text-error hover:bg-error-container/40 text-label-md font-label-md transition-colors inline-flex items-center gap-1" onclick="openUrgentModal('Artisan Sourdough Bread', '10 kg', '45m')" type="button">
-<span class="material-symbols-outlined text-[16px]">priority_high</span>
-<span>Urgent View</span>
-</button>
-</td>
-</tr>
-<!-- Row 4 -->
+<!-- Row 3: Blankets -->
 <tr class="hover:bg-surface-container-low/40 transition-colors">
 <td class="px-4 py-3.5 font-label-md text-on-surface flex items-center gap-2.5">
-<span class="material-symbols-outlined text-outline text-[20px]">soup_kitchen</span>
-<span>Mixed Vegetable Curry &amp; Roti</span>
+<span class="material-symbols-outlined text-purple-600 text-[20px]">bed</span>
+<div>
+  <span class="font-bold block">50 Thermal Winter Blankets</span>
+  <span class="text-xs text-outline">Blankets &amp; Bedding</span>
+</div>
 </td>
-<td class="px-4 py-3.5 text-right font-tabular-numeric font-medium text-on-surface">25 kg</td>
+<td class="px-4 py-3.5 text-right font-tabular-numeric font-medium text-on-surface">40 kg (50 units)</td>
 <td class="px-4 py-3.5">
-<div class="font-medium text-on-surface">City Care Home</div>
-<div class="text-label-sm font-label-sm text-outline">5.4 km away • Kitchen staff prep</div>
+<div class="font-medium text-on-surface">City Food Bank &amp; Night Shelter</div>
+<div class="text-label-sm font-label-sm text-outline">Direct Courier Transport</div>
 </td>
 <td class="px-4 py-3.5">
-<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-label-sm font-label-sm bg-secondary-container/60 text-on-secondary-fixed border border-secondary-container">
-<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
-<span>5h 10m remaining</span>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-label-sm font-label-sm bg-purple-50 text-purple-800 border border-purple-200">
+<span class="material-symbols-outlined text-[14px]">inventory_2</span>
+<span>Packed in Cartons</span>
 </span>
 </td>
 <td class="px-4 py-3.5">
-<span class="inline-flex items-center px-2.5 py-0.5 rounded text-label-sm font-label-sm bg-secondary-container text-on-secondary-fixed border border-primary-fixed-dim/60 font-medium">
-                  NGO Accepted
+<span class="inline-flex items-center px-2.5 py-0.5 rounded text-label-sm font-label-sm bg-purple-100 text-purple-900 border border-purple-200 font-medium">
+                  Available for Pickup
                 </span>
 </td>
 <td class="px-4 py-3.5 text-right">
-<button class="px-3 py-1.5 rounded-lg border border-outline-variant/40 bg-surface-container-lowest hover:bg-surface-container-low text-label-md font-label-md text-on-surface transition-colors" onclick="openMatchingModal('Mixed Vegetable Curry &amp; Roti - 25 kg')" type="button">
+<button class="px-3 py-1.5 rounded-lg border border-outline-variant/40 bg-surface-container-lowest hover:bg-surface-container-low text-label-md font-label-md text-on-surface transition-colors" onclick="openMatchingModal('50 Thermal Blankets - 40 kg')" type="button">
                   View Details
                 </button>
+</td>
+</tr>
+<!-- Row 4: Monetary Online -->
+<tr class="hover:bg-surface-container-low/40 transition-colors bg-emerald-50/40">
+<td class="px-4 py-3.5 font-label-md text-on-surface flex items-center gap-2.5">
+<span class="material-symbols-outlined text-emerald-600 text-[20px]">payments</span>
+<div>
+  <span class="font-bold block">Direct Shelter Support Fund</span>
+  <span class="text-xs text-emerald-700 font-semibold">Monetary Aid (100% Cashless Online)</span>
+</div>
+</td>
+<td class="px-4 py-3.5 text-right font-tabular-numeric font-bold text-emerald-800 text-base">₹5,000</td>
+<td class="px-4 py-3.5">
+<div class="font-medium text-on-surface">Hope Shelter &amp; Care Center</div>
+<div class="text-label-sm font-label-sm text-emerald-700">Online Bank Escrow (No Courier Required)</div>
+</td>
+<td class="px-4 py-3.5">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-label-sm font-label-sm bg-emerald-100 text-emerald-900 border border-emerald-300 font-medium">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span>Immediate Transfer • 80G Issued</span>
+</span>
+</td>
+<td class="px-4 py-3.5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded text-label-sm font-label-sm bg-emerald-200 text-emerald-900 font-bold">
+                  Completed Online
+                </span>
+</td>
+<td class="px-4 py-3.5 text-right">
+<button class="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-label-md font-label-md transition-colors inline-flex items-center gap-1" onclick="alert('Viewing 80G Statutory Tax Deduction Receipt for ₹5,000 direct contribution to Hope Shelter.')" type="button">
+<span class="material-symbols-outlined text-[16px]">receipt_long</span>
+<span>Tax Receipt</span>
+</button>
 </td>
 </tr>
 </tbody>
@@ -493,8 +505,8 @@
 <span class="material-symbols-outlined text-primary-container text-[28px]">volunteer_activism</span>
 </div>
 <div>
-<h3 class="font-headline-sm text-headline-sm text-on-surface">Have surplus food right now?</h3>
-<p class="font-body-md text-body-md text-outline mt-0.5">Post your available food and we'll instantly match a verified nearby shelter or food bank with temperature-safe pickup.</p>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Have food, clothes, necessities or funds to donate?</h3>
+<p class="font-body-md text-body-md text-outline mt-0.5">Post available items or contribute funds online — our algorithm instantly connects with certified shelters and volunteer courier dispatch.</p>
 </div>
 </div>
 <button class="bg-primary-container hover:bg-primary text-on-primary px-5 py-2.5 rounded-lg font-label-md text-label-md inline-flex items-center gap-2 shrink-0 transition-colors shadow-sm" onclick="openPostModal()" type="button">
@@ -1122,10 +1134,13 @@
         <span class="w-2 h-2 rounded-full bg-slate-400"></span> 🔐 <b>Auth / Login Page</b>
       </a>
       <a href="/restaurant-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
-        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 🏪 <b>Restaurant Portal</b>
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 🎁 <b>Donor Portal (Food, Clothes, Funds)</b>
       </a>
       <a href="/ngo-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
         <span class="w-2 h-2 rounded-full bg-blue-500"></span> 🤝 <b>NGO / Shelter Portal</b>
+      </a>
+            <a href="/admin-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-purple-500"></span> 🛡️ <b>Admin Command Center</b>
       </a>
       <a href="/db-viewer.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
         <span class="w-2 h-2 rounded-full bg-cyan-400"></span> 🗄️ <b>Supabase DB Inspector</b>

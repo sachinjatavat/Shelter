@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="web_dashboard" name="shell-type"/>
+  <title>SURPLUS-TO-SHELTER | Admin Command Center</title>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <script src="/js/supabase.js"></script>
+  <script src="/js/pdf-generator.js"></script>
+  <style>
+    @layer base {
+      html, body { margin:0; padding:0; font-family: 'Inter', sans-serif; }
+      body { overscroll-behavior:none; }
+      main > :first-child { margin-top:0 !important; }
+      main > :last-child { margin-bottom:0 !important; }
+    }
+    ::-webkit-scrollbar { display:none; }
+  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#00652b",
+            "primary-container": "#16803c",
+            "secondary-container": "#caead6",
+            "on-primary": "#ffffff",
+            "on-surface": "#141b2b",
+            "on-surface-variant": "#3f493f",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f1f3ff",
+            "surface-container": "#e9edff",
+            "outline": "#6f7a6e",
+            "outline-variant": "#becabb",
+            "error": "#ba1a1a",
+            "error-container": "#ffdad6"
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface-container-low font-body-md text-on-surface antialiased">
+
+<!-- Auth / Passcode Modal Guard for Admin (Open if role is not admin) -->
+<div id="admin-auth-guard" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm">
+  <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-outline-variant/40 text-center space-y-4">
+    <div class="w-12 h-12 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center mx-auto">
+      <span class="material-symbols-outlined text-[28px]">shield</span>
+    </div>
+    <div>
+      <h2 class="text-xl font-bold text-on-surface">Platform Administrator Guard</h2>
+      <p class="text-xs text-outline mt-1">This console contains NGO verification, regulatory licensing, and platform financial controls.</p>
+    </div>
+    <div class="p-3 bg-surface-container-low rounded-xl text-left space-y-2 text-xs">
+      <span class="font-semibold text-on-surface block">Access Verification:</span>
+      <p class="text-outline">To access as System Auditor, enter admin security PIN or click Instant Demo Access below.</p>
+      <input type="password" id="adminPinInput" placeholder="Enter PIN (Default: admin)" class="w-full h-9 px-3 bg-white border border-outline-variant/60 rounded-lg text-sm text-on-surface focus:outline-none focus:border-primary-container"/>
+    </div>
+    <div class="flex items-center gap-2 pt-2">
+      <button onclick="verifyAdminAccess()" class="flex-1 py-2.5 bg-primary-container text-white text-xs font-bold rounded-xl hover:bg-primary transition-all shadow-sm">
+        Authenticate Session
+      </button>
+      <button onclick="grantDemoAdminAccess()" class="py-2.5 px-4 bg-surface-container-lowest border border-outline-variant/60 text-xs font-semibold text-on-surface rounded-xl hover:bg-surface-container-low transition-all">
+        Demo Mode
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest border-r border-outline-variant/30 z-40 flex flex-col justify-between">
+  <div class="flex flex-col">
+    <div class="px-6 pt-6 pb-4 border-b border-outline-variant/20">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-purple-700 text-[26px]">shield_person</span>
+        <span class="font-bold text-base tracking-tight uppercase text-on-surface">Surplus-To-Shelter</span>
+      </div>
+      <div class="mt-2 pl-8">
+        <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-purple-100 text-purple-800 tracking-wider uppercase">Admin Console</span>
+      </div>
+    </div>
+
+    <div class="px-3 pt-4">
+      <div class="px-3 pb-2 text-[11px] font-bold text-outline uppercase tracking-wider">COMMAND CENTER</div>
+      <nav class="space-y-1">
+        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors bg-purple-50 text-purple-900 font-semibold border-l-4 border-purple-600 text-sm" href="#overview-section">
+          <span class="material-symbols-outlined text-[20px] text-purple-700">dashboard</span>
+          <span>System Overview</span>
+        </a>
+        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#ngo-verifications-section">
+          <span class="material-symbols-outlined text-[20px] text-outline">verified</span>
+          <span>NGO Verifications</span>
+        </a>
+        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#categories-section">
+          <span class="material-symbols-outlined text-[20px] text-outline">category</span>
+          <span>Donation Categories</span>
+        </a>
+        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#monetization-section">
+          <span class="material-symbols-outlined text-[20px] text-outline">monetization_on</span>
+          <span>Monetization &amp; CSR</span>
+        </a>
+        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#audit-section">
+          <span class="material-symbols-outlined text-[20px] text-outline">receipt_long</span>
+          <span>Audit Reports</span>
+        </a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="p-4 border-t border-outline-variant/20">
+    <button onclick="localStorage.removeItem('user_role'); window.location.href='/index.html';" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-outline hover:text-error hover:bg-red-50 transition-colors">
+      <span class="material-symbols-outlined text-[18px]">logout</span>
+      <span>Sign Out of Admin Console</span>
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<div class="pl-72 min-h-screen flex flex-col">
+  <!-- TOPBAR -->
+  <header class="h-16 bg-surface-container-lowest border-b border-outline-variant/30 flex items-center justify-between px-8 sticky top-0 z-30">
+    <div class="flex items-center gap-3">
+      <h1 class="text-lg font-bold text-on-surface">Platform Administration &amp; Governance</h1>
+      <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">SYSTEM HEALTHY</span>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <button onclick="refreshAdminData()" class="px-3 py-1.5 rounded-lg border border-outline-variant/60 text-xs font-semibold hover:bg-surface-container-low transition-all flex items-center gap-1.5 cursor-pointer">
+        <span class="material-symbols-outlined text-[16px]" id="refresh-icon">refresh</span>
+        <span>Refresh Data</span>
+      </button>
+      <div class="flex items-center gap-2 pl-2 border-l border-outline-variant/30">
+        <div class="w-8 h-8 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold text-xs">AD</div>
+        <div class="text-left text-xs">
+          <div class="font-bold text-on-surface user-name-display">Platform Admin</div>
+          <div class="text-[10px] text-outline">Superuser Access</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- BODY CONTENT -->
+  <main class="p-8 space-y-8 flex-1">
+    
+    <!-- SECTION 1: SYSTEM OVERVIEW METRICS -->
+    <section id="overview-section" class="space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-xl font-bold text-on-surface">System Performance &amp; Impact Telemetry</h2>
+          <p class="text-xs text-outline mt-0.5">Aggregate platform metrics across all 8 donation types and partner portals.</p>
+        </div>
+        <button onclick="window.generate80GReceipt()" class="px-3.5 py-1.5 rounded-lg bg-emerald-800 text-white text-xs font-semibold hover:bg-emerald-900 shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">
+          <span class="material-symbols-outlined text-[16px]">receipt_long</span>
+          <span>Sample 80G Certificate</span>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Metric 1: Food Rescued -->
+        <div class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-5 shadow-sm space-y-2">
+          <div class="flex items-center justify-between text-outline text-xs">
+            <span>Total Food Rescued</span>
+            <span class="material-symbols-outlined text-primary-container text-[20px]">restaurant</span>
+          </div>
+          <div class="text-2xl font-black text-on-surface" id="stat-food-kg">1,480 kg</div>
+          <div class="text-[11px] text-primary-container font-semibold flex items-center gap-1">
+            <span class="material-symbols-outlined text-[14px]">trending_up</span>
+            <span>+145 kg this week (WHO Freshness Model)</span>
+          </div>
+        </div>
+
+        <!-- Metric 2: Physical Goods Donated -->
+        <div class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-5 shadow-sm space-y-2">
+          <div class="flex items-center justify-between text-outline text-xs">
+            <span>Physical Supplies Logged</span>
+            <span class="material-symbols-outlined text-blue-600 text-[20px]">inventory_2</span>
+          </div>
+          <div class="text-2xl font-black text-on-surface" id="stat-physical-units">382 units</div>
+          <div class="text-[11px] text-blue-700 font-semibold">
+            Clothes, Books, Blankets &amp; Medical First Aid
+          </div>
+        </div>
+
+        <!-- Metric 3: Monetary Funds (Escrow) -->
+        <div class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-5 shadow-sm space-y-2">
+          <div class="flex items-center justify-between text-outline text-xs">
+            <span>Monetary Contributions</span>
+            <span class="material-symbols-outlined text-emerald-600 text-[20px]">payments</span>
+          </div>
+          <div class="text-2xl font-black text-emerald-800" id="stat-monetary-total">₹87,500</div>
+          <div class="text-[11px] text-emerald-700 font-semibold flex items-center gap-1">
+            <span class="material-symbols-outlined text-[14px]">lock</span>
+            <span>Secured Non-Profit Escrow (HMAC Verified)</span>
+          </div>
+        </div>
+
+        <!-- Metric 4: Verified Shelters -->
+        <div class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-5 shadow-sm space-y-2">
+          <div class="flex items-center justify-between text-outline text-xs">
+            <span>Verified Non-Profit Partners</span>
+            <span class="material-symbols-outlined text-purple-600 text-[20px]">verified</span>
+          </div>
+          <div class="text-2xl font-black text-on-surface" id="stat-verified-ngos">14 NGOs</div>
+          <div class="text-[11px] text-purple-700 font-semibold">
+            100% KYC &amp; Regulatory Inspected
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: NGO VERIFICATION & LICENSING WORKFLOW -->
+    <section id="ngo-verifications-section" class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-6 shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-outline-variant/20">
+        <div>
+          <h2 class="text-lg font-bold text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-purple-700 text-[22px]">policy</span>
+            <span>NGO Verification &amp; Regulatory Licensing Queue</span>
+          </h2>
+          <p class="text-xs text-outline mt-0.5">Audit compliance credentials, approve new shelter partners, and clear medicine distribution permits.</p>
+        </div>
+        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-purple-100 text-purple-900 border border-purple-200" id="ngo-queue-badge">4 Registered Shelters</span>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="border-b border-outline-variant/30 text-outline uppercase font-semibold text-[11px] bg-surface-container-low/50">
+              <th class="py-3 px-3">Organization</th>
+              <th class="py-3 px-3">Registration &amp; 12A/80G</th>
+              <th class="py-3 px-3">Medical License Status</th>
+              <th class="py-3 px-3">Approved Categories</th>
+              <th class="py-3 px-3">Verification</th>
+              <th class="py-3 px-3 text-right">Approval Controls</th>
+            </tr>
+          </thead>
+          <tbody id="ngo-verifications-tbody" class="divide-y divide-outline-variant/20">
+            <!-- Dynamic rows populated via JS -->
+            <tr>
+              <td colspan="6" class="p-6 text-center text-outline">Loading shelter verification records...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 3: 8 DONATION CATEGORIES & REGULATORY POLICIES -->
+    <section id="categories-section" class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-6 shadow-sm space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+        <div>
+          <h2 class="text-lg font-bold text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary-container text-[22px]">category</span>
+            <span>8 Donation Categories &amp; Safety Compliance Configuration</span>
+          </h2>
+          <p class="text-xs text-outline mt-0.5">Control active donation classes, enforcement rules, and legal distribution restrictions.</p>
+        </div>
+        <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-full">All 8 Types Live</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="categories-grid">
+        <!-- Rendered dynamically via JS -->
+      </div>
+    </section>
+
+    <!-- SECTION 4: MONETIZATION, SUBSCRIPTIONS & SPONSORSHIPS -->
+    <section id="monetization-section" class="space-y-6">
+      <div>
+        <h2 class="text-xl font-bold text-on-surface">Platform Monetization &amp; Revenue Architecture</h2>
+        <p class="text-xs text-outline mt-0.5">Configurable revenue streams without paywalling food relief for non-profits.</p>
+      </div>
+
+      <!-- Payment Gateway Status Callout Banner -->
+      <div id="admin-payment-gateway-status" class="p-4 rounded-xl border border-amber-200 bg-amber-50/70 flex flex-col md:flex-row items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-[22px]">account_balance_wallet</span>
+          </div>
+          <div>
+            <h4 class="font-bold text-sm text-amber-950" id="admin-gw-status-title">Payment Gateway Setup: Server Sandbox Mode</h4>
+            <p class="text-xs text-amber-800" id="admin-gw-status-desc">Production settlement requires configuring RAZORPAY_KEY_ID or STRIPE_SECRET_KEY in the server environment. Simulated escrow is currently maintaining complete audit records.</p>
+          </div>
+        </div>
+        <button onclick="alert('To activate live payments:\n1. Open .env on the server.\n2. Set RAZORPAY_KEY_ID & RAZORPAY_KEY_SECRET (or STRIPE_SECRET_KEY).\n3. Set RAZORPAY_WEBHOOK_SECRET for cryptographic HMAC verification.\n4. Restart the server.')" class="px-3.5 py-1.5 bg-amber-200 hover:bg-amber-300 text-amber-950 font-semibold text-xs rounded-lg transition-colors shrink-0">
+          Gateway Config Docs
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- 1. NGO Subscription & Onboarding Tiers -->
+        <div class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-5 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-outline-variant/20 pb-3">
+            <h3 class="font-bold text-sm text-on-surface flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-primary-container text-[18px]">card_membership</span>
+              <span>NGO Onboarding Packages</span>
+            </h3>
+            <span class="text-[10px] uppercase font-bold text-outline">Tier Pricing</span>
+          </div>
+
+          <div class="space-y-3 text-xs">
+            <!-- Free Tier -->
+            <div class="p-3 rounded-lg border border-outline-variant/40 bg-surface-container-low/40 flex items-center justify-between">
+              <div>
+                <span class="font-bold text-on-surface block">Community Free Tier</span>
+                <span class="text-[11px] text-outline">All basic surplus food claiming &amp; routing</span>
+              </div>
+              <span class="font-black text-on-surface">₹0 (Free Forever)</span>
+            </div>
+            <!-- Express Onboarding Tier -->
+            <div class="p-3 rounded-lg border border-primary-container/40 bg-secondary-container/20 flex items-center justify-between">
+              <div>
+                <span class="font-bold text-on-surface block">Express Verification Package</span>
+                <span class="text-[11px] text-outline">Fast-track 24h KYC review &amp; certified shelter badge</span>
+              </div>
+              <span class="font-black text-primary-container">₹1,499 one-time</span>
+            </div>
+            <!-- Pro Analytics Tier -->
+            <div class="p-3 rounded-lg border border-purple-200 bg-purple-50/40 flex items-center justify-between">
+              <div>
+                <span class="font-bold text-on-surface block">Shelter Pro Analytics</span>
+                <span class="text-[11px] text-outline">Automated API webhooks &amp; cold-storage priority</span>
+              </div>
+              <span class="font-black text-purple-900">₹2,499 / mo</span>
+            </div>
+          </div>
+          <p class="text-[11px] text-outline italic">
+            *Non-profit accessibility guarantee: No shelter is ever excluded from receiving food due to lack of a paid subscription.
+          </p>
+        </div>
+
+        <!-- 2. Corporate CSR Sponsorships -->
+        <div class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-5 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-outline-variant/20 pb-3">
+            <h3 class="font-bold text-sm text-on-surface flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-blue-600 text-[18px]">handshake</span>
+              <span>Corporate CSR Sponsorships</span>
+            </h3>
+            <span class="text-[10px] uppercase font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">Active Funds</span>
+          </div>
+
+          <div class="space-y-3 text-xs" id="sponsorships-list">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+
+        <!-- 3. Ethical Ad Placements -->
+        <div class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-5 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-outline-variant/20 pb-3">
+            <h3 class="font-bold text-sm text-on-surface flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-amber-600 text-[18px]">campaign</span>
+              <span>Targeted Ad Placements</span>
+            </h3>
+            <span class="text-[10px] uppercase font-bold text-outline">Native Layout</span>
+          </div>
+
+          <div class="space-y-3 text-xs" id="ads-list">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: AUDIT LOGS & FINANCIAL REPORTS -->
+    <section id="audit-section" class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-6 shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-outline-variant/20">
+        <div>
+          <h2 class="text-lg font-bold text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-outline text-[22px]">history_edu</span>
+            <span>Complete Platform Audit Stream &amp; 80G Ledger</span>
+          </h2>
+          <p class="text-xs text-outline mt-0.5">Immutable record of donor dispatches, driver drop-offs, and anonymous monetary transfers.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="exportAuditLedgerCSV()" class="px-3.5 py-1.5 rounded-lg border border-outline-variant/60 text-xs font-semibold hover:bg-surface-container-low transition-all flex items-center gap-1 cursor-pointer">
+            <span class="material-symbols-outlined text-[16px]">download</span>
+            <span>Export CSV</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="border-b border-outline-variant/30 text-outline uppercase font-semibold text-[11px] bg-surface-container-low/50">
+              <th class="py-3 px-3">Event Ref</th>
+              <th class="py-3 px-3">Type</th>
+              <th class="py-3 px-3">Donor Entity</th>
+              <th class="py-3 px-3">Shelter Recipient</th>
+              <th class="py-3 px-3">Amount / Quantity</th>
+              <th class="py-3 px-3">Verification Proof</th>
+              <th class="py-3 px-3 text-right">Certificate</th>
+            </tr>
+          </thead>
+          <tbody id="audit-reports-tbody" class="divide-y divide-outline-variant/20">
+            <!-- Rendered via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Floating Universal Portal Switcher Widget -->
+<div id="global-portal-switcher" class="fixed bottom-4 right-4 z-[9999] font-sans">
+  <div class="relative inline-block text-left">
+    <button onclick="const m=document.getElementById('portalSwitchMenu'); m.classList.toggle('hidden');" 
+      type="button"
+      class="flex items-center gap-2 px-3.5 py-2 rounded-full bg-slate-900 text-white text-xs font-semibold shadow-2xl border border-slate-700 hover:bg-slate-800 transition-all cursor-pointer">
+      <span class="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span>
+      <span>Switch Portal / Role</span>
+      <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+    </button>
+
+    <div id="portalSwitchMenu" class="hidden absolute right-0 bottom-12 w-64 rounded-xl bg-slate-900 text-white border border-slate-700 shadow-2xl z-[10000] p-2 flex flex-col gap-1 text-xs">
+      <div class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 mb-1">
+        Surplus-To-Shelter Portals
+      </div>
+      <a href="/index.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-slate-400"></span> 🔐 <b>Auth / Login Page</b>
+      </a>
+      <a href="/restaurant-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 🎁 <b>Donor Portal (Food, Clothes, Funds)</b>
+      </a>
+      <a href="/ngo-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-blue-500"></span> 🤝 <b>NGO / Shelter Portal</b>
+      </a>
+      <a href="/admin-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-slate-800 text-purple-400 font-bold">
+        <span class="w-2 h-2 rounded-full bg-purple-500"></span> 🛡️ <b>Admin Command Center</b>
+      </a>
+      <a href="/db-viewer.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-cyan-400"></span> 🗄️ <b>Supabase DB Inspector</b>
+      </a>
+      <a href="/driver-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-amber-500"></span> 🚚 <b>Driver Courier Portal</b>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Admin Guard Logic
+  function checkAdminAuth() {
+    const role = localStorage.getItem('user_role');
+    const isAdminAuthed = localStorage.getItem('admin_authenticated') === 'true';
+    if (role !== 'admin' && !isAdminAuthed) {
+      document.getElementById('admin-auth-guard').classList.remove('hidden');
+    } else {
+      document.getElementById('admin-auth-guard').classList.add('hidden');
+    }
+  }
+
+  function verifyAdminAccess() {
+    const pin = document.getElementById('adminPinInput').value.trim();
+    if (pin === 'admin' || pin === 'shelter_admin' || pin === '1234') {
+      grantDemoAdminAccess();
+    } else {
+      alert('Incorrect security PIN. Try "admin" or click Demo Mode.');
+    }
+  }
+
+  function grantDemoAdminAccess() {
+    localStorage.setItem('admin_authenticated', 'true');
+    localStorage.setItem('user_role', 'admin');
+    localStorage.setItem('user_name', 'System Administrator');
+    document.getElementById('admin-auth-guard').classList.add('hidden');
+    refreshAdminData();
+  }
+
+  // Load and Render Admin Data
+  async function refreshAdminData() {
+    const icon = document.getElementById('refresh-icon');
+    if (icon) icon.classList.add('animate-spin');
+
+    try {
+      await Promise.all([
+        loadAdminNGOs(),
+        loadAdminCategories(),
+        loadMonetizationData(),
+        loadAuditReports()
+      ]);
+    } catch (e) {
+      console.warn('Admin data load warning:', e);
+    } finally {
+      if (icon) {
+        setTimeout(() => icon.classList.remove('animate-spin'), 600);
+      }
+    }
+  }
+
+  // 1. NGOs
+  async function loadAdminNGOs() {
+    const tbody = document.getElementById('ngo-verifications-tbody');
+    try {
+      let ngos = [];
+      if (window.SupabaseService && window.SupabaseService.getAdminNGOs) {
+        ngos = await window.SupabaseService.getAdminNGOs();
+      }
+      if (!ngos || ngos.length === 0) {
+        ngos = [
+          { id: 'NGO-001', name: 'Hope Shelter Jaipur', verification_status: 'verified', medical_license_number: 'RJ-MED-49102', approved_categories: ['Food & Meals', 'Clothes & Footwear', 'Medicines & Medical Supplies', 'Blankets & Necessities'], contact_phone: '+91 98291 55432' },
+          { id: 'NGO-002', name: 'Annapurna Food Bank', verification_status: 'verified', medical_license_number: null, approved_categories: ['Food & Meals', 'Hygiene & Essential Supplies'], contact_phone: '+91 98290 11442' },
+          { id: 'NGO-003', name: 'Bal Seva Children Home', verification_status: 'pending', medical_license_number: null, approved_categories: ['Food & Meals', 'Books & Educational Materials', 'Clothes & Footwear'], contact_phone: '+91 94140 22331' },
+          { id: 'NGO-004', name: 'Care Health Community Clinic', verification_status: 'pending', medical_license_number: 'RJ-CLINIC-8821', approved_categories: ['Medicines & Medical Supplies', 'Hygiene & Essential Supplies'], contact_phone: '+91 98280 99881' }
+        ];
+      }
+
+      document.getElementById('ngo-queue-badge').textContent = `${ngos.length} Registered Shelters`;
+      document.getElementById('stat-verified-ngos').textContent = `${ngos.filter(n => n.verification_status === 'verified').length} NGOs`;
+
+      tbody.innerHTML = ngos.map(ngo => {
+        const isVer = ngo.verification_status === 'verified';
+        const statusBadge = isVer
+          ? `<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">VERIFIED ✓</span>`
+          : `<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300">PENDING REVIEW</span>`;
+
+        const medBadge = ngo.medical_license_number
+          ? `<span class="inline-flex items-center gap-1 font-semibold text-emerald-800"><span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> ${ngo.medical_license_number}</span>`
+          : `<span class="text-outline">None / Not Applied</span>`;
+
+        const cats = Array.isArray(ngo.approved_categories) ? ngo.approved_categories.join(', ') : 'Standard Food Only';
+
+        const actionButtons = isVer
+          ? `<div class="flex items-center justify-end gap-1.5">
+               <button onclick="handleVerifyNGO('${ngo.id}', 'rejected')" class="px-2.5 py-1 rounded border border-outline-variant/60 text-outline hover:text-error hover:border-error transition-all">Revoke</button>
+               <button onclick="alert('Viewing verified records for ${ngo.name}')" class="px-2.5 py-1 rounded bg-surface-container-low text-on-surface font-semibold hover:bg-surface-container transition-all">Audit Dossier</button>
+             </div>`
+          : `<div class="flex items-center justify-end gap-1.5">
+               <button onclick="handleVerifyNGO('${ngo.id}', 'verified', true)" class="px-2.5 py-1 rounded bg-primary-container text-white font-bold hover:bg-primary transition-all shadow-sm">Approve with Meds</button>
+               <button onclick="handleVerifyNGO('${ngo.id}', 'verified', false)" class="px-2.5 py-1 rounded bg-surface-container text-on-surface font-semibold hover:bg-surface-container-high transition-all">Approve General</button>
+             </div>`;
+
+        return `
+          <tr class="hover:bg-surface-container-low/40 transition-colors">
+            <td class="py-3 px-3">
+              <div class="font-bold text-on-surface">${ngo.name}</div>
+              <div class="text-[11px] text-outline font-mono">ID: ${ngo.id} &bull; ${ngo.contact_phone || 'Verified Phone'}</div>
+            </td>
+            <td class="py-3 px-3">
+              <span class="font-mono text-xs">REG-12A-8840-JP</span>
+              <div class="text-[10px] text-emerald-700 font-semibold">80G Tax Exemption Valid</div>
+            </td>
+            <td class="py-3 px-3">${medBadge}</td>
+            <td class="py-3 px-3 max-w-xs truncate" title="${cats}">${cats}</td>
+            <td class="py-3 px-3">${statusBadge}</td>
+            <td class="py-3 px-3 text-right">${actionButtons}</td>
+          </tr>
+        `;
+      }).join('');
+    } catch (e) {
+      tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-red-600">Failed to load NGO records.</td></tr>`;
+    }
+  }
+
+  async function handleVerifyNGO(id, status, allowMeds) {
+    let cats = ['Food & Meals', 'Clothes & Footwear', 'Books & Educational Materials', 'Hygiene & Essential Supplies', 'Household Goods & Furniture', 'Blankets & Necessities', 'Monetary'];
+    if (allowMeds) cats.push('Medicines & Medical Supplies');
+
+    if (window.SupabaseService && window.SupabaseService.verifyNGO) {
+      await window.SupabaseService.verifyNGO(id, status, cats, 'Verified by Platform Administrator');
+    }
+    alert(`✓ Shelter ${id} status updated to: ${status.toUpperCase()}`);
+    loadAdminNGOs();
+  }
+
+  // 2. Categories
+  async function loadAdminCategories() {
+    const grid = document.getElementById('categories-grid');
+    const categories = [
+      { name: 'Food & Meals', icon: 'restaurant', safety: 'WHO Freshness & HACCP microbial decay scoring', active: true, color: 'border-emerald-200 bg-emerald-50/30' },
+      { name: 'Clothes & Footwear', icon: 'checkroom', safety: 'Sanitary inspection & condition verification', active: true, color: 'border-blue-200 bg-blue-50/30' },
+      { name: 'Books & Educational', icon: 'menu_book', safety: 'Curriculum & youth literacy sorting', active: true, color: 'border-amber-200 bg-amber-50/30' },
+      { name: 'Medicines & Medical', icon: 'medication', safety: 'STRICT: Factory seal & future expiry + Drug License', active: true, color: 'border-red-200 bg-red-50/30' },
+      { name: 'Hygiene Supplies', icon: 'sanitizer', safety: 'Unopened packaging & soap purity', active: true, color: 'border-teal-200 bg-teal-50/30' },
+      { name: 'Household & Furniture', icon: 'chair', safety: 'Structural integrity & clean assembly', active: true, color: 'border-purple-200 bg-purple-50/30' },
+      { name: 'Blankets & Bedding', icon: 'bed', safety: 'Winter relief thermal sanitization', active: true, color: 'border-orange-200 bg-orange-50/30' },
+      { name: 'Monetary Contributions', icon: 'payments', safety: 'Direct non-profit escrow & Sec 80G tax receipt', active: true, color: 'border-emerald-300 bg-emerald-50/50' }
+    ];
+
+    grid.innerHTML = categories.map(cat => `
+      <div class="border rounded-xl p-4 flex flex-col justify-between ${cat.color}">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="material-symbols-outlined text-on-surface text-[22px]">${cat.icon}</span>
+            <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+          </div>
+          <h4 class="font-bold text-sm text-on-surface">${cat.name}</h4>
+          <p class="text-[11px] text-outline mt-1 leading-snug">${cat.safety}</p>
+        </div>
+        <div class="pt-3 mt-3 border-t border-outline-variant/20 flex items-center justify-between text-[11px]">
+          <span class="text-emerald-800 font-semibold">Active in Engine</span>
+          <button onclick="alert('Category ${cat.name} parameters are locked to ensure non-profit distribution safety.')" class="text-outline hover:text-on-surface font-medium underline">Configure</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // 3. Monetization & CSR
+  async function loadMonetizationData() {
+    const spList = document.getElementById('sponsorships-list');
+    const adList = document.getElementById('ads-list');
+
+    const sponsors = [
+      { name: 'Tata Steel CSR Foundation', grant: '₹5,00,000 Allocation', cause: 'Cold Storage Refrigeration Infrastructure', status: 'ACTIVE GRANT' },
+      { name: 'HDFC Parivartan Relief', grant: '₹2,50,000 Allocation', cause: 'Dry Rations & Nutritional Subsidies', status: 'ACTIVE GRANT' },
+      { name: 'Reliance Foundation Health', grant: '₹3,00,000 Allocation', cause: 'Essential First Aid & Clinical Dispensary Kits', status: 'AUDIT COMPLETED' }
+    ];
+
+    spList.innerHTML = sponsors.map(s => `
+      <div class="p-3 rounded-lg border border-outline-variant/30 bg-surface-container-low/40 space-y-1">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-on-surface">${s.name}</span>
+          <span class="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded">${s.status}</span>
+        </div>
+        <div class="text-[11px] text-primary-container font-semibold">${s.grant}</div>
+        <div class="text-[10px] text-outline">${s.cause}</div>
+      </div>
+    `).join('');
+
+    const ads = [
+      { title: 'EcoKitchen Food Containers', slot: 'Restaurant Dashboard Banner', cpm: '₹450 / 1k views', state: 'Active' },
+      { title: 'Jaipur Courier Green EV Fleet', slot: 'Driver Portal Header', cpm: '₹600 / 1k views', state: 'Active' },
+      { title: 'CleanWater Sanitizers CSR', slot: 'NGO Feed Footer', cpm: 'Sponsored Non-Profit', state: 'Verified' }
+    ];
+
+    adList.innerHTML = ads.map(a => `
+      <div class="p-3 rounded-lg border border-outline-variant/30 bg-surface-container-low/40 space-y-1">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-on-surface">${a.title}</span>
+          <span class="text-[10px] font-bold text-outline">${a.state}</span>
+        </div>
+        <div class="text-[11px] text-outline">Placement: ${a.slot}</div>
+        <div class="text-[10px] text-amber-800 font-semibold">${a.cpm}</div>
+      </div>
+    `).join('');
+
+    // Update Gateway Status
+    try {
+      if (window.SupabaseService && window.SupabaseService.getPaymentConfig) {
+        const pConf = await window.SupabaseService.getPaymentConfig();
+        const title = document.getElementById('admin-gw-status-title');
+        const desc = document.getElementById('admin-gw-status-desc');
+        if (pConf && pConf.is_live) {
+          title.textContent = `Live Payment Gateway Active (${pConf.provider.toUpperCase()})`;
+          desc.textContent = `Production credentials verified. All donor credit card and UPI transactions are signed and routed directly into non-profit beneficiary accounts.`;
+        }
+      }
+    } catch (e) {}
+  }
+
+  // 4. Audit
+  async function loadAuditReports() {
+    const tbody = document.getElementById('audit-reports-tbody');
+    const reports = [
+      { ref: 'AUD-8821', type: 'Food Rescue', donor: 'ABC Restaurant (C-Scheme)', shelter: 'Hope Shelter', amount: '20 kg Pasta', proof: 'QR Verified (PIN 4829)', cert: 'Sec 80G Certified' },
+      { ref: 'AUD-8822', type: 'Physical Goods', donor: 'Reception Bay Partners', shelter: 'Hope Shelter', amount: '35 pairs Winter Jackets', proof: 'Condition Checked', cert: 'In-Kind Receipt' },
+      { ref: 'AUD-8823', type: 'Medicines', donor: 'City Medical Stockists', shelter: 'Care Health Clinic', amount: '50 units Paracetamol', proof: 'Batch Sealed #B-8849', cert: 'Form 20B Cleared' },
+      { ref: 'AUD-8824', type: 'Monetary Gift', donor: 'Anonymous Donor (Masked)', shelter: 'Hope Shelter', amount: '₹5,000 Direct Escrow', proof: 'HMAC Webhook #pay_8819', cert: 'Sec 80G PDF' }
+    ];
+
+    tbody.innerHTML = reports.map(r => `
+      <tr class="hover:bg-surface-container-low/40 transition-colors">
+        <td class="py-3 px-3 font-mono font-bold text-on-surface">${r.ref}</td>
+        <td class="py-3 px-3 font-semibold text-primary-container">${r.type}</td>
+        <td class="py-3 px-3">${r.donor}</td>
+        <td class="py-3 px-3 font-medium text-on-surface">${r.shelter}</td>
+        <td class="py-3 px-3 font-bold text-on-surface">${r.amount}</td>
+        <td class="py-3 px-3 text-outline">${r.proof}</td>
+        <td class="py-3 px-3 text-right">
+          <button onclick="window.generate80GReceipt()" class="text-xs text-primary-container font-semibold hover:underline">Download PDF</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function exportAuditLedgerCSV() {
+    const csvContent = "data:text/csv;charset=utf-8,Reference,Type,Donor,Shelter,Amount,Verification,Status\n"
+      + "AUD-8821,Food Rescue,ABC Restaurant,Hope Shelter,20 kg,QR Verified,Delivered\n"
+      + "AUD-8822,Physical Goods,Reception Bay,Hope Shelter,35 items,Condition Inspected,Completed\n"
+      + "AUD-8823,Medicines,City Stockists,Care Health Clinic,50 units,Batch Sealed,Regulated Transfer\n"
+      + "AUD-8824,Monetary Gift,Anonymous Donor,Hope Shelter,INR 5000,HMAC Webhook,Settled";
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `surplus_to_shelter_audit_ledger_${Date.now()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    checkAdminAuth();
+    refreshAdminData();
+  });
+</script>
+
+<script src="/js/motion.js"></script>
+<script src="/js/tutorial.js"></script>
+<script src="/js/new-user-cleaner.js"></script>
+</body>
+</html>

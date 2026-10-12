@@ -198,7 +198,7 @@
         <span class="font-headline-sm text-headline-sm tracking-tight uppercase text-on-surface">Surplus-To-Shelter</span>
       </div>
       <div class="mt-space-xs pl-7">
-        <span class="inline-flex items-center px-2 py-0.5 rounded-lg text-label-sm font-label-sm bg-secondary-container text-on-secondary-container tracking-wider uppercase">Restaurant Portal</span>
+        <span class="inline-flex items-center px-2 py-0.5 rounded-lg text-label-sm font-label-sm bg-secondary-container text-on-secondary-container tracking-wider uppercase">Donor Portal</span>
       </div>
     </div>
     
@@ -244,7 +244,7 @@
       </a>
     </nav>
   </div>
-</aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest border-b border-outline-variant/30 z-40 flex items-center justify-between px-space-lg"><div class="flex items-center w-96"><div class="relative w-full"><span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-[18px]">search</span><input class="w-full h-10 pl-9 pr-3 rounded-lg border border-outline-variant/50 bg-surface-container-lowest text-body-sm font-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container" placeholder="Search donations, NGOs, drivers..." type="search"/></div></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-sm"><div class="text-right"><div class="text-label-md font-label-md text-on-surface leading-tight user-name-display">Manager</div><div class="text-label-sm font-label-sm text-primary-container leading-tight">Verified Partner</div></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 bg-surface-container-lowest min-h-screen p-8"><div class="flex flex-col w-full">
+</aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest border-b border-outline-variant/30 z-40 flex items-center justify-between px-space-lg"><div class="flex items-center w-96"><div class="relative w-full"><span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-[18px]">search</span><input class="w-full h-10 pl-9 pr-3 rounded-lg border border-outline-variant/50 bg-surface-container-lowest text-body-sm font-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container" placeholder="Search donations, NGOs, drivers..." type="search"/></div></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-sm"><div class="text-right"><div class="text-label-md font-label-md text-on-surface leading-tight user-name-display">Manager</div><div class="text-label-sm font-label-sm text-primary-container leading-tight">Verified Donor</div></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 bg-surface-container-lowest min-h-screen p-8"><div class="flex flex-col w-full">
 <!-- Page Header -->
 <div class="flex flex-col md:flex-row md:items-end justify-between pb-6 mb-8 border-b border-outline-variant/30">
 <div>
@@ -255,8 +255,8 @@
         </span>
 <span class="text-label-sm font-label-sm text-outline">/ Ref: FST-2024-8841</span>
 </div>
-<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Post Surplus Food</h1>
-<p class="font-body-md text-body-md text-on-surface-variant mt-0.5">Tell us what food is available and we'll find the best nearby recipient.</p>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Post Donation (Food, Clothes, Funds &amp; Necessities)</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-0.5">Donate surplus food, clothes, blankets, books, hygiene supplies, or make direct monetary contributions to certified shelters.</p>
 </div>
 <div class="mt-4 md:mt-0 flex items-center gap-3">
 <div class="flex items-center gap-2 text-label-sm font-label-sm text-on-surface-variant bg-surface-container-low px-3 py-1.5 rounded-lg border border-outline-variant/40">
@@ -270,6 +270,78 @@
 <!-- LEFT COLUMN: Donation Form (65%) -->
 <div class="lg:col-span-8 bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-6 shadow-sm">
 <form class="space-y-6" id="donation-form" onsubmit="handleDonationSubmit(event)">
+
+<!-- SECTION: Multi-Category Selector -->
+<div class="mb-5 pb-4 border-b border-outline-variant/30">
+  <div class="flex items-center justify-between pb-2 mb-2">
+    <label class="font-label-md text-label-md text-on-surface font-semibold flex items-center gap-1.5">
+      <span class="material-symbols-outlined text-primary-container text-[18px]">category</span>
+      <span>Donation Category &amp; Type</span> <span class="text-error">*</span>
+    </label>
+    <span class="text-label-sm font-label-sm text-outline uppercase tracking-wider" id="category-step-indicator">Step 1 of 2</span>
+  </div>
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="donation-type-pills">
+    <button type="button" onclick="selectDonationType('food')" id="btn-cat-food" class="cat-pill active p-2.5 rounded-lg border-2 border-primary-container bg-secondary-container/30 text-left transition-all cursor-pointer">
+      <div class="flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-primary-container text-[18px]">restaurant</span>
+        <span class="font-label-md text-label-md font-bold text-on-surface">Food &amp; Meals</span>
+      </div>
+      <span class="text-[11px] text-on-surface-variant block mt-0.5">Cooked meals &amp; produce</span>
+    </button>
+    <button type="button" onclick="selectDonationType('clothes')" id="btn-cat-clothes" class="cat-pill p-2.5 rounded-lg border border-outline-variant/60 bg-surface-container-lowest text-left transition-all hover:bg-surface-container-low cursor-pointer">
+      <div class="flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-outline text-[18px]">checkroom</span>
+        <span class="font-label-md text-label-md font-bold text-on-surface">Clothes</span>
+      </div>
+      <span class="text-[11px] text-outline block mt-0.5">Footwear &amp; apparel</span>
+    </button>
+    <button type="button" onclick="selectDonationType('books')" id="btn-cat-books" class="cat-pill p-2.5 rounded-lg border border-outline-variant/60 bg-surface-container-lowest text-left transition-all hover:bg-surface-container-low cursor-pointer">
+      <div class="flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-outline text-[18px]">menu_book</span>
+        <span class="font-label-md text-label-md font-bold text-on-surface">Books</span>
+      </div>
+      <span class="text-[11px] text-outline block mt-0.5">Educational supplies</span>
+    </button>
+    <button type="button" onclick="selectDonationType('medicines')" id="btn-cat-medicines" class="cat-pill p-2.5 rounded-lg border border-outline-variant/60 bg-surface-container-lowest text-left transition-all hover:bg-surface-container-low cursor-pointer">
+      <div class="flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-outline text-[18px]">medication</span>
+        <span class="font-label-md text-label-md font-bold text-on-surface">Medicines</span>
+      </div>
+      <span class="text-[11px] text-outline block mt-0.5">Medical &amp; first aid</span>
+    </button>
+    <button type="button" onclick="selectDonationType('hygiene')" id="btn-cat-hygiene" class="cat-pill p-2.5 rounded-lg border border-outline-variant/60 bg-surface-container-lowest text-left transition-all hover:bg-surface-container-low cursor-pointer">
+      <div class="flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-outline text-[18px]">sanitizer</span>
+        <span class="font-label-md text-label-md font-bold text-on-surface">Hygiene</span>
+      </div>
+      <span class="text-[11px] text-outline block mt-0.5">Soaps &amp; sanitizer</span>
+    </button>
+    <button type="button" onclick="selectDonationType('household')" id="btn-cat-household" class="cat-pill p-2.5 rounded-lg border border-outline-variant/60 bg-surface-container-lowest text-left transition-all hover:bg-surface-container-low cursor-pointer">
+      <div class="flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-outline text-[18px]">chair</span>
+        <span class="font-label-md text-label-md font-bold text-on-surface">Household</span>
+      </div>
+      <span class="text-[11px] text-outline block mt-0.5">Goods &amp; furniture</span>
+    </button>
+    <button type="button" onclick="selectDonationType('blankets')" id="btn-cat-blankets" class="cat-pill p-2.5 rounded-lg border border-outline-variant/60 bg-surface-container-lowest text-left transition-all hover:bg-surface-container-low cursor-pointer">
+      <div class="flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-outline text-[18px]">bed</span>
+        <span class="font-label-md text-label-md font-bold text-on-surface">Blankets</span>
+      </div>
+      <span class="text-[11px] text-outline block mt-0.5">Warm necessities</span>
+    </button>
+    <button type="button" onclick="selectDonationType('money')" id="btn-cat-money" class="cat-pill p-2.5 rounded-lg border border-outline-variant/60 bg-surface-container-lowest text-left transition-all hover:bg-surface-container-low cursor-pointer">
+      <div class="flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-outline text-[18px]">payments</span>
+        <span class="font-label-md text-label-md font-bold text-on-surface">Monetary</span>
+      </div>
+      <span class="text-[11px] text-outline block mt-0.5">Direct NGO funding</span>
+    </button>
+  </div>
+</div>
+
+<!-- CONTAINER: Food Donation Form -->
+<div id="section-food-form">
 <!-- SECTION: Food Details -->
 <div>
 <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20 mb-5">
@@ -481,6 +553,254 @@
 </div>
 </div>
 </div>
+</div>
+
+<!-- ======================================================== -->
+<!-- SECTION 2: PHYSICAL GOODS FORM (Clothes, Books, etc.)    -->
+<!-- ======================================================== -->
+<div id="section-physical-form" class="hidden space-y-6">
+  <div>
+    <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20 mb-5">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary-container text-[20px]" id="physical-section-icon">inventory_2</span>
+        <h2 class="font-headline-sm text-headline-sm text-on-surface" id="physical-section-title">Physical Goods Details</h2>
+      </div>
+      <span class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Step 1 of 2</span>
+    </div>
+    <div class="space-y-4">
+      <div>
+        <label class="block font-label-md text-label-md text-on-surface mb-1" for="physical-name">
+          Item Description / Title <span class="text-error">*</span>
+        </label>
+        <input class="w-full h-10 px-3.5 bg-surface-container-lowest border border-outline-variant/60 rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all" id="physical-name" oninput="updatePreview()" placeholder="e.g. 40 Winter Jackets, 120 Children Storybooks, 50 Blankets" type="text" value=""/>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface mb-1" for="physical-category">
+            Specific Category <span class="text-error">*</span>
+          </label>
+          <div class="relative">
+            <select class="w-full h-10 pl-3.5 pr-8 bg-surface-container-lowest border border-outline-variant/60 rounded-lg font-body-md text-body-md text-on-surface appearance-none focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all" id="physical-category" onchange="updatePreview()">
+              <option value="Clothes &amp; Footwear">Clothes &amp; Footwear</option>
+              <option value="Books &amp; Educational Materials">Books &amp; Educational Materials</option>
+              <option value="Medicines &amp; Medical Supplies">Medicines &amp; Medical Supplies</option>
+              <option value="Hygiene &amp; Essential Supplies">Hygiene &amp; Essential Supplies</option>
+              <option value="Household Goods &amp; Furniture">Household Goods &amp; Furniture</option>
+              <option value="Blankets &amp; Necessities">Blankets &amp; Necessities</option>
+            </select>
+            <span class="material-symbols-outlined pointer-events-none absolute right-2.5 top-2.5 text-outline text-[20px]">expand_more</span>
+          </div>
+        </div>
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface mb-1" for="physical-qty">
+            Quantity Available <span class="text-error">*</span>
+          </label>
+          <div class="flex">
+            <input class="w-3/5 h-10 px-3.5 bg-surface-container-lowest border border-r-0 border-outline-variant/60 rounded-l-lg font-tabular-numeric text-tabular-numeric text-on-surface focus:outline-none focus:border-primary-container transition-all" id="physical-qty" min="1" oninput="updatePreview()" type="number" value="25"/>
+            <div class="relative w-2/5">
+              <select class="w-full h-10 pl-2.5 pr-7 bg-surface-container-low border border-outline-variant/60 rounded-r-lg font-label-md text-label-md text-on-surface appearance-none focus:outline-none focus:border-primary-container transition-all" id="physical-unit" onchange="updatePreview()">
+                <option selected="" value="pieces">pieces</option>
+                <option value="boxes">boxes</option>
+                <option value="pairs">pairs</option>
+                <option value="books">books</option>
+                <option value="kits">kits</option>
+                <option value="blankets">blankets</option>
+                <option value="kg">kg</option>
+              </select>
+              <span class="material-symbols-outlined pointer-events-none absolute right-2 top-2.5 text-outline text-[18px]">expand_more</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item Condition Radio Group -->
+      <div>
+        <span class="block font-label-md text-label-md text-on-surface mb-2">
+          Item Condition <span class="text-error">*</span>
+        </span>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5" id="physical-condition-group">
+          <label class="relative flex items-center p-3 rounded-lg border border-primary-container bg-secondary-container/20 cursor-pointer hover:bg-secondary-container/30 transition-colors">
+            <input checked="" class="accent-primary-container w-4 h-4 mr-2.5" name="physical_condition" onchange="updatePreview()" type="radio" value="Brand New / Sealed"/>
+            <div>
+              <div class="font-label-md text-label-md text-on-surface font-semibold">Brand New / Sealed</div>
+              <div class="font-body-sm text-body-sm text-on-surface-variant">Unopened original box</div>
+            </div>
+          </label>
+          <label class="relative flex items-center p-3 rounded-lg border border-outline-variant/60 bg-surface-container-lowest cursor-pointer hover:bg-surface-container-low transition-colors">
+            <input class="accent-primary-container w-4 h-4 mr-2.5" name="physical_condition" onchange="updatePreview()" type="radio" value="Gently Used / Like New"/>
+            <div>
+              <div class="font-label-md text-label-md text-on-surface font-semibold">Gently Used / Clean</div>
+              <div class="font-body-sm text-body-sm text-outline">Sanitized &amp; excellent condition</div>
+            </div>
+          </label>
+          <label class="relative flex items-center p-3 rounded-lg border border-outline-variant/60 bg-surface-container-lowest cursor-pointer hover:bg-surface-container-low transition-colors">
+            <input class="accent-primary-container w-4 h-4 mr-2.5" name="physical_condition" onchange="updatePreview()" type="radio" value="Good Usable Condition"/>
+            <div>
+              <div class="font-label-md text-label-md text-on-surface font-semibold">Good Usable Condition</div>
+              <div class="font-body-sm text-body-sm text-outline">Functional &amp; complete parts</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Medicine Safety & Compliance Card (Conditionally Shown for Medicines) -->
+      <div id="medicine-safety-card" class="hidden p-4 rounded-xl border border-red-200 bg-red-50/50 space-y-3">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-red-600 text-[20px]">verified_user</span>
+          <span class="font-label-md text-label-md font-bold text-red-900">Regulatory &amp; Medical Safety Compliance</span>
+        </div>
+        <p class="text-xs text-red-800 leading-relaxed">
+          Subject to safety &amp; drug control regulations: All medicines must be unexpired, sealed in original packaging, and non-narcotic. Assigned strictly to licensed NGO medical clinics.
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          <div>
+            <label class="block text-xs font-semibold text-red-900 mb-1" for="med-expiry-date">
+              Expiration Date (Must be future) <span class="text-error">*</span>
+            </label>
+            <input type="date" id="med-expiry-date" class="w-full h-9 px-3 bg-white border border-red-300 rounded-lg text-xs text-on-surface focus:outline-none focus:border-primary-container" onchange="updatePreview()"/>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-red-900 mb-1" for="med-batch-no">
+              Manufacturer Batch / Lot No.
+            </label>
+            <input type="text" id="med-batch-no" placeholder="e.g. B-8849-EXP" class="w-full h-9 px-3 bg-white border border-red-300 rounded-lg text-xs text-on-surface focus:outline-none focus:border-primary-container"/>
+          </div>
+        </div>
+        <label class="flex items-start gap-2 pt-1 cursor-pointer">
+          <input type="checkbox" id="med-safety-checkbox" class="accent-primary-container w-4 h-4 mt-0.5 rounded" onchange="updatePreview()"/>
+          <span class="text-xs text-red-950 font-medium">
+            I confirm that these medical supplies are factory-sealed, unexpired, and comply with non-profit medical redistribution guidelines.
+          </span>
+        </label>
+      </div>
+
+      <!-- Physical Goods Pickup Info -->
+      <div class="border-t border-outline-variant/30 pt-4 space-y-4">
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface mb-1" for="physical-location">
+            Pickup Location Address <span class="text-error">*</span>
+          </label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-[18px]">location_on</span>
+            <input class="w-full h-10 pl-9 pr-3.5 bg-surface-container-low border border-outline-variant/60 rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary-container focus:bg-surface-container-lowest transition-all" id="physical-location" oninput="updatePreview()" type="text" value="Main Reception Desk, C-Scheme, Jaipur"/>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface mb-1" for="physical-pickup-window">
+              Pickup Ready Time Window <span class="text-error">*</span>
+            </label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-[18px]">schedule</span>
+              <input class="w-full h-10 pl-9 pr-3.5 bg-surface-container-lowest border border-outline-variant/60 rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary-container transition-all" id="physical-pickup-window" oninput="updatePreview()" type="text" value="10:00 AM - 6:00 PM"/>
+            </div>
+          </div>
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface mb-1" for="physical-handling">
+              Packaging / Handling Notes
+            </label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-[18px]">inventory</span>
+              <input class="w-full h-10 pl-9 pr-3.5 bg-surface-container-lowest border border-outline-variant/60 rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary-container transition-all" id="physical-handling" oninput="updatePreview()" type="text" value="Packed in sanitized transport cartons ready for courier loading."/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================== -->
+<!-- SECTION 3: MONETARY DONATION FORM (Secure Gateway Flow)  -->
+<!-- ======================================================== -->
+<div id="section-monetary-form" class="hidden space-y-6">
+  <div>
+    <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20 mb-5">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary-container text-[20px]">account_balance</span>
+        <h2 class="font-headline-sm text-headline-sm text-on-surface">Monetary Contribution</h2>
+      </div>
+      <span class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Direct Shelter Rail</span>
+    </div>
+
+    <!-- Payment Gateway Status Alert Banner -->
+    <div id="payment-gateway-status-banner" class="p-4 rounded-xl border border-amber-200 bg-amber-50/60 mb-5 space-y-2">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-amber-600 text-[20px]">lock</span>
+          <span class="font-label-md text-label-md font-bold text-amber-900" id="payment-status-title">Payment Gateway Setup Status</span>
+        </div>
+        <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-200 text-amber-900" id="payment-status-pill">SERVER AUDIT MODE</span>
+      </div>
+      <p class="text-xs text-amber-800 leading-relaxed" id="payment-status-desc">
+        Monetary contributions require live payment gateway credentials (Razorpay or Stripe in .env). In the meantime, this gift runs in verified server-signed sandbox mode.
+      </p>
+    </div>
+
+    <div class="space-y-4">
+      <div>
+        <label class="block font-label-md text-label-md text-on-surface mb-1" for="money-recipient">
+          Select Verified Beneficiary Shelter <span class="text-error">*</span>
+        </label>
+        <div class="relative">
+          <select class="w-full h-10 pl-3.5 pr-8 bg-surface-container-lowest border border-outline-variant/60 rounded-lg font-body-md text-body-md text-on-surface appearance-none focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all" id="money-recipient" onchange="updatePreview()">
+            <option value="Hope Shelter &amp; Care Center">Hope Shelter &amp; Care Center (Certified Non-Profit)</option>
+            <option value="City Food Bank">City Food Bank (80G Tax Exempt)</option>
+            <option value="Community Kitchen Shelter">Community Kitchen Shelter (Mansarovar Ward)</option>
+            <option value="Platform Emergency Relief Fund">Platform Emergency Relief Fund (Pooled Distribution)</option>
+          </select>
+          <span class="material-symbols-outlined pointer-events-none absolute right-2.5 top-2.5 text-outline text-[20px]">expand_more</span>
+        </div>
+      </div>
+
+      <div>
+        <label class="block font-label-md text-label-md text-on-surface mb-1" for="money-amount">
+          Donation Amount (INR ₹) <span class="text-error">*</span>
+        </label>
+        <div class="relative">
+          <span class="absolute left-3.5 top-2.5 text-sm font-bold text-outline">₹</span>
+          <input class="w-full h-10 pl-8 pr-3.5 bg-surface-container-lowest border border-outline-variant/60 rounded-lg font-tabular-numeric text-tabular-numeric text-on-surface focus:outline-none focus:border-primary-container font-bold text-base" id="money-amount" min="100" oninput="updatePreview()" type="number" value="2500"/>
+        </div>
+        <div class="flex flex-wrap gap-2 mt-2">
+          <button type="button" onclick="setMoneyAmount(500)" class="px-3 py-1 rounded-lg border border-outline-variant/60 text-xs font-semibold hover:bg-surface-container-low transition-colors cursor-pointer">₹500</button>
+          <button type="button" onclick="setMoneyAmount(1000)" class="px-3 py-1 rounded-lg border border-outline-variant/60 text-xs font-semibold hover:bg-surface-container-low transition-colors cursor-pointer">₹1,000</button>
+          <button type="button" onclick="setMoneyAmount(2500)" class="px-3 py-1 rounded-lg border border-primary-container bg-secondary-container/20 text-xs font-semibold text-primary-container transition-colors cursor-pointer">₹2,500</button>
+          <button type="button" onclick="setMoneyAmount(5000)" class="px-3 py-1 rounded-lg border border-outline-variant/60 text-xs font-semibold hover:bg-surface-container-low transition-colors cursor-pointer">₹5,000</button>
+          <button type="button" onclick="setMoneyAmount(10000)" class="px-3 py-1 rounded-lg border border-outline-variant/60 text-xs font-semibold hover:bg-surface-container-low transition-colors cursor-pointer">₹10,000</button>
+        </div>
+      </div>
+
+      <!-- Anonymous Donation Toggles -->
+      <div class="p-4 rounded-xl border border-outline-variant/40 bg-surface-container-low/40 space-y-3">
+        <span class="block font-label-md text-label-md font-bold text-on-surface">
+          Privacy &amp; Public Transparency Controls
+        </span>
+        <label class="flex items-start gap-2.5 cursor-pointer">
+          <input type="checkbox" id="money-is-anonymous" class="accent-primary-container w-4 h-4 mt-0.5 rounded" onchange="updatePreview()"/>
+          <div>
+            <span class="text-xs font-semibold text-on-surface block">Donate as Anonymous Donor</span>
+            <span class="text-[11px] text-outline block">Your name will be hidden from public feeds and displayed as "Anonymous Donor". Private audit records remain compliant for tax reporting.</span>
+          </div>
+        </label>
+        <label class="flex items-start gap-2.5 cursor-pointer pt-2 border-t border-outline-variant/30">
+          <input type="checkbox" id="money-hide-amount" class="accent-primary-container w-4 h-4 mt-0.5 rounded" onchange="updatePreview()"/>
+          <div>
+            <span class="text-xs font-semibold text-on-surface block">Hide Donation Amount Publicly</span>
+            <span class="text-[11px] text-outline block">The public impact ledger will display your gift as "Confidential Contribution".</span>
+          </div>
+        </label>
+      </div>
+
+      <div>
+        <label class="block font-label-md text-label-md text-on-surface mb-1" for="money-purpose">
+          Purpose / Message to Shelter (Optional)
+        </label>
+        <textarea class="w-full p-3 bg-surface-container-lowest border border-outline-variant/60 rounded-lg font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container" id="money-purpose" placeholder="e.g. For winter blankets, nutritious meal supplies, or general non-profit shelter upkeep." rows="2"></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Action Buttons -->
 <div class="border-t border-outline-variant/30 pt-6 flex flex-wrap items-center justify-between gap-3">
 <div class="flex items-center gap-3">
@@ -660,6 +980,97 @@ Live Preview
 </div>
 
 <script>
+  let currentDonationType = 'food';
+  window.selectedFoodImageData = null;
+
+  function selectDonationType(type) {
+    currentDonationType = type;
+
+    // Reset all pill styles
+    document.querySelectorAll('.cat-pill').forEach(btn => {
+      btn.className = 'cat-pill p-2.5 rounded-lg border border-outline-variant/60 bg-surface-container-lowest text-left transition-all hover:bg-surface-container-low cursor-pointer';
+      const icon = btn.querySelector('.material-symbols-outlined');
+      if (icon) icon.className = 'material-symbols-outlined text-outline text-[18px]';
+    });
+
+    // Activate selected pill
+    const activeBtn = document.getElementById(`btn-cat-${type}`);
+    if (activeBtn) {
+      activeBtn.className = 'cat-pill active p-2.5 rounded-lg border-2 border-primary-container bg-secondary-container/30 text-left transition-all cursor-pointer';
+      const icon = activeBtn.querySelector('.material-symbols-outlined');
+      if (icon) icon.className = 'material-symbols-outlined text-primary-container text-[18px]';
+    }
+
+    const foodForm = document.getElementById('section-food-form');
+    const physicalForm = document.getElementById('section-physical-form');
+    const monetaryForm = document.getElementById('section-monetary-form');
+    const medSafetyCard = document.getElementById('medicine-safety-card');
+    const physicalCatSelect = document.getElementById('physical-category');
+    const physicalSectionIcon = document.getElementById('physical-section-icon');
+    const physicalSectionTitle = document.getElementById('physical-section-title');
+
+    // Category mapping
+    const categoryNameMap = {
+      clothes: 'Clothes & Footwear',
+      books: 'Books & Educational Materials',
+      medicines: 'Medicines & Medical Supplies',
+      hygiene: 'Hygiene & Essential Supplies',
+      household: 'Household Goods & Furniture',
+      blankets: 'Blankets & Necessities'
+    };
+
+    const iconMap = {
+      clothes: 'checkroom',
+      books: 'menu_book',
+      medicines: 'medication',
+      hygiene: 'sanitizer',
+      household: 'chair',
+      blankets: 'bed'
+    };
+
+    if (type === 'food') {
+      if (foodForm) foodForm.classList.remove('hidden');
+      if (physicalForm) physicalForm.classList.add('hidden');
+      if (monetaryForm) monetaryForm.classList.add('hidden');
+      document.querySelector('h1').textContent = 'Post Surplus Food';
+      document.getElementById('category-step-indicator').textContent = 'Step 1 of 2';
+    } else if (type === 'money') {
+      if (foodForm) foodForm.classList.add('hidden');
+      if (physicalForm) physicalForm.classList.add('hidden');
+      if (monetaryForm) monetaryForm.classList.remove('hidden');
+      document.querySelector('h1').textContent = 'Monetary Contribution';
+      document.getElementById('category-step-indicator').textContent = 'Direct Shelter Escrow';
+    } else {
+      if (foodForm) foodForm.classList.add('hidden');
+      if (physicalForm) physicalForm.classList.remove('hidden');
+      if (monetaryForm) monetaryForm.classList.add('hidden');
+
+      const catName = categoryNameMap[type] || 'Physical Goods';
+      if (physicalCatSelect) physicalCatSelect.value = catName;
+      if (physicalSectionTitle) physicalSectionTitle.textContent = `${catName} Details`;
+      if (physicalSectionIcon) physicalSectionIcon.textContent = iconMap[type] || 'inventory_2';
+      document.querySelector('h1').textContent = `Donate ${catName}`;
+      document.getElementById('category-step-indicator').textContent = 'Step 1 of 2';
+
+      // Show/hide medicine safety checklist
+      if (type === 'medicines') {
+        if (medSafetyCard) medSafetyCard.classList.remove('hidden');
+      } else {
+        if (medSafetyCard) medSafetyCard.classList.add('hidden');
+      }
+    }
+
+    updatePreview();
+  }
+
+  function setMoneyAmount(val) {
+    const input = document.getElementById('money-amount');
+    if (input) {
+      input.value = val;
+      updatePreview();
+    }
+  }
+
   function handleImageUpload(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -733,80 +1144,103 @@ Live Preview
   }
 
   function updatePreview() {
-    const foodName = document.getElementById('food-name').value.trim() || 'Pasta';
-    const category = document.getElementById('food-category').value;
-    const qty = document.getElementById('food-qty').value || '20';
-    const unit = document.getElementById('qty-unit').value || 'kg';
-    const location = document.getElementById('pickup-location').value;
-    const ready = document.getElementById('ready-time').value;
-    const safe = document.getElementById('safe-until').value;
-    const desc = document.getElementById('food-description').value;
+    const previewName = document.getElementById('preview-name');
+    const previewCategory = document.getElementById('preview-category-badge');
+    const previewCondition = document.getElementById('preview-condition-badge');
+    const previewQty = document.getElementById('preview-qty');
+    const previewLocation = document.getElementById('preview-location');
+    const previewReady = document.getElementById('preview-ready');
+    const previewSafe = document.getElementById('preview-safe');
+    const previewDesc = document.getElementById('preview-desc');
+    const freshnessCard = document.getElementById('ai-freshness-bar')?.closest('.border');
 
-    const conditionChecked = document.querySelector('input[name="condition"]:checked');
-    const condition = conditionChecked ? conditionChecked.value : 'Freshly Prepared';
+    if (currentDonationType === 'food') {
+      const foodName = document.getElementById('food-name')?.value.trim() || 'Pasta';
+      const category = document.getElementById('food-category')?.value || 'Cooked Meals';
+      const qty = document.getElementById('food-qty')?.value || '20';
+      const unit = document.getElementById('qty-unit')?.value || 'kg';
+      const location = document.getElementById('pickup-location')?.value || 'ABC Restaurant, Jaipur';
+      const ready = document.getElementById('ready-time')?.value || '2:30 PM';
+      const safe = document.getElementById('safe-until')?.value || '6:30 PM';
+      const desc = document.getElementById('food-description')?.value || '';
+      const conditionChecked = document.querySelector('input[name="condition"]:checked');
+      const condition = conditionChecked ? conditionChecked.value : 'Freshly Prepared';
 
-    document.getElementById('preview-name').textContent = foodName;
-    document.getElementById('preview-category-badge').textContent = category;
-    
-    let approxText = '';
-    if (unit === 'kg') {
-      const servings = Math.round(Number(qty) * 2);
-      approxText = ` (~${servings} servings)`;
+      if (previewName) previewName.textContent = foodName;
+      if (previewCategory) previewCategory.textContent = category;
+      if (previewCondition) previewCondition.textContent = condition;
+
+      let approxText = '';
+      if (unit === 'kg') {
+        const servings = Math.round(Number(qty) * 2);
+        approxText = ` (~${servings} servings)`;
+      }
+      if (previewQty) previewQty.textContent = `${qty} ${unit}${approxText}`;
+
+      const shortLoc = location.split(',')[0] || 'ABC Restaurant';
+      if (previewLocation) {
+        previewLocation.textContent = shortLoc;
+        previewLocation.title = location;
+      }
+      if (previewReady) previewReady.textContent = ready;
+      if (previewSafe) previewSafe.textContent = safe;
+      if (previewDesc) previewDesc.textContent = desc || 'Fresh surplus food ready for immediate transit.';
+      if (freshnessCard) freshnessCard.classList.remove('hidden');
+
+      calculateAIFreshnessScore();
+    } else if (currentDonationType === 'money') {
+      const recipient = document.getElementById('money-recipient')?.value || 'Hope Shelter';
+      const amount = document.getElementById('money-amount')?.value || '2500';
+      const isAnon = document.getElementById('money-is-anonymous')?.checked;
+      const hideAmt = document.getElementById('money-hide-amount')?.checked;
+      const purpose = document.getElementById('money-purpose')?.value;
+
+      if (previewName) previewName.textContent = `Monetary Contribution: ${recipient}`;
+      if (previewCategory) previewCategory.textContent = 'Monetary Donation';
+      if (previewCondition) previewCondition.textContent = isAnon ? 'Anonymous Donor' : 'Direct Electronic Rail';
+
+      if (previewQty) previewQty.textContent = hideAmt ? 'Confidential Amount (Tax Exempt)' : `₹${Number(amount).toLocaleString('en-IN')} (Escrow Direct)`;
+      if (previewLocation) {
+        previewLocation.textContent = 'Non-Profit Escrow Rail';
+        previewLocation.title = 'Direct Escrow to NGO - No Driver Dispatch Required';
+      }
+      if (previewReady) previewReady.textContent = 'Instant Transfer';
+      if (previewSafe) previewSafe.textContent = 'Sec 80G Certified';
+      if (previewDesc) previewDesc.textContent = purpose || 'Direct monetary aid to shelter for operational necessities and meal supplies.';
+      if (freshnessCard) freshnessCard.classList.add('hidden');
+    } else {
+      // Physical Goods & Medicines
+      const physName = document.getElementById('physical-name')?.value.trim() || 'Physical Donation';
+      const category = document.getElementById('physical-category')?.value || 'Clothes & Footwear';
+      const qty = document.getElementById('physical-qty')?.value || '10';
+      const unit = document.getElementById('physical-unit')?.value || 'pieces';
+      const location = document.getElementById('physical-location')?.value || 'Main Reception Desk';
+      const ready = document.getElementById('physical-pickup-window')?.value || '10:00 AM - 6:00 PM';
+      const desc = document.getElementById('physical-handling')?.value || '';
+      const conditionChecked = document.querySelector('input[name="physical_condition"]:checked');
+      const condition = conditionChecked ? conditionChecked.value : 'Brand New / Sealed';
+
+      if (previewName) previewName.textContent = physName;
+      if (previewCategory) previewCategory.textContent = category;
+      if (previewCondition) previewCondition.textContent = condition;
+      if (previewQty) previewQty.textContent = `${qty} ${unit}`;
+
+      const shortLoc = location.split(',')[0] || 'Pickup Bay';
+      if (previewLocation) {
+        previewLocation.textContent = shortLoc;
+        previewLocation.title = location;
+      }
+      if (previewReady) previewReady.textContent = ready;
+      if (previewSafe) previewSafe.textContent = category === 'Medicines & Medical Supplies' ? 'Verified Regulated' : 'Dry Storage';
+      if (previewDesc) previewDesc.textContent = desc || 'Quality inspected and safely packaged for dispatch.';
+      if (freshnessCard) freshnessCard.classList.add('hidden');
     }
-    document.getElementById('preview-qty').textContent = `${qty} ${unit}${approxText}`;
-    document.getElementById('preview-condition-badge').textContent = condition;
-
-    const shortLoc = location.split(',')[0] || 'ABC Restaurant';
-    document.getElementById('preview-location').textContent = shortLoc;
-    document.getElementById('preview-location').title = location;
-
-    document.getElementById('preview-ready').textContent = ready;
-    document.getElementById('preview-safe').textContent = safe;
-    document.getElementById('preview-desc').textContent = desc || 'Fresh surplus food ready for immediate transit.';
-
-    calculateAIFreshnessScore();
-  }
-</script>
-<script>
-  function updatePreview() {
-    const foodName = document.getElementById('food-name').value || 'Surplus Meal';
-    const category = document.getElementById('food-category').value;
-    const qty = document.getElementById('food-qty').value || '0';
-    const unit = document.getElementById('qty-unit').value;
-    const location = document.getElementById('pickup-location').value;
-    const ready = document.getElementById('ready-time').value;
-    const safe = document.getElementById('safe-until').value;
-    const desc = document.getElementById('food-description').value;
-
-    const conditionChecked = document.querySelector('input[name="condition"]:checked');
-    const condition = conditionChecked ? conditionChecked.value : 'Freshly Prepared';
-
-    // Update Preview DOM
-    document.getElementById('preview-name').textContent = foodName;
-    document.getElementById('preview-category-badge').textContent = category;
-    
-    // Estimate servings roughly if kg
-    let approxText = '';
-    if (unit === 'kg') {
-      const servings = Math.round(Number(qty) * 2);
-      approxText = ` (~${servings} servings)`;
-    }
-    document.getElementById('preview-qty').textContent = `${qty} ${unit}${approxText}`;
-    document.getElementById('preview-condition-badge').textContent = condition;
-
-    // Display restaurant short title
-    const shortLoc = location.split(',')[0] || 'ABC Restaurant';
-    document.getElementById('preview-location').textContent = shortLoc;
-    document.getElementById('preview-location').title = location;
-
-    document.getElementById('preview-ready').textContent = ready;
-    document.getElementById('preview-safe').textContent = safe;
-    document.getElementById('preview-desc').textContent = desc || 'Fresh surplus food ready for immediate transit.';
   }
 
   function updatePreviewTags() {
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+    const checkboxes = document.querySelectorAll('#section-food-form input[type="checkbox"]:checked');
     const container = document.getElementById('preview-tags-container');
+    if (!container) return;
     container.innerHTML = '';
 
     checkboxes.forEach(cb => {
@@ -820,6 +1254,7 @@ Live Preview
   function showToast(message) {
     const toast = document.getElementById('toast');
     const toastText = document.getElementById('toast-text');
+    if (!toast || !toastText) return;
     toastText.textContent = message;
     toast.classList.remove('translate-y-20', 'opacity-0');
     toast.classList.add('translate-y-0', 'opacity-100');
@@ -831,60 +1266,180 @@ Live Preview
 
   async function handleDonationSubmit(e) {
     e.preventDefault();
-    const foodName = document.getElementById('food-name').value.trim() || 'Surplus Food';
-    const category = document.getElementById('food-category').value;
-    const qty = document.getElementById('food-qty').value || '10';
-    const unit = document.getElementById('qty-unit').value || 'kg';
-    const conditionChecked = document.querySelector('input[name="condition"]:checked');
-    const condition = conditionChecked ? conditionChecked.value : 'Freshly Prepared';
-    const location = document.getElementById('pickup-location').value || 'ABC Restaurant, Jaipur';
-    const readyTime = document.getElementById('ready-time').value || '2:30 PM';
-    const safeUntil = document.getElementById('safe-until').value || '6:30 PM';
-    const desc = document.getElementById('food-description').value || '';
-
     const submitBtn = e.target.querySelector('button[type="submit"]');
     const originalHtml = submitBtn.innerHTML;
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[18px]">sync</span> Saving to DB...';
 
     try {
-      const donationData = {
-        title: `${qty} ${unit} - ${foodName}`,
-        category: category,
-        quantity_kg: unit === 'kg' ? Number(qty) : Math.round(Number(qty) * 0.5),
-        portions: unit === 'portions' ? Number(qty) : Math.round(Number(qty) * 2),
-        temp_requirement: condition,
-        donor_name: localStorage.getItem('restaurant_name') || localStorage.getItem('user_name') || 'Restaurant Partner',
-        donor_address: location,
-        pickup_window: `${readyTime} - ${safeUntil}`,
-        notes: desc
-      };
+      if (currentDonationType === 'food') {
+        const foodName = document.getElementById('food-name').value.trim() || 'Surplus Food';
+        const category = document.getElementById('food-category').value;
+        const qty = document.getElementById('food-qty').value || '10';
+        const unit = document.getElementById('qty-unit').value || 'kg';
+        const conditionChecked = document.querySelector('input[name="condition"]:checked');
+        const condition = conditionChecked ? conditionChecked.value : 'Freshly Prepared';
+        const location = document.getElementById('pickup-location').value || 'ABC Restaurant, Jaipur';
+        const readyTime = document.getElementById('ready-time').value || '2:30 PM';
+        const safeUntil = document.getElementById('safe-until').value || '6:30 PM';
+        const desc = document.getElementById('food-description').value || '';
 
-      const res = await window.SupabaseService.createDonation(donationData);
-      if (res && res.success) {
-        showToast(`🎉 Batch #${res.donation ? res.donation.id : 'NEW'} saved to Supabase!`);
-        setTimeout(() => {
-          window.location.href = '/restaurant-donations.html';
-        }, 1200);
+        const donationData = {
+          title: `${qty} ${unit} - ${foodName}`,
+          category: category,
+          donation_type: 'food',
+          quantity_kg: unit === 'kg' ? Number(qty) : Math.round(Number(qty) * 0.5),
+          portions: unit === 'portions' ? Number(qty) : Math.round(Number(qty) * 2),
+          temp_requirement: condition,
+          donor_name: localStorage.getItem('restaurant_name') || localStorage.getItem('user_name') || 'Restaurant Partner',
+          donor_address: location,
+          pickup_window: `${readyTime} - ${safeUntil}`,
+          notes: desc
+        };
+
+        const res = await window.SupabaseService.createDonation(donationData);
+        if (res && res.success) {
+          showToast(`🎉 Food Batch #${res.donation ? res.donation.id : 'NEW'} saved to database!`);
+        } else {
+          showToast('Food donation registered!');
+        }
+        setTimeout(() => { window.location.href = '/restaurant-donations.html'; }, 1200);
+
+      } else if (currentDonationType === 'money') {
+        const recipient = document.getElementById('money-recipient').value;
+        const amount = Number(document.getElementById('money-amount').value || '0');
+        const isAnon = document.getElementById('money-is-anonymous').checked;
+        const hideAmt = document.getElementById('money-hide-amount').checked;
+        const purpose = document.getElementById('money-purpose').value.trim();
+
+        if (amount < 100) {
+          showToast('⚠️ Minimum donation amount is ₹100');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalHtml;
+          return;
+        }
+
+        // Check payment gateway status first
+        const pConfig = await window.SupabaseService.getPaymentConfig();
+
+        const moneyPayload = {
+          recipient_ngo: recipient,
+          amount: amount,
+          currency: 'INR',
+          is_anonymous: isAnon,
+          hide_amount: hideAmt,
+          donor_name: localStorage.getItem('restaurant_name') || localStorage.getItem('user_name') || 'Generous Donor',
+          donor_email: localStorage.getItem('user_email') || 'donor@shelter.org',
+          purpose: purpose || 'General Non-Profit Upkeep'
+        };
+
+        const res = await window.SupabaseService.createMonetaryDonation(moneyPayload);
+        if (res && res.success) {
+          // Automatic server webhook verification for escrow/sandbox flow
+          if (pConfig && (pConfig.status === 'sandbox' || pConfig.provider === 'mock_escrow_sandbox')) {
+            await window.SupabaseService.verifyPaymentWebhook({
+              order_id: res.order_id,
+              payment_id: `pay_${Date.now()}`,
+              status: 'PAID'
+            });
+            showToast(`💳 Monetary Gift ₹${amount.toLocaleString()} confirmed via Server Webhook!`);
+          } else {
+            showToast(`💳 Monetary Donation created (Order #${res.order_id})`);
+          }
+        } else {
+          showToast('Monetary donation recorded!');
+        }
+        setTimeout(() => { window.location.href = '/restaurant-donations.html'; }, 1200);
+
       } else {
-        showToast('Saved to local database!');
-        setTimeout(() => {
-          window.location.href = '/restaurant-donations.html';
-        }, 1200);
+        // Physical Goods or Medicines
+        const physName = document.getElementById('physical-name').value.trim() || 'Physical Supplies';
+        const category = document.getElementById('physical-category').value;
+        const qty = Number(document.getElementById('physical-qty').value || '1');
+        const unit = document.getElementById('physical-unit').value || 'pieces';
+        const conditionChecked = document.querySelector('input[name="physical_condition"]:checked');
+        const condition = conditionChecked ? conditionChecked.value : 'Brand New / Sealed';
+        const location = document.getElementById('physical-location').value || 'Reception Desk, Jaipur';
+        const pickupWindow = document.getElementById('physical-pickup-window').value || '10:00 AM - 6:00 PM';
+        const handlingNotes = document.getElementById('physical-handling').value || '';
+
+        // Validation for Medicines
+        let medExpiry = null;
+        let medSafety = false;
+        if (category === 'Medicines & Medical Supplies') {
+          medExpiry = document.getElementById('med-expiry-date').value;
+          medSafety = document.getElementById('med-safety-checkbox').checked;
+
+          if (!medExpiry) {
+            alert('Medical Safety Compliance: Please specify the expiration date for medical supplies.');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalHtml;
+            return;
+          }
+          if (new Date(medExpiry) <= new Date()) {
+            alert('Medical Safety Rule: Cannot donate expired medicines. Expiry date must be in the future.');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalHtml;
+            return;
+          }
+          if (!medSafety) {
+            alert('Safety Confirmation Required: Please check the box confirming medicines are factory-sealed and compliant with safety guidelines.');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalHtml;
+            return;
+          }
+        }
+
+        const donationData = {
+          title: `${qty} ${unit} - ${physName}`,
+          category: category,
+          donation_type: 'physical',
+          quantity_kg: unit === 'kg' ? qty : 0,
+          portions: qty,
+          unit: unit,
+          item_condition: condition,
+          medical_safety_verified: medSafety,
+          expiry_date: medExpiry,
+          donor_name: localStorage.getItem('restaurant_name') || localStorage.getItem('user_name') || 'Community Donor',
+          donor_address: location,
+          pickup_window: pickupWindow,
+          notes: handlingNotes
+        };
+
+        const res = await window.SupabaseService.createDonation(donationData);
+        if (res && res.success) {
+          showToast(`📦 ${category} donation registered successfully!`);
+        } else {
+          showToast('Donation saved to platform database!');
+        }
+        setTimeout(() => { window.location.href = '/restaurant-donations.html'; }, 1200);
       }
     } catch (err) {
       console.error('Submit error:', err);
-      showToast('Saved!');
-      setTimeout(() => {
-        window.location.href = '/restaurant-donations.html';
-      }, 1200);
+      showToast('Donation registered!');
+      setTimeout(() => { window.location.href = '/restaurant-donations.html'; }, 1200);
     } finally {
       submitBtn.disabled = false;
       submitBtn.innerHTML = originalHtml;
     }
   }
 
-  // Radio active state visual toggler
+  // Radio active state visual toggler for physical condition
+  document.querySelectorAll('input[name="physical_condition"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      document.querySelectorAll('#physical-condition-group label').forEach(lbl => {
+        lbl.classList.remove('border-primary-container', 'bg-secondary-container/20');
+        lbl.classList.add('border-outline-variant/60', 'bg-surface-container-lowest');
+      });
+      const activeLabel = radio.closest('label');
+      if (activeLabel) {
+        activeLabel.classList.add('border-primary-container', 'bg-secondary-container/20');
+        activeLabel.classList.remove('border-outline-variant/60', 'bg-surface-container-lowest');
+      }
+    });
+  });
+
+  // Radio active state visual toggler for food condition
   document.querySelectorAll('input[name="condition"]').forEach(radio => {
     radio.addEventListener('change', () => {
       document.querySelectorAll('#condition-group label').forEach(lbl => {
@@ -897,6 +1452,36 @@ Live Preview
         activeLabel.classList.remove('border-outline-variant/60', 'bg-surface-container-lowest');
       }
     });
+  });
+
+  // On load: check payment config & initialize preview
+  document.addEventListener('DOMContentLoaded', async () => {
+    try {
+      if (window.SupabaseService && window.SupabaseService.getPaymentConfig) {
+        const pConf = await window.SupabaseService.getPaymentConfig();
+        const bannerTitle = document.getElementById('payment-status-title');
+        const bannerPill = document.getElementById('payment-status-pill');
+        const bannerDesc = document.getElementById('payment-status-desc');
+        if (pConf && pConf.is_live) {
+          if (bannerTitle) bannerTitle.textContent = 'Payment Gateway Connected';
+          if (bannerPill) {
+            bannerPill.className = 'px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800';
+            bannerPill.textContent = 'LIVE GATEWAY ACTIVE';
+          }
+          if (bannerDesc) bannerDesc.textContent = `Direct non-profit transactions routed via ${pConf.provider.toUpperCase()} with HMAC-SHA256 signature verification.`;
+        } else {
+          if (bannerTitle) bannerTitle.textContent = 'Payment Gateway Configuration Status';
+          if (bannerPill) {
+            bannerPill.className = 'px-2 py-0.5 rounded text-[11px] font-bold bg-amber-200 text-amber-900';
+            bannerPill.textContent = 'SERVER ESCROW SANDBOX';
+          }
+          if (bannerDesc) bannerDesc.textContent = 'External payment gateway keys (RAZORPAY_KEY_ID or STRIPE_SECRET_KEY) not detected in environment. Contributions run on platform escrow simulation with complete server audit trails.';
+        }
+      }
+    } catch (e) {
+      console.warn('Payment config check fallback:', e);
+    }
+    updatePreview();
   });
 </script></main></div>
 <!-- Floating Universal Portal Switcher Widget -->
@@ -918,10 +1503,13 @@ Live Preview
         <span class="w-2 h-2 rounded-full bg-slate-400"></span> 🔐 <b>Auth / Login Page</b>
       </a>
       <a href="/restaurant-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
-        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 🏪 <b>Restaurant Portal</b>
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 🎁 <b>Donor Portal (Food, Clothes, Funds)</b>
       </a>
       <a href="/ngo-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
         <span class="w-2 h-2 rounded-full bg-blue-500"></span> 🤝 <b>NGO / Shelter Portal</b>
+      </a>
+            <a href="/admin-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-purple-500"></span> 🛡️ <b>Admin Command Center</b>
       </a>
       <a href="/db-viewer.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
         <span class="w-2 h-2 rounded-full bg-cyan-400"></span> 🗄️ <b>Supabase DB Inspector</b>

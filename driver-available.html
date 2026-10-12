@@ -59,10 +59,10 @@
   </div>
 </aside><div class="pl-60"><header class="fixed top-0 left-60 right-0 h-16 bg-surface-container-lowest border-b border-outline-variant/40 z-40 flex items-center justify-between px-space-md shadow-[0_1px_8px_rgba(0,0,0,0.02)]"><div class="relative w-full max-w-md"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px] pointer-events-none">search</span><input class="w-full h-10 pl-9 pr-4 rounded-lg bg-surface border border-outline-variant/60 font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search pickups, donors, shelters..." type="text"/></div><div class="flex items-center gap-space-md"><button aria-label="Notifications" class="relative p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error ring-2 ring-surface-container-lowest"></span></button><div class="h-6 w-px bg-outline-variant/40"></div><div class="flex items-center gap-space-sm cursor-pointer group"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="flex items-center gap-1"><span class="font-label-lg text-label-lg text-on-surface group-hover:text-primary transition-colors">Rahul Sharma</span><span class="material-symbols-outlined text-outline text-[18px] group-hover:text-on-surface transition-colors">expand_more</span></div></div><button aria-label="Sign out" class="p-2 rounded-lg text-outline hover:text-error hover:bg-error-container/20 transition-colors ml-space-xs" type="button"><span class="material-symbols-outlined text-[20px]">logout</span></button></div></header><main class="relative pt-16 bg-surface min-h-screen w-full px-space-md lg:px-margin py-space-md lg:py-margin"><div class="flex flex-col w-full pb-16"><div class="flex flex-col w-full">
 <!-- Header & Live Banner -->
-<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-space-sm mb-space-lg">
+<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-space-sm mb-4">
 <div>
 <h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">Available Pickups</h1>
-<p class="font-body-md text-body-md text-on-surface-variant mt-1">Nearby surplus food waiting for rescue. Ranked by urgency and expiry window.</p>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Nearby relief goods & food waiting for courier transport (Food, Clothes, Blankets & Essentials). Ranked by urgency.</p>
 </div>
 <div class="flex items-center gap-space-sm self-start md:self-auto">
 <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-lowest shadow-sm">
@@ -77,6 +77,28 @@
 <span>Refresh Feed</span>
 </button>
 </div>
+</div>
+<!-- Cashless Platform & Physical Goods Only Security Notice -->
+<div class="mb-space-lg p-4 rounded-xl bg-blue-50/90 border border-blue-200 text-blue-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+  <div class="flex items-center gap-3">
+    <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+      <span class="material-symbols-outlined text-[22px]">verified_user</span>
+    </div>
+    <div>
+      <div class="font-label-lg font-bold text-blue-900 flex items-center gap-2">
+        <span>Physical Goods Logistics Only • 100% Cashless</span>
+        <span class="px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 text-[11px] font-bold uppercase">Digital Escrow</span>
+      </div>
+      <div class="font-body-sm text-xs text-blue-800 mt-0.5">
+        Couriers transport physical items (Food, Clothes, Blankets, Hygiene Kits). Monetary donations are transferred digitally directly to NGOs—drivers do not collect or transport cash.
+      </div>
+    </div>
+  </div>
+  <div class="flex items-center gap-2 self-start sm:self-auto shrink-0">
+    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-blue-200 text-blue-700 text-xs font-semibold">
+      <span class="material-symbols-outlined text-[16px] text-emerald-600">check_circle</span> No Cash Handling
+    </span>
+  </div>
 </div>
 <!-- Key Metrics Strip matching dashboard style -->
 <div class="grid grid-cols-2 md:grid-cols-4 gap-space-md mb-space-lg">
@@ -153,11 +175,15 @@
 <div class="relative">
 <select class="appearance-none w-full h-9 pl-3 pr-8 rounded-lg bg-surface font-label-md text-label-md text-on-surface shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer" id="filterType" onchange="applyFilters()">
 <option value="all">All Types</option>
-<option value="cooked">Cooked Meals</option>
-<option value="produce">Fresh Produce</option>
-<option value="bakery">Bakery Items</option>
-<option value="dairy">Dairy Products</option>
-<option value="packaged">Packaged Pantry</option>
+<option value="cooked">Food: Cooked Meals</option>
+<option value="produce">Food: Fresh Produce</option>
+<option value="bakery">Food: Bakery Items</option>
+<option value="clothes">Clothes &amp; Footwear</option>
+<option value="books">Books &amp; Educational</option>
+<option value="medicines">Medicines &amp; First Aid</option>
+<option value="hygiene">Hygiene &amp; Sanitization</option>
+<option value="household">Household &amp; Furniture</option>
+<option value="blankets">Blankets &amp; Bedding</option>
 </select>
 <span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-outline text-[18px] pointer-events-none">arrow_drop_down</span>
 </div>
@@ -717,35 +743,53 @@
       if (!tbody || !list) return;
 
       list.forEach(item => {
+        // Exclude monetary donations from physical driver pickups!
+        if (item.donation_type === 'money' || item.category === 'Monetary' || item.category === 'Monetary Donations') {
+          return;
+        }
+
         const existingRow = document.querySelector(`tr[data-id="${item.id}"]`);
         if (!existingRow) {
           const tr = document.createElement('tr');
           tr.setAttribute('data-id', item.id);
           tr.setAttribute('data-distance', '2.1');
           tr.setAttribute('data-priority', 'urgent');
-          tr.setAttribute('data-qty', item.quantity_kg || 20);
-          tr.setAttribute('data-type', 'cooked');
+          tr.setAttribute('data-qty', item.quantity_kg || item.portions || 20);
+
+          let rowType = 'cooked';
+          let rowIcon = 'restaurant';
+          const cat = item.category || '';
+          if (cat.includes('Clothes')) { rowType = 'clothes'; rowIcon = 'checkroom'; }
+          else if (cat.includes('Books')) { rowType = 'books'; rowIcon = 'menu_book'; }
+          else if (cat.includes('Medicines')) { rowType = 'medicines'; rowIcon = 'medication'; }
+          else if (cat.includes('Hygiene')) { rowType = 'hygiene'; rowIcon = 'sanitizer'; }
+          else if (cat.includes('Household')) { rowType = 'household'; rowIcon = 'chair'; }
+          else if (cat.includes('Blankets')) { rowType = 'blankets'; rowIcon = 'bed'; }
+
+          tr.setAttribute('data-type', rowType);
           tr.className = 'hover:bg-surface-container-low/30 transition-colors group bg-emerald-50/60 border-l-4 border-emerald-600';
+
+          const qtyText = item.quantity_kg ? `${item.quantity_kg} kg (${item.portions || 40} meals)` : `${item.portions || 1} ${item.unit || 'units'}`;
 
           tr.innerHTML = `
             <td class="py-4 px-4 align-middle">
               <div class="flex items-start gap-3">
                 <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
-                  <span class="material-symbols-outlined text-[22px]">restaurant</span>
+                  <span class="material-symbols-outlined text-[22px]">${rowIcon}</span>
                 </div>
                 <div>
                   <span class="font-label-lg text-label-lg text-on-surface block leading-tight font-bold">${item.title}</span>
-                  <span class="font-body-sm text-body-sm text-on-surface-variant block mt-0.5">${item.category || 'Cooked Meals'} • Live Posted</span>
+                  <span class="font-body-sm text-body-sm text-on-surface-variant block mt-0.5">${item.category || 'Surplus Item'} • Live Available</span>
                 </div>
               </div>
             </td>
             <td class="py-4 px-4 align-middle whitespace-nowrap">
               <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-900 font-label-md text-label-md font-bold shadow-sm">
-                ${item.quantity_kg || 20} kg (${item.portions || 40} meals)
+                ${qtyText}
               </span>
             </td>
             <td class="py-4 px-4 align-middle">
-              <span class="font-label-lg text-label-lg text-on-surface block leading-tight font-bold">${item.donor_name || 'Restaurant Donor'}</span>
+              <span class="font-label-lg text-label-lg text-on-surface block leading-tight font-bold">${item.donor_name || 'Donor Partner'}</span>
               <span class="font-body-sm text-body-sm text-outline block mt-0.5">${item.donor_address || 'Jaipur'}</span>
             </td>
             <td class="py-4 px-4 align-middle whitespace-nowrap">
@@ -777,7 +821,7 @@
             </td>
             <td class="py-4 px-4 align-middle text-right whitespace-nowrap">
               <div class="flex items-center justify-end gap-2">
-                <button class="px-3 py-1.5 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md transition-all shadow-sm flex items-center gap-1.5" onclick="openAcceptModal('${item.title}', '${item.quantity_kg || 20} kg', '${item.donor_name}', '${item.donor_address}', 'Hope Shelter', '2.1 km', 'Next 2 Hours')" type="button">
+                <button class="px-3 py-1.5 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md transition-all shadow-sm flex items-center gap-1.5" onclick="openAcceptModal('${item.title}', '${qtyText}', '${item.donor_name}', '${item.donor_address}', 'Hope Shelter', '2.1 km', 'Next 2 Hours')" type="button">
                   <span>Accept Pickup</span>
                   <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
                 </button>
@@ -912,10 +956,13 @@
         <span class="w-2 h-2 rounded-full bg-slate-400"></span> 🔐 <b>Auth / Login Page</b>
       </a>
       <a href="/restaurant-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
-        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 🏪 <b>Restaurant Portal</b>
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 🎁 <b>Donor Portal (Food, Clothes, Funds)</b>
       </a>
       <a href="/ngo-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
         <span class="w-2 h-2 rounded-full bg-blue-500"></span> 🤝 <b>NGO / Shelter Portal</b>
+      </a>
+            <a href="/admin-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-purple-500"></span> 🛡️ <b>Admin Command Center</b>
       </a>
       <a href="/db-viewer.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
         <span class="w-2 h-2 rounded-full bg-cyan-400"></span> 🗄️ <b>Supabase DB Inspector</b>

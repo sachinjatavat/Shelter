@@ -568,5 +568,131 @@ window.SupabaseService = {
     } catch (e) {
       return { success: true, donation: item };
     }
+  },
+
+  // Get Payment Configuration Status
+  async getPaymentConfig() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/payments/config`);
+      return await res.json();
+    } catch (e) {
+      return { configured: false, setup_status: 'PENDING_CONFIGURATION' };
+    }
+  },
+
+  // Create Monetary Donation Intent
+  async createMonetaryDonation(monetaryData) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/donations/monetary`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(monetaryData)
+      });
+      return await res.json();
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  // Verify Server Webhook Payment
+  async verifyPaymentWebhook(payload) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/payments/verify-webhook`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      return await res.json();
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  // NGO Preferences (Categories)
+  async updateNGOPreferences(ngoEmail, acceptedCategories) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/ngo/preferences`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ngo_email: ngoEmail, accepted_categories: acceptedCategories })
+      });
+      return await res.json();
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  // Admin: Get NGOs
+  async getAdminNGOs() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/admin/ngos`);
+      return await res.json();
+    } catch (e) {
+      return { success: true, ngos: [] };
+    }
+  },
+
+  // Admin: Verify NGO
+  async verifyNGO(id, data) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/admin/ngos/${id}/verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      return await res.json();
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  // Admin: Categories
+  async getAdminCategories() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/admin/categories`);
+      return await res.json();
+    } catch (e) {
+      return { success: true, categories: [] };
+    }
+  },
+
+  // Sponsorships & Ads & Subscriptions
+  async getSponsorships() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/sponsorships`);
+      const data = await res.json();
+      return data.sponsorships || [];
+    } catch (e) {
+      return [];
+    }
+  },
+
+  async getAdvertisements() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/advertisements`);
+      const data = await res.json();
+      return data.advertisements || [];
+    } catch (e) {
+      return [];
+    }
+  },
+
+  async getSubscriptions() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/admin/subscriptions`);
+      return await res.json();
+    } catch (e) {
+      return { success: true, packages: [] };
+    }
+  },
+
+  async getAdminReports() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/admin/reports`);
+      return await res.json();
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
   }
 };
+
