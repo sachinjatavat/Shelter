@@ -48,7 +48,7 @@ window.triggerSendDonation = function(btn) {
   }
 
   setTimeout(() => {
-    window.location.href = '/restaurant-pickups.html';
+    window.location.href = './restaurant-pickups.html';
   }, 200);
 };
 
@@ -81,7 +81,7 @@ window.quickDispatchEmergencyRelief = function() {
   }
 
   setTimeout(() => {
-    window.location.href = '/restaurant-pickups.html';
+    window.location.href = './restaurant-pickups.html';
   }, 200);
 };
 
@@ -161,7 +161,7 @@ window.handleSignOut = function() {
   localStorage.removeItem('emergency_crisis_event');
 
   alert('Signed out successfully.');
-  window.location.href = '/index.html';
+  window.location.href = './index.html';
 };
 
 window.syncProfileHeaderUI = function() {
@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.syncProfileHeaderUI();
 
   document.addEventListener('click', (e) => {
-    const logoutTarget = e.target.closest('button[aria-label="Sign out"], button[aria-label="Logout"], .logout-btn, a[href="#logout"], a[href="/index.html"]');
+    const logoutTarget = e.target.closest('button[aria-label="Sign out"], button[aria-label="Logout"], .logout-btn, a[href="#logout"], a[href="./index.html"]');
     if (logoutTarget) {
       const text = logoutTarget.textContent.toLowerCase();
       const aria = (logoutTarget.getAttribute('aria-label') || '').toLowerCase();
