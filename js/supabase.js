@@ -279,10 +279,52 @@ window.SupabaseService = {
     return { success: true, name: cleanName };
   },
 
-  // Get All Donations
-  async getDonations() {
+  // Delete Donation from Supabase, Express API & LocalStorage
+  async deleteDonation(id) {
+    if (!id) return { success: false, error: 'Missing donation ID' };
+
+    try {
+      await fetch(`${API_BASE_URL}/donations/${id}`, { method: 'DELETE' });
+    } catch (e) {}
+
+    const direct = window.SupabaseService.getDirectClient();
+    if (direct) {
+      try {
+        await direct.from('donations').delete().eq('id', id);
+      } catch (err) {}
+    }
+
+    try {
+      const local = getLocalDonations().filter(d => d.id !== id);
+      localStorage.setItem('local_donations', JSON.stringify(local));
+    } catch (e) {}
+
+    return { success: true };
+  },
+
+  // Purge Corrupted or Dummy LocalStorage Test Submissions
+  clearCorruptedLocalData() {
+    try {
+      const list = getLocalDonations();
+      const clean = list.filter(d => {
+        const title = (d.title || '').toLowerCase();
+        if (!d.id || !d.title) return false;
+        if (title.includes('pastgrbvergt') || title.includes('pastaegtg')) return false;
+        if (d.category === 'undefined' || d.category === undefined || !d.category) return false;
+        return true;
+      });
+      localStorage.setItem('local_donations', JSON.stringify(clean));
+      return clean;
+    } catch (e) {
+      return [];
+    }
+  },
+
+  // Get All Donations (Supports remoteOnly flag to bypass dirty local cache)
+  async getDonations(options = {}) {
     const isNewUser = localStorage.getItem('is_new_user') === 'true';
     const userName = localStorage.getItem('user_name');
+    const remoteOnly = options && options.remoteOnly === true;
 
     let apiDonations = [];
     try {
@@ -301,7 +343,19 @@ window.SupabaseService = {
       }
     }
 
-    const localList = getLocalDonations();
+    // If pure database inspection requested, return clean remote database records
+    if (remoteOnly) {
+      return apiDonations.map(d => ({
+        ...d,
+        donation_type: d.donation_type || (['Cooked Meals', 'Bakery', 'Fresh Produce'].includes(d.category) ? 'food' : 'physical'),
+        item_condition: d.item_condition || 'Good',
+        unit: d.unit || (d.donation_type === 'food' ? 'kg' : 'items'),
+        temp_requirement: d.temp_requirement || 'Ambient',
+        expiryInfo: this.getExpiryInfo(d)
+      }));
+    }
+
+    const localList = this.clearCorruptedLocalData();
 
     if (isNewUser && userName) {
       const userDonations = localList.filter(d => 
@@ -325,7 +379,17 @@ window.SupabaseService = {
     const combined = [...apiDonations];
     const existingIds = new Set(apiDonations.map(d => d.id));
 
-    for (const item of localList) {
+    for (const rawItem of localList) {
+      const item = {
+        ...rawItem,
+        donation_type: rawItem.donation_type || (['Cooked Meals', 'Bakery', 'Fresh Produce'].includes(rawItem.category) ? 'food' : 'physical'),
+        item_condition: rawItem.item_condition || 'Good',
+        unit: rawItem.unit || (rawItem.donation_type === 'food' ? 'kg' : 'items'),
+        temp_requirement: rawItem.temp_requirement || 'Ambient',
+        portions: rawItem.portions ?? (rawItem.quantity_kg ? Number(rawItem.quantity_kg) * 2 : 10),
+        quantity_kg: Number(rawItem.quantity_kg) || 10
+      };
+
       if (!existingIds.has(item.id)) {
         combined.push(item);
       } else {
@@ -339,17 +403,25 @@ window.SupabaseService = {
     return combined.map(d => ({ ...d, expiryInfo: this.getExpiryInfo(d) }));
   },
 
-  // Create New Surplus Food Donation
+  // Create New Surplus Donation (Multi-Category Safe)
   async createDonation(donationData) {
     const tempId = `DON-${Math.floor(1000 + Math.random() * 9000)}`;
+    const category = donationData.category || 'Cooked Meals';
+    const donationType = donationData.donation_type || 
+      (['Cooked Meals', 'Bakery', 'Fresh Produce', 'Dairy & Chilled'].includes(category) ? 'food' : 
+      (category === 'Monetary Donations' ? 'money' : 'physical'));
+
     const newDonation = {
       id: donationData.id || tempId,
-      title: donationData.title || 'Surplus Food Batch',
-      category: donationData.category || 'Cooked Meals',
-      quantity_kg: Number(donationData.quantity_kg) || 20,
-      portions: Number(donationData.portions) || 30,
+      title: donationData.title || `${category} Batch`,
+      category: category,
+      donation_type: donationType,
+      quantity_kg: Number(donationData.quantity_kg) || (donationType === 'food' ? 20 : 10),
+      portions: Number(donationData.portions) || (donationType === 'food' ? 30 : 20),
+      item_condition: donationData.item_condition || donationData.condition || 'Good Condition',
+      unit: donationData.unit || (donationType === 'food' ? 'kg' : 'pieces'),
       temp_requirement: donationData.temp_requirement || 'Ambient',
-      donor_name: donationData.donor_name || localStorage.getItem('user_name') || 'Fresh Harvest Bistro',
+      donor_name: donationData.donor_name || localStorage.getItem('user_name') || 'Generous Donor',
       donor_address: donationData.donor_address || 'C-Scheme, Jaipur',
       donor_lat: Number(donationData.donor_lat) || 26.9124,
       donor_lng: Number(donationData.donor_lng) || 75.7873,
@@ -360,7 +432,7 @@ window.SupabaseService = {
       distance_km: donationData.distance_km || 0,
       match_status: donationData.match_status || 'UNMATCHED',
       pickup_window: donationData.pickup_window || 'Next 2 Hours',
-      expiry_minutes: Number(donationData.expiry_minutes) || 240,
+      expiry_minutes: Number(donationData.expiry_minutes) || (donationType === 'food' ? 240 : 4320),
       pin_code: donationData.pin_code || `${Math.floor(1000 + Math.random() * 9000)}`,
       created_at: new Date().toISOString()
     };

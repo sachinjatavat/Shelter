@@ -1359,6 +1359,23 @@ app.post('/api/donations', async (req, res) => {
   res.json({ success: true, donation, match: matchResult, expiryInfo, storage: 'memory' });
 });
 
+// Delete Donation (Supabase PostgreSQL + In-Memory)
+app.delete('/api/donations/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    if (isSupabaseConfigured && supabase) {
+      await supabase.from('donations').delete().eq('id', id);
+    }
+    const idx = memoryDb.donations.findIndex(d => d.id === id);
+    if (idx !== -1) {
+      memoryDb.donations.splice(idx, 1);
+    }
+    res.json({ success: true, message: `Donation ${id} deleted successfully.` });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // Explicit Auto-Match Endpoint
 app.post('/api/donations/auto-match', async (req, res) => {
   const { donation_id, donation_data } = req.body;

@@ -983,6 +983,8 @@
           donation_type: 'food',
           quantity_kg: unit === 'kg' ? Number(qty) : Math.round(Number(qty) * 0.5),
           portions: unit === 'portions' ? Number(qty) : Math.round(Number(qty) * 2),
+          unit: unit,
+          item_condition: condition,
           temp_requirement: condition,
           donor_name: localStorage.getItem('restaurant_name') || localStorage.getItem('user_name') || 'Restaurant Partner',
           donor_address: location,

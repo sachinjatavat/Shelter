@@ -117,6 +117,9 @@
       </div>
 
       <div class="flex items-center gap-2">
+        <button onclick="purgeTestCache()" class="px-3 py-1.5 rounded-lg bg-rose-950/70 hover:bg-rose-900 text-rose-300 border border-rose-800/60 text-xs font-semibold flex items-center gap-1 cursor-pointer transition-colors" title="Purge corrupted/dummy test records from local cache">
+          <span class="material-symbols-outlined text-[16px]">cleaning_services</span> Clean Cache &amp; Sync
+        </button>
         <button onclick="promptAddNewDriver()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold flex items-center gap-1 shadow-sm cursor-pointer transition-colors">
           <span class="material-symbols-outlined text-[16px]">person_add</span> Add New Driver
         </button>
@@ -349,16 +352,55 @@ ALTER TABLE public.impact_logs DISABLE ROW LEVEL SECURITY;
       }
     }
 
+    function formatCell(val, key) {
+      if (val === undefined || val === null || val === 'undefined' || val === '') {
+        return `<span class="text-slate-600 font-sans italic">—</span>`;
+      }
+      if (key === 'status') {
+        const cls = val === 'AVAILABLE' ? 'bg-emerald-950 text-emerald-400 border-emerald-800/60' :
+                    (val === 'DELIVERED' ? 'bg-blue-950 text-blue-400 border-blue-800/60' :
+                    (val === 'EXPIRED' ? 'bg-rose-950 text-rose-400 border-rose-800/60' : 'bg-amber-950 text-amber-400 border-amber-800/60'));
+        return `<span class="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider border ${cls}">${val}</span>`;
+      }
+      if (key === 'donation_type') {
+        const cls = val === 'food' ? 'bg-emerald-950 text-emerald-400 border-emerald-800/60' :
+                    (val === 'money' ? 'bg-amber-950 text-amber-400 border-amber-800/60' : 'bg-purple-950 text-purple-400 border-purple-800/60');
+        return `<span class="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider border ${cls}">${val}</span>`;
+      }
+      if (typeof val === 'object') {
+        return `<span class="truncate block max-w-xs text-slate-400">${JSON.stringify(val)}</span>`;
+      }
+      return String(val);
+    }
+
+    async function purgeTestCache() {
+      localStorage.removeItem('local_donations');
+      if (window.SupabaseService && window.SupabaseService.clearCorruptedLocalData) {
+        window.SupabaseService.clearCorruptedLocalData();
+      }
+      alert('✓ Clean slate applied! Corrupt test records removed from local cache. Synchronizing live Supabase database...');
+      await loadTableData();
+    }
+
+    async function deleteDonationRow(id) {
+      if (!confirm(`Are you sure you want to permanently delete donation #${id} from the database?`)) return;
+      if (window.SupabaseService && window.SupabaseService.deleteDonation) {
+        await window.SupabaseService.deleteDonation(id);
+      }
+      await loadTableData();
+    }
+
     async function loadTableData() {
       const tbody = document.getElementById('tableBody');
       const thead = document.getElementById('tableHeader');
       const count = document.getElementById('rowCount');
 
-      tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-500">Loading data...</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="10" class="p-6 text-center text-slate-500">Loading live data from Supabase...</td></tr>`;
 
       let data = [];
       if (activeTable === 'donations') {
-        data = await SupabaseService.getDonations();
+        // Query pure live Supabase / Express API database records
+        data = await SupabaseService.getDonations({ remoteOnly: true });
       } else if (activeTable === 'users') {
         data = await SupabaseService.getUsers();
       } else if (activeTable === 'pickups') {
@@ -375,19 +417,39 @@ ALTER TABLE public.impact_logs DISABLE ROW LEVEL SECURITY;
         ];
       }
 
-      count.textContent = `${data.length} row(s) loaded`;
+      count.textContent = `${data.length} row(s) loaded (Verified Database)`;
 
       if (!data || data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-500">No rows found in ${activeTable}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="10" class="p-6 text-center text-slate-500">No rows found in ${activeTable}</td></tr>`;
         return;
       }
 
-      const keys = Object.keys(data[0]);
-      thead.innerHTML = `<tr>${keys.map(k => `<th class="p-3">${k}</th>`).join('')}</tr>`;
+      // Collect all unique keys across all items
+      const allKeySet = new Set();
+      data.forEach(row => {
+        Object.keys(row).forEach(k => {
+          if (k !== 'expiryInfo' && k !== 'assignment_history') allKeySet.add(k);
+        });
+      });
+      const keys = Array.from(allKeySet);
+
+      thead.innerHTML = `
+        <tr>
+          ${keys.map(k => `<th class="p-3">${k}</th>`).join('')}
+          ${activeTable === 'donations' ? '<th class="p-3 text-right">Actions</th>' : ''}
+        </tr>
+      `;
 
       tbody.innerHTML = data.map(row => `
         <tr class="hover:bg-slate-800/40 transition-colors">
-          ${keys.map(k => `<td class="p-3 font-mono text-xs text-slate-300 max-w-xs truncate">${typeof row[k] === 'object' ? JSON.stringify(row[k]) : row[k]}</td>`).join('')}
+          ${keys.map(k => `<td class="p-3 font-mono text-xs text-slate-300 max-w-xs truncate">${formatCell(row[k], k)}</td>`).join('')}
+          ${activeTable === 'donations' ? `
+            <td class="p-3 text-right">
+              <button onclick="deleteDonationRow('${row.id}')" title="Delete record" class="px-2 py-1 rounded bg-rose-950/70 hover:bg-rose-900 text-rose-300 border border-rose-800/60 text-[11px] font-semibold inline-flex items-center gap-1 cursor-pointer transition-colors shadow-sm">
+                <span class="material-symbols-outlined text-[13px]">delete</span> Delete
+              </button>
+            </td>
+          ` : ''}
         </tr>
       `).join('');
     }
