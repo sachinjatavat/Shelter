@@ -216,7 +216,7 @@
                 </div>
               </div>
               <p class="text-xs text-outline mt-1">No active pickup mission currently assigned.</p>
-              <a href="/driver-available.html" class="inline-block mt-3 px-3 py-1 bg-primary-container text-white rounded text-[11px] font-semibold hover:bg-primary">Browse Available Pickups</a>
+              <a href="./driver-available.html" class="inline-block mt-3 px-3 py-1 bg-primary-container text-white rounded text-[11px] font-semibold hover:bg-primary">Browse Available Pickups</a>
             `;
           }
         });
@@ -248,7 +248,7 @@
                 You currently do not have an active food rescue mission in progress. Pickups you accept from the courier portal will appear here with live route navigation and temperature telemetry.
               </p>
               <div class="mt-6">
-                <a href="/driver-available.html" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-primary-container text-white font-bold text-xs shadow-md hover:bg-primary transition-all">
+                <a href="./driver-available.html" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-primary-container text-white font-bold text-xs shadow-md hover:bg-primary transition-all">
                   <span class="material-symbols-outlined text-sm">search</span>
                   <span>Browse Available Pickups</span>
                 </a>
@@ -392,7 +392,7 @@
                 When an NGO claims your surplus food batch or a courier driver is dispatched, live driver details and pickup milestone tracking will appear here.
               </p>
               <div class="mt-4">
-                <a href="/restaurant-post.html" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary-container text-white text-xs font-bold hover:bg-primary transition-colors">
+                <a href="./restaurant-post.html" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary-container text-white text-xs font-bold hover:bg-primary transition-colors">
                   <span class="material-symbols-outlined text-[16px]">add_circle</span> Post Surplus Donation
                 </a>
               </div>
