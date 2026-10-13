@@ -31,14 +31,14 @@
     "bank_account_number": null,
     "bank_ifsc": null,
     "bank_verification_status": "PENDING",
-    "status": "VERIFIED",
-    "verification_status": "VERIFIED",
+    "status": "REJECTED",
+    "verification_status": "REJECTED",
     "missing_information": null,
-    "rejection_reason": null,
+    "rejection_reason": "Registration credentials could not be authenticated with official records.",
     "suspension_reason": null,
     "submitted_at": "2026-10-13T00:40:13.927Z",
-    "reviewed_at": "2026-10-13T06:12:01.853Z",
-    "decision_notes": "All statutory requirements and official registry checks verified successfully.",
+    "reviewed_at": "2026-10-13T06:17:21.973Z",
+    "decision_notes": "Registration credentials could not be authenticated with official records.",
     "verification_checklist": {
       "legal_name_matched": false,
       "registration_number_verified": false,
@@ -52,10 +52,10 @@
       "verification_notes": ""
     },
     "created_at": "2026-10-13T00:39:18.088Z",
-    "updated_at": "2026-10-13T06:12:02.412Z",
+    "updated_at": "2026-10-13T06:17:22.462Z",
     "reviewer_id": "hde@g.com",
     "reviewer_name": "Platform Senior Administrator",
-    "is_trustable": true
+    "is_trustable": false
   },
   {
     "id": "app-1791848334961",

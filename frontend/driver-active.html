@@ -511,6 +511,7 @@
         await window.SupabaseService.updateStatus(activeId, 'DELIVERED');
       }
       localStorage.removeItem('active_driver_mission_id');
+      localStorage.removeItem('active_mission_data');
       currentMissionStep = 5;
       showToast('🎉 Rescue Delivered! Status updated to DELIVERED in Supabase!');
     } else if (currentMissionStep === 5) {
@@ -531,14 +532,48 @@
     try {
       const activeId = localStorage.getItem('active_driver_mission_id');
       const list = JSON.parse(localStorage.getItem('local_donations') || '[]');
-      const mission = list.find(d => d.id === activeId) || list.find(d => d.status === 'EN_ROUTE' || d.status === 'ASSIGNED');
-      if (mission) {
+      let mission = list.find(d => d.id === activeId);
+      if (!mission) {
+        try {
+          mission = JSON.parse(localStorage.getItem('active_mission_data') || 'null');
+        } catch(e) {}
+      }
+      if (!mission) {
+        mission = list.find(d => d.status === 'EN_ROUTE' || d.status === 'ASSIGNED');
+      }
+
+      if (mission || activeId) {
+        const emptyBanner = document.getElementById('empty-active-mission-banner');
+        if (emptyBanner) emptyBanner.remove();
+
+        const actualMission = mission || {
+          id: activeId || 'DON-9482',
+          title: 'Cooked Prepared Meals',
+          quantity_kg: 25,
+          donor_name: 'Green Leaf Restaurant',
+          donor_address: '142 Market St, Suite 4B',
+          recipient_ngo: 'Hope Shelter (Main Intake)'
+        };
+
         const badge = document.getElementById('mission-status-badge');
-        if (badge) badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span> Mission #${mission.id} • En Route`;
+        if (badge) badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span> Mission #${actualMission.id} • En Route`;
+        
         const donorH2 = document.querySelector('h2.font-headline-md');
-        if (donorH2) donorH2.textContent = mission.donor_name || 'Restaurant Partner';
+        if (donorH2 && actualMission.donor_name) donorH2.textContent = actualMission.donor_name;
+
+        const donorAddr = document.querySelector('.bg-surface-container-low .font-body-md');
+        if (donorAddr && actualMission.donor_address) donorAddr.textContent = actualMission.donor_address;
+
         const foodH3 = document.querySelector('h3.font-headline-md');
-        if (foodH3) foodH3.textContent = mission.title || 'Cooked Prepared Meals';
+        if (foodH3 && actualMission.title) foodH3.textContent = actualMission.title;
+
+        const qtyEl = document.querySelector('.font-headline-lg');
+        if (qtyEl && actualMission.quantity_kg) qtyEl.textContent = `${actualMission.quantity_kg} kg`;
+
+        const allH3 = document.querySelectorAll('h3.font-headline-md');
+        if (allH3.length > 1 && actualMission.recipient_ngo) {
+          allH3[1].textContent = actualMission.recipient_ngo;
+        }
       }
     } catch (e) {}
   });

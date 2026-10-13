@@ -110,14 +110,38 @@
     const path = window.location.pathname;
     if (!path.includes('driver')) return;
 
-    const myDriverDonations = allDonations.filter(d => 
-      d.driver_name && (
+    const activeMissionId = localStorage.getItem('active_driver_mission_id');
+    let activeMission = null;
+
+    if (activeMissionId) {
+      activeMission = allDonations.find(d => d.id === activeMissionId);
+      if (!activeMission) {
+        try {
+          const stored = JSON.parse(localStorage.getItem('active_mission_data') || 'null');
+          if (stored) activeMission = stored;
+        } catch(e) {}
+      }
+      if (!activeMission) {
+        activeMission = { id: activeMissionId, status: 'EN_ROUTE' };
+      }
+    }
+    if (!activeMission) {
+      activeMission = allDonations.find(d => (d.status === 'EN_ROUTE' || d.status === 'ASSIGNED') && (
+        !d.driver_name || 
         d.driver_name.toLowerCase() === info.driverName.toLowerCase() ||
-        d.driver_name.toLowerCase() === info.userName.toLowerCase()
-      )
+        d.driver_name.toLowerCase() === info.userName.toLowerCase() ||
+        d.driver_name === 'Courier Driver'
+      ));
+    }
+
+    const myDriverDonations = allDonations.filter(d => 
+      !d.driver_name ||
+      d.driver_name.toLowerCase() === info.driverName.toLowerCase() ||
+      d.driver_name.toLowerCase() === info.userName.toLowerCase() ||
+      d.driver_name === 'Courier Driver' ||
+      d.id === activeMissionId
     );
     const completed = myDriverDonations.filter(d => d.status === 'DELIVERED');
-    const activeMission = myDriverDonations.find(d => d.status === 'EN_ROUTE' || d.status === 'ASSIGNED');
     const totalWeightKg = completed.reduce((sum, d) => sum + (Number(d.quantity_kg) || 0), 0);
 
     // 1. Driver History Page (driver-history.html)
@@ -236,8 +260,8 @@
     }
 
     // 3. Driver Active Mission Page (driver-active.html)
-    if (path.includes('driver-active') && info.isNew) {
-      if (!activeMission) {
+    if (path.includes('driver-active')) {
+      if (!activeMission && !activeMissionId) {
         const mainContainer = document.querySelector('main .flex.flex-col.w-full');
         if (mainContainer && !document.getElementById('empty-active-mission-banner')) {
           mainContainer.innerHTML = `
@@ -257,6 +281,11 @@
               </div>
             </div>
           `;
+        }
+      } else {
+        const emptyBanner = document.getElementById('empty-active-mission-banner');
+        if (emptyBanner) {
+          emptyBanner.remove();
         }
       }
     }
