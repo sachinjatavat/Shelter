@@ -3391,8 +3391,8 @@ app.get('/api/ngo/verification/application/:ngo_id', async (req, res) => {
       item.legal_name.toLowerCase().includes(cleanLower) || cleanLower.includes(item.legal_name.toLowerCase())
     ) : null;
 
-    if (appRecord.status === 'REJECTED' || appRecord.status === 'SUSPENDED') {
-      // Retain admin decision (REJECTED / SUSPENDED) and rejection reason intact
+    if (appRecord.status === 'VERIFIED' || appRecord.status === 'REJECTED' || appRecord.status === 'SUSPENDED') {
+      // Retain admin decision (VERIFIED / REJECTED / SUSPENDED) and notes intact
     } else if (matchedGovt) {
       appRecord.darpan_id = matchedGovt.darpan_id;
       appRecord.pan = matchedGovt.pan_number;
@@ -4024,6 +4024,10 @@ app.post('/api/admin/verification/:app_id/decision', async (req, res) => {
       await supabase.from('users').update({ verification_status: decision }).eq('email', appRecord.ngo_id);
     } catch (e) {}
   }
+
+  appRecord.is_trustable = (decision === 'VERIFIED');
+  appRecord.updated_at = new Date().toISOString();
+  saveVerificationStore();
 
   res.json({
     success: true,

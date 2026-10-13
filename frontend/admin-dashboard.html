@@ -1417,13 +1417,23 @@
         }
 
         if (selectedDossierApp) {
-          const ngoKey = (selectedDossierApp.ngo_id || selectedDossierApp.legal_name || '').toLowerCase();
-          if (ngoKey) {
-            localStorage.setItem(`ngo_verification_status_${ngoKey}`, decision);
+          const keys = [
+            selectedDossierApp.id,
+            selectedDossierApp.ngo_id,
+            selectedDossierApp.legal_name,
+            selectedDossierApp.ngo_name,
+            selectedDossierApp.rep_email
+          ].filter(Boolean);
+
+          keys.forEach(k => {
+            const lk = k.toLowerCase().trim();
+            localStorage.setItem(`ngo_verification_status_${lk}`, decision);
             if (decision === 'REJECTED') {
-              localStorage.setItem(`ngo_verification_reason_${ngoKey}`, decisionReason || 'Application rejected by compliance administrators.');
+              localStorage.setItem(`ngo_verification_reason_${lk}`, decisionReason || 'Application rejected by compliance administrators.');
+            } else if (decision === 'VERIFIED') {
+              localStorage.removeItem(`ngo_verification_reason_${lk}`);
             }
-          }
+          });
         }
 
         try { window.dispatchEvent(new Event('storage')); } catch(e) {}

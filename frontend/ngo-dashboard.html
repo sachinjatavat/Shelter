@@ -2761,12 +2761,25 @@
         const docs = (res && res.success && res.documents) ? res.documents : [];
         window.currentNGOApplication = app;
 
-        const localDecision = localStorage.getItem('ngo_verification_status');
-        let status = app ? (app.verification_status || app.status) : 'VERIFIED';
-        // If an explicit admin decision was made locally (e.g. admin tab rejected it), honor it
-        if (localDecision === 'REJECTED' && (!app || app.verification_status !== 'VERIFIED')) {
-          status = 'REJECTED';
+        const currentEmail = (ngoEmail || '').toLowerCase();
+        const currentName = (ngoName || '').toLowerCase();
+        const appIdKey = (app && app.id) ? app.id.toLowerCase() : '';
+        const specificDecision = 
+          (appIdKey ? localStorage.getItem(`ngo_verification_status_${appIdKey}`) : null) ||
+          localStorage.getItem(`ngo_verification_status_${currentEmail}`) ||
+          localStorage.getItem(`ngo_verification_status_${currentName}`) ||
+          localStorage.getItem('ngo_verification_status');
+
+        let status = 'VERIFIED';
+        if (app && (app.verification_status || app.status)) {
+          status = app.verification_status || app.status;
         }
+
+        // Honor explicit administrative decision from admin actions
+        if (specificDecision) {
+          status = specificDecision;
+        }
+
         window.ngoVerificationStatus = status;
 
         // 1. Update Topbar & Sidebar Badges
@@ -2865,7 +2878,7 @@
 
           const statusBadgeEl = document.getElementById('ngo-status-badge');
           if (statusBadgeEl) {
-            statusBadgeEl.textContent = app ? app.verification_status : status;
+            statusBadgeEl.textContent = config.text;
             statusBadgeEl.className = `px-2.5 py-0.5 rounded-full text-xs font-bold border ${config.cls}`;
           }
           const regnumEl = document.getElementById('ngo-status-regnum');
