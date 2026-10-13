@@ -5,6 +5,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
+const QRCode = require('qrcode');
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 dotenv.config();
@@ -21,6 +22,50 @@ app.get('/api/schema', (req, res) => {
     return res.sendFile(schemaPath);
   }
   res.status(404).send('-- schema.sql not found');
+});
+
+// Dynamic Fixed-Amount PhonePe UPI QR Generation API (Mall POS-style fixed amount checkout)
+app.get('/api/qr/upi', async (req, res) => {
+  try {
+    const rawAmount = parseFloat(req.query.amount) || 2500;
+    const amount = Math.max(1, rawAmount);
+    const payeeVpa = req.query.pa || '8946955851-2@ybl';
+    const payeeName = req.query.pn || 'SACHIN KUMAR JATAWAT';
+    const note = req.query.tn || 'Donation to Surplus To Shelter';
+    
+    // NPCI UPI Specification Deep Link
+    // Format: upi://pay?pa=<VPA>&pn=<NAME>&am=<AMOUNT>&cu=INR&tn=<NOTE>&mode=02&purpose=00
+    const upiUrl = `upi://pay?pa=${encodeURIComponent(payeeVpa)}&pn=${encodeURIComponent(payeeName)}&am=${amount.toFixed(2)}&cu=INR&tn=${encodeURIComponent(note)}&mode=02&purpose=00`;
+    
+    const qrDataUrl = await QRCode.toDataURL(upiUrl, {
+      errorCorrectionLevel: 'H',
+      margin: 1,
+      width: 480,
+      color: {
+        dark: '#000000',
+        light: '#ffffff'
+      }
+    });
+
+    if (req.query.format === 'raw' || req.query.format === 'image') {
+      const imgBuffer = Buffer.from(qrDataUrl.replace(/^data:image\/png;base64,/, ''), 'base64');
+      res.setHeader('Content-Type', 'image/png');
+      return res.send(imgBuffer);
+    }
+
+    res.json({
+      success: true,
+      amount,
+      amount_formatted: `₹${amount.toLocaleString('en-IN')}`,
+      payee_name: payeeName,
+      payee_vpa: payeeVpa,
+      upi_url: upiUrl,
+      qr_data_url: qrDataUrl
+    });
+  } catch (err) {
+    console.error('QR Generation error:', err);
+    res.status(500).json({ success: false, error: 'Failed to generate dynamic UPI QR code.' });
+  }
 });
 
 const UPLOADS_DIR = path.join(__dirname, 'uploads/verification_docs');

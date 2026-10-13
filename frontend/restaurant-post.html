@@ -3,6 +3,7 @@
 <html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script src="./js/supabase.js"></script>
+<script src="./js/qrcode.min.js"></script>
 <style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
     darkMode: "class",
     theme: {
@@ -659,28 +660,40 @@
       <span class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Direct Shelter Rail</span>
     </div>
 
-    <!-- Instant UPI PhonePe QR Code Banner & Preview Card -->
-    <div class="p-5 rounded-2xl border-2 border-emerald-500/80 bg-gradient-to-br from-emerald-50/90 via-white to-teal-50/70 shadow-sm mb-6">
+    <!-- Dynamic Mall-Style POS Fixed-Amount PhonePe UPI QR Terminal -->
+    <div class="p-5 rounded-2xl border-2 border-purple-600/80 bg-gradient-to-br from-purple-50/90 via-white to-emerald-50/70 shadow-md mb-6">
       <div class="flex flex-col sm:flex-row items-center gap-5">
-        <!-- QR Code Container -->
-        <div class="relative w-44 h-44 sm:w-48 sm:h-48 bg-white p-2.5 rounded-2xl border border-slate-200 shadow-md flex items-center justify-center flex-shrink-0 group cursor-pointer" onclick="openUpiQrModal()" title="Click to enlarge QR code">
-          <img src="./images/donation-upi-qr.jpg" alt="Instant PhonePe UPI QR Code" class="w-full h-full object-contain rounded-xl select-none" />
-          <span class="absolute -top-2.5 -right-2.5 px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-[#16803C] text-white shadow-xs">Scan &amp; Pay</span>
+        <!-- Dynamic QR Code Container with Center Logo & Badges -->
+        <div class="relative w-48 h-48 sm:w-52 sm:h-52 bg-white p-2.5 rounded-2xl border-2 border-purple-200 shadow-lg flex items-center justify-center flex-shrink-0 group cursor-pointer" onclick="openUpiQrModal()" title="Click to enlarge fixed amount QR code">
+          <img id="live-upi-qr-image" src="./images/donation-upi-qr.jpg" alt="Dynamic Fixed Amount PhonePe UPI QR Code" class="w-full h-full object-contain rounded-xl select-none transition-all duration-300" />
+          
+          <!-- Fixed Amount Pill -->
+          <span id="live-qr-badge" class="absolute -top-2.5 -right-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-[#5f259f] text-white shadow-sm flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+            FIXED ₹2,500
+          </span>
+
+          <!-- Verified Payee Label -->
+          <span class="absolute -bottom-2.5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-emerald-700 text-white shadow-xs whitespace-nowrap">
+            ✓ SACHIN KUMAR JATAWAT
+          </span>
         </div>
         
-        <!-- Text & UPI Instruction -->
+        <!-- Text & POS Fixed Checkout Instruction -->
         <div class="space-y-2 text-center sm:text-left flex-1">
           <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1">
-              <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
-              Live PhonePe &amp; UPI Donation Rail
+            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-purple-100 text-purple-900 border border-purple-300 flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-purple-600 animate-pulse"></span>
+              Live PhonePe POS Terminal • Mall Billing Rail
             </span>
-            <span class="text-xs font-semibold text-outline">Direct Non-Profit Aid</span>
+            <span class="text-xs font-semibold text-emerald-800">Direct Account Deposit</span>
           </div>
           
-          <h3 class="text-base sm:text-lg font-black text-on-surface">Scan &amp; Donate Instantly via Any UPI App</h3>
+          <h3 class="text-base sm:text-lg font-black text-on-surface">
+            Scan with Any UPI App — Pre-Filled at ₹<span id="live-qr-amount-text">2,500</span>
+          </h3>
           <p class="text-xs text-on-surface-variant leading-relaxed">
-            Open <strong>PhonePe</strong>, <strong>Google Pay</strong>, <strong>Paytm</strong>, or any UPI banking app on your phone, scan this QR code, and send your contribution. Direct funds are immediately allocated to verified community shelters.
+            Just like POS counters in shopping malls, this QR is locked with the exact donation amount. When scanned using <strong>PhonePe</strong>, <strong>Google Pay</strong>, or <strong>Paytm</strong>, ₹<span id="live-qr-amount-subtext">2,500</span> is pre-filled automatically on the screen and routed directly to <strong>Sachin Kumar Jatawat</strong> (<code>8946955851-2@ybl</code>).
           </p>
           
           <div class="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 pt-1 text-[11px] font-semibold text-slate-700">
@@ -690,11 +703,19 @@
             <span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-900 border border-emerald-200">BHIM UPI</span>
           </div>
           
-          <div class="pt-1">
-            <button type="button" onclick="openUpiQrModal()" class="px-3.5 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold transition-all shadow-xs inline-flex items-center gap-1.5 cursor-pointer">
-              <span class="material-symbols-outlined text-[16px]">qr_code_scanner</span>
-              <span>Enlarge QR Code &amp; Complete Donation</span>
+          <div class="pt-2 flex flex-wrap items-center justify-center sm:justify-start gap-2">
+            <button type="button" onclick="generateFixedAmountQr(true)" class="px-3.5 py-1.5 rounded-lg bg-[#5f259f] hover:bg-[#4b1d7f] text-white text-xs font-bold transition-all shadow-xs inline-flex items-center gap-1.5 cursor-pointer">
+              <span class="material-symbols-outlined text-[16px]">qr_code_2</span>
+              <span>Enlarge Fixed QR Code (₹<span id="live-qr-btn-amt">2,500</span>)</span>
             </button>
+            <button type="button" onclick="copyUpiId()" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold border border-slate-300 transition-all inline-flex items-center gap-1 cursor-pointer">
+              <span class="material-symbols-outlined text-[15px]">content_copy</span>
+              <span>Copy UPI ID</span>
+            </button>
+            <a id="live-upi-mobile-link" href="#" class="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold transition-all shadow-xs inline-flex items-center gap-1 cursor-pointer sm:hidden">
+              <span class="material-symbols-outlined text-[15px]">phone_android</span>
+              <span>Pay via App</span>
+            </a>
           </div>
         </div>
       </div>
@@ -706,7 +727,7 @@
           Select Verified Beneficiary Shelter <span class="text-error">*</span>
         </label>
         <div class="relative">
-          <select class="w-full h-10 pl-3.5 pr-8 bg-surface-container-lowest border border-outline-variant/60 rounded-lg font-body-md text-body-md text-on-surface appearance-none focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all" id="money-recipient" onchange="updatePreview()">
+          <select class="w-full h-10 pl-3.5 pr-8 bg-surface-container-lowest border border-outline-variant/60 rounded-lg font-body-md text-body-md text-on-surface appearance-none focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all" id="money-recipient" onchange="generateFixedAmountQr()">
             <option value="Hope Shelter &amp; Care Center">Hope Shelter &amp; Care Center (Certified Non-Profit)</option>
             <option value="City Food Bank">City Food Bank (80G Tax Exempt)</option>
             <option value="Community Kitchen Shelter">Community Kitchen Shelter (Mansarovar Ward)</option>
@@ -717,20 +738,33 @@
       </div>
 
       <div>
-        <label class="block font-label-md text-label-md text-on-surface mb-1" for="money-amount">
-          Donation Amount (INR ₹) <span class="text-error">*</span>
-        </label>
+        <div class="flex items-center justify-between mb-1">
+          <label class="block font-label-md text-label-md text-on-surface" for="money-amount">
+            Donation Amount (INR ₹) <span class="text-error">*</span>
+          </label>
+          <span class="text-[11px] font-semibold text-purple-700 flex items-center gap-1">
+            <span class="material-symbols-outlined text-[14px]">lock</span>
+            Locks into QR Code
+          </span>
+        </div>
         <div class="relative">
           <span class="absolute left-3.5 top-2.5 text-sm font-bold text-outline">₹</span>
-          <input class="w-full h-10 pl-8 pr-3.5 bg-surface-container-lowest border border-outline-variant/60 rounded-lg font-tabular-numeric text-tabular-numeric text-on-surface focus:outline-none focus:border-primary-container font-bold text-base" id="money-amount" min="100" oninput="updatePreview()" type="number" value="2500"/>
+          <input class="w-full h-10 pl-8 pr-3.5 bg-surface-container-lowest border-2 border-purple-300 focus:border-[#5f259f] rounded-lg font-tabular-numeric text-tabular-numeric text-on-surface focus:outline-none font-bold text-base transition-colors" id="money-amount" min="10" oninput="generateFixedAmountQr()" type="number" value="2500"/>
         </div>
         <div class="flex flex-wrap gap-2 mt-2">
+          <button type="button" onclick="setMoneyAmount(200)" class="px-3 py-1 rounded-lg border border-outline-variant/60 text-xs font-semibold hover:bg-surface-container-low transition-colors cursor-pointer">₹200</button>
           <button type="button" onclick="setMoneyAmount(500)" class="px-3 py-1 rounded-lg border border-outline-variant/60 text-xs font-semibold hover:bg-surface-container-low transition-colors cursor-pointer">₹500</button>
           <button type="button" onclick="setMoneyAmount(1000)" class="px-3 py-1 rounded-lg border border-outline-variant/60 text-xs font-semibold hover:bg-surface-container-low transition-colors cursor-pointer">₹1,000</button>
-          <button type="button" onclick="setMoneyAmount(2500)" class="px-3 py-1 rounded-lg border border-primary-container bg-secondary-container/20 text-xs font-semibold text-primary-container transition-colors cursor-pointer">₹2,500</button>
+          <button type="button" onclick="setMoneyAmount(2500)" class="px-3 py-1 rounded-lg border-2 border-[#5f259f] bg-purple-50 text-xs font-bold text-[#5f259f] transition-colors cursor-pointer">₹2,500</button>
           <button type="button" onclick="setMoneyAmount(5000)" class="px-3 py-1 rounded-lg border border-outline-variant/60 text-xs font-semibold hover:bg-surface-container-low transition-colors cursor-pointer">₹5,000</button>
           <button type="button" onclick="setMoneyAmount(10000)" class="px-3 py-1 rounded-lg border border-outline-variant/60 text-xs font-semibold hover:bg-surface-container-low transition-colors cursor-pointer">₹10,000</button>
         </div>
+        
+        <!-- Generate Fixed Amount QR Code Action Button -->
+        <button type="button" onclick="generateFixedAmountQr(true)" id="btn-generate-fixed-qr" class="w-full mt-3 py-3 px-5 rounded-xl bg-gradient-to-r from-[#5f259f] via-indigo-700 to-emerald-700 hover:from-purple-800 hover:to-emerald-800 text-white font-bold text-sm shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer">
+          <span class="material-symbols-outlined text-[20px]">qr_code_scanner</span>
+          <span>⚡ Generate Fixed-Amount QR Code for ₹<span id="btn-amt-label">2,500</span></span>
+        </button>
       </div>
 
       <!-- Anonymous Donation Toggles -->
@@ -879,7 +913,7 @@
     const input = document.getElementById('money-amount');
     if (input) {
       input.value = val;
-      updatePreview();
+      generateFixedAmountQr();
     }
   }
 
@@ -1193,10 +1227,103 @@
     }
   });
 
-  // PhonePe UPI QR Code Modal Handlers
+  // Dynamic Fixed-Amount PhonePe UPI QR POS Engine
+  const PAYEE_VPA = '8946955851-2@ybl';
+  const PAYEE_NAME = 'SACHIN KUMAR JATAWAT';
   let activeDonationContext = null;
 
-  window.openUpiQrModal = function(customAmount, customRecipient, isAnon, hideAmt, purpose) {
+  window.copyUpiId = function() {
+    navigator.clipboard.writeText(PAYEE_VPA).then(() => {
+      showToast(`✓ Payee UPI ID Copied: ${PAYEE_VPA} (${PAYEE_NAME})`);
+    }).catch(() => {
+      showToast(`UPI ID: ${PAYEE_VPA}`);
+    });
+  };
+
+  window.generateFixedAmountQr = async function(openModalAfter = false) {
+    const amtInput = document.getElementById('money-amount');
+    const rawAmt = parseFloat(amtInput ? amtInput.value : 2500) || 2500;
+    const amount = Math.max(1, rawAmt);
+    const recipient = document.getElementById('money-recipient') ? document.getElementById('money-recipient').value : 'Hope Shelter & Care Center';
+    const note = `Donation to ${recipient} - Surplus To Shelter`;
+
+    // Official NPCI UPI Specification Deep Link with Pre-filled & Locked Fixed Amount
+    // Format: upi://pay?pa=<VPA>&pn=<NAME>&am=<AMOUNT>&cu=INR&tn=<NOTE>&mode=02&purpose=00
+    const upiUrl = `upi://pay?pa=${encodeURIComponent(PAYEE_VPA)}&pn=${encodeURIComponent(PAYEE_NAME)}&am=${amount.toFixed(2)}&cu=INR&tn=${encodeURIComponent(note)}&mode=02&purpose=00`;
+
+    // Update text labels across page
+    const formattedAmt = `₹${amount.toLocaleString('en-IN')}`;
+    const btnLabel = document.getElementById('btn-amt-label');
+    const liveAmtText = document.getElementById('live-qr-amount-text');
+    const liveSubAmtText = document.getElementById('live-qr-amount-subtext');
+    const liveBtnAmt = document.getElementById('live-qr-btn-amt');
+    const liveBadge = document.getElementById('live-qr-badge');
+    const modalAmt = document.getElementById('upi-modal-amount');
+    const modalSub = document.getElementById('upi-modal-amount-sub');
+    const modalRecip = document.getElementById('upi-modal-beneficiary');
+    const modalStepAmt = document.getElementById('upi-modal-step-amount');
+    const modalBtnAmt = document.getElementById('upi-modal-btn-amount');
+    const modalPayAmtBtn = document.getElementById('modal-pay-amt-btn');
+    const mobileLink = document.getElementById('live-upi-mobile-link');
+    const modalMobileBtn = document.getElementById('upi-modal-mobile-btn');
+
+    if (btnLabel) btnLabel.textContent = amount.toLocaleString('en-IN');
+    if (liveAmtText) liveAmtText.textContent = amount.toLocaleString('en-IN');
+    if (liveSubAmtText) liveSubAmtText.textContent = amount.toLocaleString('en-IN');
+    if (liveBtnAmt) liveBtnAmt.textContent = amount.toLocaleString('en-IN');
+    if (liveBadge) liveBadge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>FIXED ${formattedAmt}`;
+    if (modalAmt) modalAmt.textContent = `${formattedAmt}.00`;
+    if (modalSub) modalSub.textContent = `Direct fixed payment to ${PAYEE_NAME} (${PAYEE_VPA})`;
+    if (modalRecip) modalRecip.textContent = recipient;
+    if (modalStepAmt) modalStepAmt.textContent = formattedAmt;
+    if (modalBtnAmt) modalBtnAmt.textContent = formattedAmt;
+    if (modalPayAmtBtn) modalPayAmtBtn.textContent = formattedAmt;
+    if (mobileLink) mobileLink.href = upiUrl;
+    if (modalMobileBtn) modalMobileBtn.href = upiUrl;
+
+    let qrDataUrl = null;
+
+    // 1. Fast client-side generation via bundled QRCode (Zero latency, works offline)
+    if (window.QRCodeBundle && window.QRCodeBundle.toDataURL) {
+      try {
+        qrDataUrl = await window.QRCodeBundle.toDataURL(upiUrl, {
+          errorCorrectionLevel: 'H',
+          width: 480,
+          margin: 1,
+          color: { dark: '#000000', light: '#ffffff' }
+        });
+      } catch (e) {
+        console.warn('Client QR generation warning:', e);
+      }
+    }
+
+    // 2. Server API fallback (/api/qr/upi)
+    if (!qrDataUrl) {
+      try {
+        const resp = await fetch(`/api/qr/upi?amount=${amount}&pa=${encodeURIComponent(PAYEE_VPA)}&pn=${encodeURIComponent(PAYEE_NAME)}&tn=${encodeURIComponent(note)}`);
+        const data = await resp.json();
+        if (data && data.qr_data_url) {
+          qrDataUrl = data.qr_data_url;
+        }
+      } catch (err) {
+        console.warn('API QR fetch error:', err);
+      }
+    }
+
+    // Update images in real-time
+    if (qrDataUrl) {
+      const liveImg = document.getElementById('live-upi-qr-image');
+      const modalImg = document.getElementById('upi-modal-qr-image');
+      if (liveImg) liveImg.src = qrDataUrl;
+      if (modalImg) modalImg.src = qrDataUrl;
+    }
+
+    if (openModalAfter) {
+      openUpiQrModal(amount, recipient);
+    }
+  };
+
+  window.openUpiQrModal = async function(customAmount, customRecipient, isAnon, hideAmt, purpose) {
     const modal = document.getElementById('upi-donation-qr-modal');
     if (!modal) return;
 
@@ -1214,13 +1341,8 @@
       purpose: note || 'General Non-Profit Upkeep'
     };
 
-    const amtEl = document.getElementById('upi-modal-amount');
-    const amtSubEl = document.getElementById('upi-modal-amount-sub');
-    const recipEl = document.getElementById('upi-modal-beneficiary');
-
-    if (amtEl) amtEl.textContent = `₹${amount.toLocaleString()}`;
-    if (amtSubEl) amtSubEl.textContent = `Direct allocation to ${recipient}`;
-    if (recipEl) recipEl.textContent = recipient;
+    // Ensure dynamic QR code with exact fixed amount is fresh
+    await generateFixedAmountQr(false);
 
     modal.classList.remove('hidden');
     modal.classList.add('flex');
@@ -1294,24 +1416,45 @@
       }
     }
   };
+
+  // Parse query parameters and generate initial fixed amount QR code on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const cat = urlParams.get('cat') || urlParams.get('type');
+      if (cat && typeof selectDonationType === 'function') {
+        selectDonationType(cat);
+      }
+      const amt = urlParams.get('amount') || urlParams.get('amt');
+      if (amt && !isNaN(amt)) {
+        setMoneyAmount(Number(amt));
+      }
+    } catch (e) {
+      console.warn('URL param parse error:', e);
+    }
+
+    setTimeout(() => {
+      generateFixedAmountQr(false);
+    }, 150);
+  });
 </script></main></div>
 
-<!-- Instant PhonePe UPI QR Code Donation Modal -->
-<div id="upi-donation-qr-modal" class="hidden fixed inset-0 z-[10000] bg-slate-950/80 backdrop-blur-sm items-center justify-center p-4 overflow-y-auto" role="dialog" aria-modal="true">
+<!-- Mall POS-Style Fixed-Amount PhonePe UPI QR Code Modal -->
+<div id="upi-donation-qr-modal" class="hidden fixed inset-0 z-[10000] bg-slate-950/85 backdrop-blur-md items-center justify-center p-4 overflow-y-auto" role="dialog" aria-modal="true">
   <div class="relative bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden transform transition-all my-8">
     
-    <!-- Modal Header with PhonePe and UPI Branding -->
+    <!-- Modal Header with PhonePe and Mall POS Branding -->
     <div class="bg-gradient-to-r from-[#5f259f] via-[#7b32c6] to-emerald-700 text-white p-5 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-2xl bg-white/15 backdrop-blur-xs flex items-center justify-center border border-white/20">
-          <span class="material-symbols-outlined text-[24px]">qr_code_scanner</span>
+        <div class="w-11 h-11 rounded-2xl bg-white/20 backdrop-blur-xs flex items-center justify-center border border-white/30 shadow-inner">
+          <span class="material-symbols-outlined text-[26px]">point_of_sale</span>
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <h3 class="font-bold text-base text-white leading-tight">Instant UPI Donation</h3>
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-400 text-slate-900 tracking-wider">Zero Fees</span>
+            <h3 class="font-black text-base text-white leading-tight">PhonePe POS Fixed-Amount Checkout</h3>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-400 text-slate-900 tracking-wider">Locked Amount</span>
           </div>
-          <p class="text-xs text-white/80">Direct Shelter Relief Rail (PhonePe • GPay • Paytm • BHIM)</p>
+          <p class="text-xs text-white/90">Payee: <strong>SACHIN KUMAR JATAWAT</strong> • <code>8946955851-2@ybl</code></p>
         </div>
       </div>
       <button type="button" onclick="closeUpiQrModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer" aria-label="Close modal">
@@ -1322,57 +1465,69 @@
     <!-- Modal Content -->
     <div class="p-6 space-y-5 text-center sm:text-left">
       <!-- Beneficiary & Amount Card -->
-      <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+      <div class="p-4 rounded-2xl bg-purple-50/80 border-2 border-purple-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
         <div>
-          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">Beneficiary Shelter</span>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-purple-700 block">Beneficiary Non-Profit</span>
           <span id="upi-modal-beneficiary" class="text-sm font-bold text-slate-900 block truncate max-w-[240px]">Hope Shelter &amp; Care Center</span>
-          <span id="upi-modal-amount-sub" class="text-[11px] text-emerald-700 font-semibold block">80G Tax Deductible Receipt Available</span>
+          <span id="upi-modal-amount-sub" class="text-[11px] text-slate-600 block mt-0.5">Direct fixed payment to SACHIN KUMAR JATAWAT (8946955851-2@ybl)</span>
         </div>
-        <div class="sm:text-right">
-          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">Amount to Pay</span>
-          <span id="upi-modal-amount" class="text-2xl font-black text-emerald-700 font-tabular-numeric">₹2,500</span>
+        <div class="sm:text-right bg-white px-3.5 py-2 rounded-xl border border-purple-300 shadow-xs">
+          <span class="text-[10px] font-black uppercase tracking-wider text-purple-800 block">Locked POS Amount</span>
+          <span id="upi-modal-amount" class="text-2xl font-black text-emerald-700 font-tabular-numeric">₹2,500.00</span>
         </div>
       </div>
 
-      <!-- Centered QR Code with Frame -->
+      <!-- Centered Dynamic QR Code with Frame -->
       <div class="flex flex-col items-center justify-center">
-        <div class="relative bg-white p-3 rounded-2xl border-2 border-slate-300 shadow-lg flex items-center justify-center group">
-          <!-- The QR Code Image -->
-          <img src="./images/donation-upi-qr.jpg" alt="Scan to Donate via PhonePe UPI" class="w-56 h-56 sm:w-64 sm:h-64 object-contain rounded-xl select-none" />
+        <div class="relative bg-white p-3.5 rounded-2xl border-2 border-purple-500 shadow-xl flex items-center justify-center group">
+          <!-- The Dynamic QR Code Image -->
+          <img id="upi-modal-qr-image" src="./images/donation-upi-qr.jpg" alt="Dynamic Fixed Amount PhonePe UPI QR Code" class="w-60 h-60 sm:w-64 sm:h-64 object-contain rounded-xl select-none" />
           
-          <!-- Subtle corner accents for high tech look -->
-          <div class="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-purple-600 rounded-tl-md pointer-events-none"></div>
-          <div class="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-purple-600 rounded-tr-md pointer-events-none"></div>
-          <div class="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-purple-600 rounded-bl-md pointer-events-none"></div>
-          <div class="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-purple-600 rounded-br-md pointer-events-none"></div>
+          <!-- Modern corner accents -->
+          <div class="absolute top-2 left-2 w-5 h-5 border-t-4 border-l-4 border-purple-600 rounded-tl-lg pointer-events-none"></div>
+          <div class="absolute top-2 right-2 w-5 h-5 border-t-4 border-r-4 border-purple-600 rounded-tr-lg pointer-events-none"></div>
+          <div class="absolute bottom-2 left-2 w-5 h-5 border-b-4 border-l-4 border-purple-600 rounded-bl-lg pointer-events-none"></div>
+          <div class="absolute bottom-2 right-2 w-5 h-5 border-b-4 border-r-4 border-purple-600 rounded-br-lg pointer-events-none"></div>
         </div>
 
-        <p class="text-xs font-semibold text-slate-600 mt-3 text-center">
-          Scan using <strong class="text-purple-700">PhonePe</strong>, <strong class="text-blue-600">Google Pay</strong>, <strong class="text-cyan-600">Paytm</strong>, or any UPI App
+        <p class="text-xs font-bold text-slate-700 mt-3 text-center">
+          Amount is pre-filled! Scan via <strong class="text-purple-700">PhonePe</strong>, <strong class="text-blue-600">Google Pay</strong>, or <strong class="text-cyan-600">Paytm</strong>
         </p>
+
+        <!-- Direct Actions -->
+        <div class="flex flex-wrap items-center justify-center gap-2 mt-2">
+          <a id="upi-modal-mobile-btn" href="#" class="px-3.5 py-1.5 rounded-xl bg-[#5f259f] hover:bg-[#4b1d7f] text-white text-xs font-bold shadow-xs transition-colors inline-flex items-center gap-1.5 cursor-pointer">
+            <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+            <span>📱 Pay ₹<span id="modal-pay-amt-btn">2,500</span> directly in UPI App</span>
+          </a>
+          <button type="button" onclick="copyUpiId()" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold border border-slate-300 transition-colors inline-flex items-center gap-1 cursor-pointer">
+            <span class="material-symbols-outlined text-[15px]">content_copy</span>
+            <span>Copy UPI ID</span>
+          </button>
+        </div>
       </div>
 
-      <!-- 3-Step Guided Instruction -->
-      <div class="p-3.5 rounded-xl bg-purple-50/80 border border-purple-200/80 text-xs text-slate-700 space-y-1.5">
+      <!-- 3-Step Guided POS Instruction -->
+      <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 space-y-1.5">
         <div class="flex items-center gap-2 font-bold text-[#5f259f]">
-          <span class="material-symbols-outlined text-[16px]">touch_app</span>
-          <span>How to complete this donation:</span>
+          <span class="material-symbols-outlined text-[18px]">verified</span>
+          <span>How Fixed Mall-Style QR Checkout Works:</span>
         </div>
         <ol class="list-decimal list-inside space-y-1 text-[11px] text-slate-600 pl-1 leading-normal">
-          <li>Open your UPI app on mobile &amp; scan the QR code above.</li>
-          <li>Enter or verify the amount and complete UPI PIN authentication.</li>
-          <li>Tap <strong>"I Have Completed Payment"</strong> below to save your tax record.</li>
+          <li>Scan the QR code with PhonePe, Google Pay, or Paytm.</li>
+          <li>The fixed amount <strong>₹<span id="upi-modal-step-amount">2,500</span></strong> is automatically pre-filled into your payment screen.</li>
+          <li>Authorize your UPI PIN, then click <strong>"I Have Completed Payment"</strong> below to claim your 80G tax receipt.</li>
         </ol>
       </div>
 
       <!-- Modal Footer Buttons -->
       <div class="flex flex-col sm:flex-row items-center gap-2 pt-2 border-t border-slate-100">
-        <button id="btn-confirm-upi-paid" type="button" onclick="confirmUpiDonationPaid()" class="w-full sm:flex-1 h-11 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer">
+        <button id="btn-confirm-upi-paid" type="button" onclick="confirmUpiDonationPaid()" class="w-full sm:flex-1 h-12 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer">
           <span class="material-symbols-outlined text-[20px]">verified</span>
-          <span>I Have Completed Payment</span>
+          <span>I Have Completed Payment (₹<span id="upi-modal-btn-amount">2,500</span>)</span>
         </button>
-        <button type="button" onclick="closeUpiQrModal()" class="w-full sm:w-auto px-4 h-11 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 font-semibold text-xs transition-colors cursor-pointer">
-          Cancel
+        <button type="button" onclick="closeUpiQrModal()" class="w-full sm:w-auto px-5 h-12 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 font-semibold text-xs transition-colors cursor-pointer">
+          Close
         </button>
       </div>
     </div>
