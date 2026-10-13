@@ -1587,15 +1587,15 @@
         }
 
         const roleMap = {
-          restaurant: '/restaurant-dashboard.html',
-          ngo: '/ngo-dashboard.html',
-          driver: '/driver-dashboard.html',
+          restaurant: './restaurant-dashboard.html',
+          ngo: './ngo-dashboard.html',
+          driver: './driver-dashboard.html',
         };
 
         showToast('Login Successful', `Welcome back, ${userName}!`);
 
         setTimeout(() => {
-          window.location.href = roleMap[userRole] || '/restaurant-dashboard.html';
+          window.location.href = roleMap[userRole] || './restaurant-dashboard.html';
         }, 350);
       }
     }
@@ -1880,13 +1880,13 @@
       showToast(`Account Created`, `Welcome ${name}! Application submitted for review.`);
 
       const roleMap = {
-        restaurant: '/restaurant-dashboard.html',
-        ngo: '/ngo-dashboard.html',
-        driver: '/driver-dashboard.html',
+        restaurant: './restaurant-dashboard.html',
+        ngo: './ngo-dashboard.html',
+        driver: './driver-dashboard.html',
       };
 
       setTimeout(() => {
-        window.location.href = roleMap[role] || '/driver-dashboard.html';
+        window.location.href = roleMap[role] || './driver-dashboard.html';
       }, 700);
     }
 
