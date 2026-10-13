@@ -4016,6 +4016,17 @@ app.get('/api/admin/verification/audit-events', (req, res) => {
   res.json({ success: true, events: memoryDb.ngo_audit_events });
 });
 
+// Serve frontend static assets in production
+const FRONTEND_DIR = path.join(__dirname, '../frontend');
+if (fs.existsSync(FRONTEND_DIR)) {
+  app.use(express.static(FRONTEND_DIR));
+  
+  // Direct root access fallback to index.html
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(FRONTEND_DIR, 'index.html'));
+  });
+}
+
 // Start Express Server
 app.listen(PORT, () => {
   console.log(`🚀 Surplus-To-Shelter Supabase Backend Server running on http://localhost:${PORT}`);
