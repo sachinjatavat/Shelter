@@ -30,11 +30,17 @@ By integrating **multi-category aid routing**, **instant PhonePe UPI QR Code don
   - 📚 **Books & Stationery**: School textbooks, storybooks, and educational supplies.
   - 🩹 **Medicines & First Aid**: OTC medicines with safety expiry and batch verification.
   - 🧼 **Hygiene Packs**: Soaps, sanitizers, dental kits, and sanitary products.
-  - 💳 **Monetary Contributions & Instant UPI PhonePe QR Code**: Donors select verified beneficiary shelters and scan the dynamic PhonePe UPI QR code via PhonePe, Google Pay, Paytm, or BHIM.
-- **📱 Instant PhonePe UPI QR Code Donation Rail**:
-  - Embedded high-resolution PhonePe UPI QR Code (`images/donation-upi-qr.jpg`).
-  - Interactive popup modal displaying dynamic amount (e.g. ₹2,500) and beneficiary name.
-  - Direct 1-click payment confirmation with instant ledger entry and 80G tax receipt issuance.
+  - 💳 **Monetary Contributions & Mall-Style POS Fixed-Amount PhonePe UPI QR Terminal**: Donors input custom amounts or click quick denominations, generating a dynamic QR code pre-encoded with the exact fixed amount that routes directly to **Sachin Kumar Jatawat** (`8946955851-2@ybl`).
+- **🏬 Mall-Style POS Fixed-Amount PhonePe UPI QR Terminal**:
+  - **Locked Pre-Filled Amount**: Works identical to supermarket and shopping mall billing counters (Reliance, DMart, Zara). The exact entered amount (e.g. ₹500, ₹1,000, ₹2,500) is dynamically encoded into the NPCI UPI payload (`am=<amount>&mode=02&purpose=00`), so scanning with **PhonePe**, **Google Pay**, **Paytm**, or **BHIM** pre-fills and locks the exact amount automatically on the donor's screen.
+  - **Direct Account Routing**: 100% of the funds route directly to **Sachin Kumar Jatawat** (`8946955851-2@ybl`).
+  - **Dynamic Dual-Engine QR Generator**:
+    - **Client-Side Engine (`frontend/js/qrcode.min.js`)**: Instant zero-latency offline QR generation as the user types or clicks chips.
+    - **REST API Fallback (`GET /api/qr/upi`)**: Server-side endpoint generating high-resolution Base64 PNG data URLs.
+  - **Interactive POS Modal & Mobile 1-Tap**:
+    - Full-screen high-resolution modal with locked amount counter (`₹2,500.00`) and verified payee verification badge.
+    - 1-tap mobile payment deep-link (`upi://pay?...`) for donors on mobile devices.
+    - Instant ledger transaction recording and Section 80G Tax Exemption Certificate generation.
 - **📊 Interactive Analytics Hub (`restaurant-dashboard.html`)**:
   - Live SVG Donut / Pie Chart & Bar Graph toggle.
   - Visual breakdown across Food Rescue, Warm Clothing, Blankets, Educational Books, Medicines, and Monetary Grants.
@@ -119,15 +125,18 @@ By integrating **multi-category aid routing**, **instant PhonePe UPI QR Code don
 
 ## 📖 Comprehensive Step-by-Step Usage Guide
 
-### Scenario A: How to Pay Monetary Donation via PhonePe UPI QR Code
-1. Open the platform at `http://localhost:3000` and go to **Donor Portal** (`restaurant-post.html`).
-2. Click the **Monetary Contribution** category pill (or select "Donate Money (UPI QR)").
-3. Select the beneficiary shelter (e.g., *Hope Shelter & Care Center*) and specify your donation amount (e.g., *₹2,500*).
-4. Click **Post Donation** (or click **Enlarge QR Code & Complete Donation**).
-5. The **PhonePe UPI QR Code Modal** will immediately appear on screen.
-6. Open **PhonePe**, **Google Pay**, or **Paytm** on your mobile phone, scan the QR code, and complete the UPI transfer.
-7. Click **"I Have Completed Payment"** in the modal.
-8. The payment is instantly recorded in the Supabase ledger, and a Section 80G Tax Receipt is generated!
+### Scenario A: How to Pay Monetary Donation via Mall-Style Fixed-Amount PhonePe QR Code
+1. Open the platform at `http://localhost:3000` and go to **Donor Portal** (`restaurant-post.html?cat=money`).
+2. Click the **Monetary Contribution** category pill.
+3. Select your beneficiary shelter (e.g., *Hope Shelter & Care Center*) and specify your desired donation amount (e.g., *₹2,500* or click one of the quick chips: *₹200*, *₹500*, *₹1,000*, *₹2,500*, *₹5,000*, *₹10,000*).
+4. Notice the live **PhonePe POS Terminal** update instantly in real time with the **`FIXED ₹[amount]`** badge and verified payee **`✓ SACHIN KUMAR JATAWAT`** (`8946955851-2@ybl`).
+5. Click **"⚡ Generate Fixed-Amount QR Code for ₹[amount]"** or **"Enlarge Fixed QR Code"**.
+6. The full-screen **PhonePe POS Fixed-Amount Checkout Modal** appears with the high-resolution QR code and locked amount counter (`₹[amount].00`).
+7. Open **PhonePe**, **Google Pay**, **Paytm**, or **BHIM** on your mobile device and scan the screen:
+   - Just like scanning a supermarket POS bill, your UPI app **locks and pre-fills the exact donation amount** automatically (no typing required).
+   - If on mobile, tap the **"📱 Pay via App"** button to jump directly into your banking app with one click.
+8. Complete payment to **Sachin Kumar Jatawat**, return to the platform, and click **"✅ I Have Completed Payment"**.
+9. The transaction is instantly recorded into the verified Supabase ledger, and a Section 80G Tax Deduction Certificate is issued automatically!
 
 ### Scenario B: How an NGO Handles Rejection & Submits an Appeal
 1. When an administrator rejects an NGO's verification in `admin-dashboard.html` with a reason (e.g. *Invalid NGO-DARPAN ID*), the NGO's dashboard (`ngo-dashboard.html`) immediately reflects the rejection.
@@ -286,13 +295,14 @@ SUPABASE_ANON_KEY=sb_publishable__Q6ZFUUsSS6a28VjJRCL-w_DixWn7_Y
 
 ### Step 3: Launch Servers
 ```bash
-# Start Vite Frontend Dev Server (Port 3000)
+# Start Full Platform Concurrently (Express Backend :5000 + Vite Frontend :3000)
 npm run dev
 
-# Start Express Backend Server (Port 5000)
-npm run server
+# Or run services individually in separate terminals:
+npm run server   # Express Backend REST API Server (:5000)
+npm run client   # Vite Frontend Client (:3000)
 
-# Run Automated Test Suites
+# Run Automated Test Suites (43 Tests)
 npm test
 ```
 
