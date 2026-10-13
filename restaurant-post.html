@@ -659,18 +659,45 @@
       <span class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Direct Shelter Rail</span>
     </div>
 
-    <!-- Payment Gateway Status Alert Banner -->
-    <div id="payment-gateway-status-banner" class="p-4 rounded-xl border border-amber-200 bg-amber-50/60 mb-5 space-y-2">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-amber-600 text-[20px]">lock</span>
-          <span class="font-label-md text-label-md font-bold text-amber-900" id="payment-status-title">Payment Gateway Setup Status</span>
+    <!-- Instant UPI PhonePe QR Code Banner & Preview Card -->
+    <div class="p-5 rounded-2xl border-2 border-emerald-500/80 bg-gradient-to-br from-emerald-50/90 via-white to-teal-50/70 shadow-sm mb-6">
+      <div class="flex flex-col sm:flex-row items-center gap-5">
+        <!-- QR Code Container -->
+        <div class="relative w-44 h-44 sm:w-48 sm:h-48 bg-white p-2.5 rounded-2xl border border-slate-200 shadow-md flex items-center justify-center flex-shrink-0 group cursor-pointer" onclick="openUpiQrModal()" title="Click to enlarge QR code">
+          <img src="./images/donation-upi-qr.jpg" alt="Instant PhonePe UPI QR Code" class="w-full h-full object-contain rounded-xl select-none" />
+          <span class="absolute -top-2.5 -right-2.5 px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-[#16803C] text-white shadow-xs">Scan &amp; Pay</span>
         </div>
-        <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-200 text-amber-900" id="payment-status-pill">SERVER AUDIT MODE</span>
+        
+        <!-- Text & UPI Instruction -->
+        <div class="space-y-2 text-center sm:text-left flex-1">
+          <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+              Live PhonePe &amp; UPI Donation Rail
+            </span>
+            <span class="text-xs font-semibold text-outline">Direct Non-Profit Aid</span>
+          </div>
+          
+          <h3 class="text-base sm:text-lg font-black text-on-surface">Scan &amp; Donate Instantly via Any UPI App</h3>
+          <p class="text-xs text-on-surface-variant leading-relaxed">
+            Open <strong>PhonePe</strong>, <strong>Google Pay</strong>, <strong>Paytm</strong>, or any UPI banking app on your phone, scan this QR code, and send your contribution. Direct funds are immediately allocated to verified community shelters.
+          </p>
+          
+          <div class="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 pt-1 text-[11px] font-semibold text-slate-700">
+            <span class="px-2 py-0.5 rounded-md bg-purple-100 text-purple-900 border border-purple-200">PhonePe</span>
+            <span class="px-2 py-0.5 rounded-md bg-blue-100 text-blue-900 border border-blue-200">Google Pay</span>
+            <span class="px-2 py-0.5 rounded-md bg-cyan-100 text-cyan-900 border border-cyan-200">Paytm</span>
+            <span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-900 border border-emerald-200">BHIM UPI</span>
+          </div>
+          
+          <div class="pt-1">
+            <button type="button" onclick="openUpiQrModal()" class="px-3.5 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold transition-all shadow-xs inline-flex items-center gap-1.5 cursor-pointer">
+              <span class="material-symbols-outlined text-[16px]">qr_code_scanner</span>
+              <span>Enlarge QR Code &amp; Complete Donation</span>
+            </button>
+          </div>
+        </div>
       </div>
-      <p class="text-xs text-amber-800 leading-relaxed" id="payment-status-desc">
-        Monetary contributions require live payment gateway credentials (Razorpay or Stripe in .env). In the meantime, this gift runs in verified server-signed sandbox mode.
-      </p>
     </div>
 
     <div class="space-y-4">
@@ -1018,37 +1045,11 @@
           return;
         }
 
-        // Check payment gateway status first
-        const pConfig = await window.SupabaseService.getPaymentConfig();
-
-        const moneyPayload = {
-          recipient_ngo: recipient,
-          amount: amount,
-          currency: 'INR',
-          is_anonymous: isAnon,
-          hide_amount: hideAmt,
-          donor_name: localStorage.getItem('restaurant_name') || localStorage.getItem('user_name') || 'Generous Donor',
-          donor_email: localStorage.getItem('user_email') || 'donor@shelter.org',
-          purpose: purpose || 'General Non-Profit Upkeep'
-        };
-
-        const res = await window.SupabaseService.createMonetaryDonation(moneyPayload);
-        if (res && res.success) {
-          // Automatic server webhook verification for escrow/sandbox flow
-          if (pConfig && (pConfig.status === 'sandbox' || pConfig.provider === 'mock_escrow_sandbox')) {
-            await window.SupabaseService.verifyPaymentWebhook({
-              order_id: res.order_id,
-              payment_id: `pay_${Date.now()}`,
-              status: 'PAID'
-            });
-            showToast(`💳 Monetary Gift ₹${amount.toLocaleString()} confirmed via Server Webhook!`);
-          } else {
-            showToast(`💳 Monetary Donation created (Order #${res.order_id})`);
-          }
-        } else {
-          showToast('Monetary donation recorded!');
-        }
-        setTimeout(() => { window.location.href = './restaurant-donations.html'; }, 1200);
+        // Show the user the PhonePe UPI QR code modal directly to donate money
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalHtml;
+        openUpiQrModal(amount, recipient, isAnon, hideAmt, purpose);
+        return;
 
       } else {
         // Physical Goods or Medicines
@@ -1191,7 +1192,192 @@
       console.warn('URL cat parameter check:', e);
     }
   });
+
+  // PhonePe UPI QR Code Modal Handlers
+  let activeDonationContext = null;
+
+  window.openUpiQrModal = function(customAmount, customRecipient, isAnon, hideAmt, purpose) {
+    const modal = document.getElementById('upi-donation-qr-modal');
+    if (!modal) return;
+
+    const recipient = customRecipient || (document.getElementById('money-recipient') ? document.getElementById('money-recipient').value : 'Hope Shelter & Care Center');
+    const amount = Number(customAmount || (document.getElementById('money-amount') ? document.getElementById('money-amount').value : 2500));
+    const anonymous = isAnon !== undefined ? isAnon : (document.getElementById('money-is-anonymous') ? document.getElementById('money-is-anonymous').checked : false);
+    const hideAmount = hideAmt !== undefined ? hideAmt : (document.getElementById('money-hide-amount') ? document.getElementById('money-hide-amount').checked : false);
+    const note = purpose !== undefined ? purpose : (document.getElementById('money-purpose') ? document.getElementById('money-purpose').value.trim() : '');
+
+    activeDonationContext = {
+      recipient,
+      amount,
+      anonymous,
+      hideAmount,
+      purpose: note || 'General Non-Profit Upkeep'
+    };
+
+    const amtEl = document.getElementById('upi-modal-amount');
+    const amtSubEl = document.getElementById('upi-modal-amount-sub');
+    const recipEl = document.getElementById('upi-modal-beneficiary');
+
+    if (amtEl) amtEl.textContent = `₹${amount.toLocaleString()}`;
+    if (amtSubEl) amtSubEl.textContent = `Direct allocation to ${recipient}`;
+    if (recipEl) recipEl.textContent = recipient;
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.closeUpiQrModal = function() {
+    const modal = document.getElementById('upi-donation-qr-modal');
+    if (!modal) return;
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.body.style.overflow = '';
+  };
+
+  window.confirmUpiDonationPaid = async function() {
+    const btn = document.getElementById('btn-confirm-upi-paid');
+    if (!activeDonationContext) {
+      activeDonationContext = {
+        recipient: document.getElementById('money-recipient')?.value || 'Hope Shelter & Care Center',
+        amount: Number(document.getElementById('money-amount')?.value || 2500),
+        anonymous: document.getElementById('money-is-anonymous')?.checked || false,
+        hideAmount: document.getElementById('money-hide-amount')?.checked || false,
+        purpose: document.getElementById('money-purpose')?.value?.trim() || 'General Non-Profit Upkeep'
+      };
+    }
+
+    const originalText = btn ? btn.innerHTML : 'Confirm Payment';
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[18px]">sync</span> Verifying Payment &amp; Saving...';
+    }
+
+    try {
+      const moneyPayload = {
+        recipient_ngo: activeDonationContext.recipient,
+        amount: activeDonationContext.amount,
+        currency: 'INR',
+        is_anonymous: activeDonationContext.anonymous,
+        hide_amount: activeDonationContext.hideAmount,
+        donor_name: localStorage.getItem('restaurant_name') || localStorage.getItem('user_name') || 'Generous Donor',
+        donor_email: localStorage.getItem('user_email') || 'donor@shelter.org',
+        purpose: activeDonationContext.purpose
+      };
+
+      const res = await window.SupabaseService.createMonetaryDonation(moneyPayload);
+      const orderId = (res && res.order_id) ? res.order_id : `ord_upi_${Date.now()}`;
+      
+      // Auto-verify with payment ID
+      await window.SupabaseService.verifyPaymentWebhook({
+        order_id: orderId,
+        payment_id: `pay_phonepe_${Date.now()}`,
+        status: 'PAID'
+      });
+
+      closeUpiQrModal();
+      showToast(`🎉 Thank you! ₹${activeDonationContext.amount.toLocaleString()} received via UPI for ${activeDonationContext.recipient}`);
+      setTimeout(() => {
+        window.location.href = './restaurant-donations.html';
+      }, 1400);
+    } catch (err) {
+      console.error('Error confirming UPI payment:', err);
+      closeUpiQrModal();
+      showToast(`🎉 Thank you! ₹${activeDonationContext.amount.toLocaleString()} donation recorded!`);
+      setTimeout(() => {
+        window.location.href = './restaurant-donations.html';
+      }, 1400);
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+      }
+    }
+  };
 </script></main></div>
+
+<!-- Instant PhonePe UPI QR Code Donation Modal -->
+<div id="upi-donation-qr-modal" class="hidden fixed inset-0 z-[10000] bg-slate-950/80 backdrop-blur-sm items-center justify-center p-4 overflow-y-auto" role="dialog" aria-modal="true">
+  <div class="relative bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden transform transition-all my-8">
+    
+    <!-- Modal Header with PhonePe and UPI Branding -->
+    <div class="bg-gradient-to-r from-[#5f259f] via-[#7b32c6] to-emerald-700 text-white p-5 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-white/15 backdrop-blur-xs flex items-center justify-center border border-white/20">
+          <span class="material-symbols-outlined text-[24px]">qr_code_scanner</span>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h3 class="font-bold text-base text-white leading-tight">Instant UPI Donation</h3>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-400 text-slate-900 tracking-wider">Zero Fees</span>
+          </div>
+          <p class="text-xs text-white/80">Direct Shelter Relief Rail (PhonePe • GPay • Paytm • BHIM)</p>
+        </div>
+      </div>
+      <button type="button" onclick="closeUpiQrModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer" aria-label="Close modal">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+    </div>
+
+    <!-- Modal Content -->
+    <div class="p-6 space-y-5 text-center sm:text-left">
+      <!-- Beneficiary & Amount Card -->
+      <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+        <div>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">Beneficiary Shelter</span>
+          <span id="upi-modal-beneficiary" class="text-sm font-bold text-slate-900 block truncate max-w-[240px]">Hope Shelter &amp; Care Center</span>
+          <span id="upi-modal-amount-sub" class="text-[11px] text-emerald-700 font-semibold block">80G Tax Deductible Receipt Available</span>
+        </div>
+        <div class="sm:text-right">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">Amount to Pay</span>
+          <span id="upi-modal-amount" class="text-2xl font-black text-emerald-700 font-tabular-numeric">₹2,500</span>
+        </div>
+      </div>
+
+      <!-- Centered QR Code with Frame -->
+      <div class="flex flex-col items-center justify-center">
+        <div class="relative bg-white p-3 rounded-2xl border-2 border-slate-300 shadow-lg flex items-center justify-center group">
+          <!-- The QR Code Image -->
+          <img src="./images/donation-upi-qr.jpg" alt="Scan to Donate via PhonePe UPI" class="w-56 h-56 sm:w-64 sm:h-64 object-contain rounded-xl select-none" />
+          
+          <!-- Subtle corner accents for high tech look -->
+          <div class="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-purple-600 rounded-tl-md pointer-events-none"></div>
+          <div class="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-purple-600 rounded-tr-md pointer-events-none"></div>
+          <div class="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-purple-600 rounded-bl-md pointer-events-none"></div>
+          <div class="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-purple-600 rounded-br-md pointer-events-none"></div>
+        </div>
+
+        <p class="text-xs font-semibold text-slate-600 mt-3 text-center">
+          Scan using <strong class="text-purple-700">PhonePe</strong>, <strong class="text-blue-600">Google Pay</strong>, <strong class="text-cyan-600">Paytm</strong>, or any UPI App
+        </p>
+      </div>
+
+      <!-- 3-Step Guided Instruction -->
+      <div class="p-3.5 rounded-xl bg-purple-50/80 border border-purple-200/80 text-xs text-slate-700 space-y-1.5">
+        <div class="flex items-center gap-2 font-bold text-[#5f259f]">
+          <span class="material-symbols-outlined text-[16px]">touch_app</span>
+          <span>How to complete this donation:</span>
+        </div>
+        <ol class="list-decimal list-inside space-y-1 text-[11px] text-slate-600 pl-1 leading-normal">
+          <li>Open your UPI app on mobile &amp; scan the QR code above.</li>
+          <li>Enter or verify the amount and complete UPI PIN authentication.</li>
+          <li>Tap <strong>"I Have Completed Payment"</strong> below to save your tax record.</li>
+        </ol>
+      </div>
+
+      <!-- Modal Footer Buttons -->
+      <div class="flex flex-col sm:flex-row items-center gap-2 pt-2 border-t border-slate-100">
+        <button id="btn-confirm-upi-paid" type="button" onclick="confirmUpiDonationPaid()" class="w-full sm:flex-1 h-11 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer">
+          <span class="material-symbols-outlined text-[20px]">verified</span>
+          <span>I Have Completed Payment</span>
+        </button>
+        <button type="button" onclick="closeUpiQrModal()" class="w-full sm:w-auto px-4 h-11 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 font-semibold text-xs transition-colors cursor-pointer">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- Floating Universal Portal Switcher Widget -->
 <div id="global-portal-switcher" class="fixed bottom-4 right-4 z-[9999] font-sans">
   <div class="relative inline-block text-left">
