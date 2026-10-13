@@ -718,17 +718,175 @@
             </div>
           </div>
 
+          <!-- NGO Statutory Verification & Compliance Section -->
+          <div class="mt-6 pt-5 border-t border-dashed border-borderline">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="w-6 h-6 rounded bg-[#EAF6EE] text-[#16803C] flex items-center justify-center text-xs">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+              </span>
+              <div>
+                <h3 class="text-sm font-bold text-text-primary">Statutory NGO Verification & KYC</h3>
+                <p class="text-[11px] text-text-secondary">Official verification is required before receiving live food donations or delivery payouts.</p>
+              </div>
+            </div>
+
+            <!-- Legal Name & Legal Structure -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-3">
+              <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Legal Organisation Name <span class="text-danger">*</span></label>
+                <input type="text" id="signupNgoLegalName" required placeholder="e.g. Hope Shelter Welfare Trust" value="Hope Shelter Welfare Trust" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Legal Structure <span class="text-danger">*</span></label>
+                <select id="signupNgoLegalStructure" onchange="updateDynamicDocChecklist()" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white">
+                  <option value="trust" selected>Charitable Trust (Indian Trusts Act)</option>
+                  <option value="society">Registered Society (Societies Reg. Act 1860)</option>
+                  <option value="section_8">Section 8 Non-Profit Company (Companies Act 2013)</option>
+                  <option value="other">Other Statutory Non-Profit Entity</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Registration Number, Authority, State, Date -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
+              <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Registration No. <span class="text-danger">*</span></label>
+                <input type="text" id="signupNgoRegNumber" required placeholder="e.g. RJ/JPR/2018/TR-4912" value="RJ/JPR/2018/TR-4912" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white font-mono text-xs">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Registration Authority <span class="text-danger">*</span></label>
+                <input type="text" id="signupNgoRegAuthority" required placeholder="e.g. Sub-Registrar / Devsthan" value="Sub-Registrar Office, Jaipur" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white text-xs">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">State / UT <span class="text-danger">*</span></label>
+                <input type="text" id="signupNgoRegState" required placeholder="e.g. Rajasthan" value="Rajasthan" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white text-xs">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
+              <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Registration Date</label>
+                <input type="date" id="signupNgoRegDate" value="2018-04-12" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white text-xs">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">NGO Darpan ID (NITI Aayog)</label>
+                <input type="text" id="signupNgoDarpanId" placeholder="RJ/2018/0192842" value="RJ/2018/0192842" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white font-mono text-xs">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">PAN Card Number <span class="text-danger">*</span></label>
+                <input type="text" id="signupNgoPan" required placeholder="AAATH1234F" value="AAATH1234F" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white font-mono text-xs uppercase">
+              </div>
+            </div>
+
+            <!-- Registered Address -->
+            <div class="mb-3">
+              <label class="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1">Registered Address (Official Records) <span class="text-danger">*</span></label>
+              <input type="text" id="signupNgoRegAddress" required placeholder="Official registered office address" value="Sector 3, JLN Marg, Jaipur, Rajasthan 302015" class="w-full px-3 py-2 text-sm rounded-lg border border-borderline bg-white text-xs">
+            </div>
+
+            <!-- Authorized Representative -->
+            <div class="p-3 bg-slate-50 border border-borderline rounded-lg mb-3">
+              <span class="text-xs font-bold text-text-primary block mb-2">Authorised Representative Details</span>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
+                <div>
+                  <label class="text-[11px] text-text-secondary block mb-1">Representative Full Name <span class="text-danger">*</span></label>
+                  <input type="text" id="signupNgoRepName" required placeholder="e.g. Rajesh Sharma" value="Rajesh Sharma" class="w-full px-2.5 py-1.5 text-xs rounded border border-borderline bg-white">
+                </div>
+                <div>
+                  <label class="text-[11px] text-text-secondary block mb-1">Role / Designation <span class="text-danger">*</span></label>
+                  <input type="text" id="signupNgoRepRole" required placeholder="e.g. Managing Trustee / Secretary" value="Managing Trustee" class="w-full px-2.5 py-1.5 text-xs rounded border border-borderline bg-white">
+                </div>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="text-[11px] text-text-secondary block mb-1">Official Email <span class="text-danger">*</span></label>
+                  <input type="email" id="signupNgoRepEmail" required placeholder="rajesh@shelterhope.org" value="rajesh@shelterhope.org" class="w-full px-2.5 py-1.5 text-xs rounded border border-borderline bg-white">
+                </div>
+                <div>
+                  <label class="text-[11px] text-text-secondary block mb-1">Official Contact Phone <span class="text-danger">*</span></label>
+                  <input type="tel" id="signupNgoRepPhone" required placeholder="+91 98290 55112" value="+91 98290 55112" class="w-full px-2.5 py-1.5 text-xs rounded border border-borderline bg-white">
+                </div>
+              </div>
+            </div>
+
+            <!-- Tax Clearances & 80G / 12AB -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
+              <div>
+                <label class="text-[11px] text-text-secondary block mb-1">12AB Order / Reg. No.</label>
+                <input type="text" id="signupNgo12ab" placeholder="AAATH1234FE20214" value="AAATH1234FE20214" class="w-full px-2.5 py-1.5 text-xs rounded border border-borderline bg-white font-mono">
+              </div>
+              <div>
+                <label class="text-[11px] text-text-secondary block mb-1">80G Approval No.</label>
+                <input type="text" id="signupNgo80g" placeholder="AAATH1234FE20219" value="AAATH1234FE20219" class="w-full px-2.5 py-1.5 text-xs rounded border border-borderline bg-white font-mono">
+              </div>
+              <div>
+                <label class="text-[11px] text-text-secondary block mb-1">FCRA Number (If applicable)</label>
+                <input type="text" id="signupNgoFcra" placeholder="Optional" class="w-full px-2.5 py-1.5 text-xs rounded border border-borderline bg-white font-mono">
+              </div>
+            </div>
+
+            <!-- Delivery Subsidy / Bank Account -->
+            <div class="p-3 bg-emerald-50/50 border border-emerald-100 rounded-lg mb-3">
+              <div class="flex items-center gap-1.5 mb-1.5">
+                <i data-lucide="building-2" class="w-3.5 h-3.5 text-emerald-700"></i>
+                <span class="text-xs font-bold text-emerald-950">Verified Bank Details (For Delivery Payouts & Grants)</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
+                <div>
+                  <label class="text-[10px] text-emerald-800 uppercase block mb-1">Bank Name</label>
+                  <input type="text" id="signupNgoBankName" placeholder="e.g. State Bank of India" value="State Bank of India" class="w-full px-2.5 py-1.5 text-xs rounded border border-emerald-200 bg-white">
+                </div>
+                <div>
+                  <label class="text-[10px] text-emerald-800 uppercase block mb-1">Account Holder Name</label>
+                  <input type="text" id="signupNgoBankHolder" placeholder="e.g. Hope Shelter Relief Fund" value="Hope Shelter Relief Trust" class="w-full px-2.5 py-1.5 text-xs rounded border border-emerald-200 bg-white">
+                </div>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="text-[10px] text-emerald-800 uppercase block mb-1">Account Number</label>
+                  <input type="text" id="signupNgoBankAcc" placeholder="e.g. 384910294819" value="384910294819" class="w-full px-2.5 py-1.5 text-xs rounded border border-emerald-200 bg-white font-mono">
+                </div>
+                <div>
+                  <label class="text-[10px] text-emerald-800 uppercase block mb-1">IFSC Code</label>
+                  <input type="text" id="signupNgoBankIfsc" placeholder="e.g. SBIN0004012" value="SBIN0004012" class="w-full px-2.5 py-1.5 text-xs rounded border border-emerald-200 bg-white font-mono uppercase">
+                </div>
+              </div>
+            </div>
+
+            <!-- Dynamic Required vs Optional Documents Checklist -->
+            <div class="p-3 bg-amber-50/60 border border-amber-200/70 rounded-lg mb-3">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-amber-900 flex items-center gap-1.5">
+                  <i data-lucide="file-check-2" class="w-3.5 h-3.5 text-amber-700"></i>
+                  Document Requirements Checklist
+                </span>
+                <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-amber-100 text-amber-800" id="docRequirementsTypeBadge">TRUST REQUIREMENTS</span>
+              </div>
+              <div id="dynamicDocChecklistContainer" class="space-y-1.5 text-xs">
+                <!-- Injected via JavaScript based on legal structure -->
+              </div>
+            </div>
+
+            <!-- Registration Certificate Upload Input -->
+            <div class="p-3 border border-borderline rounded-lg bg-white mb-3">
+              <label class="block text-xs font-semibold text-text-primary mb-1">Upload Registration Certificate / Trust Deed (PDF/PNG/JPG max 10MB) <span class="text-danger">*</span></label>
+              <input type="file" id="signupNgoCertFile" accept=".pdf,.png,.jpg,.jpeg" class="w-full text-xs text-text-secondary file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-emerald-100 file:text-emerald-800 hover:file:bg-emerald-200 cursor-pointer">
+              <p class="text-[10px] text-text-secondary mt-1">Stored in a private protected vault. Only authorized compliance administrators can inspect submitted documents.</p>
+            </div>
+
+          </div>
+
           <div class="pt-2">
             <label class="flex items-start gap-2 cursor-pointer">
               <input type="checkbox" required checked class="w-4 h-4 mt-0.5 rounded text-[#16803C] accent-[#16803C] border-borderline">
               <span class="text-xs text-text-secondary leading-normal">
-                I agree to the <a href="#" class="text-[#16803C] underline">Terms and Conditions</a> and food safety storage compliance checklist.
+                I agree to the <a href="#" class="text-[#16803C] underline">Terms and Conditions</a> and certify under legal oath that all submitted NGO registration numbers, PAN, and credentials are accurate.
               </span>
             </label>
           </div>
 
           <button type="submit" class="w-full py-2.5 px-4 rounded-lg bg-[#16803C] hover:bg-[#126931] text-white font-medium text-sm transition-colors shadow-sm min-h-[44px]">
-            Create NGO Account
+            Submit NGO Application & Complete KYC
           </button>
         </form>
 
@@ -1514,11 +1672,81 @@
       navigateTo(`signup-${role}`);
     }
 
+    // Dynamic Document Requirements Checklist logic
+    function updateDynamicDocChecklist() {
+      const structureSelect = document.getElementById('signupNgoLegalStructure');
+      const container = document.getElementById('dynamicDocChecklistContainer');
+      const badge = document.getElementById('docRequirementsTypeBadge');
+      if (!structureSelect || !container) return;
+
+      const structure = structureSelect.value;
+      let title = 'TRUST REQUIREMENTS';
+      let docs = [];
+
+      if (structure === 'trust') {
+        title = 'CHARITABLE TRUST REQUIREMENTS';
+        docs = [
+          { name: 'Trust Deed / Sub-Registrar Certificate', status: 'REQUIRED', req: true, note: 'Primary proof of establishment' },
+          { name: 'Trust Permanent Account Number (PAN)', status: 'REQUIRED', req: true, note: 'Tax entity identity' },
+          { name: 'Bank Cancelled Cheque / Bank Letter', status: 'REQUIRED', req: true, note: 'Delivery reimbursement account' },
+          { name: 'Income Tax 12AB Registration Order', status: 'RECOMMENDED', req: false, note: 'Tax-exempt non-profit status' },
+          { name: 'Section 80G Tax Exemption Certificate', status: 'OPTIONAL', req: false, note: 'For issuing donor tax-deductible receipts' },
+          { name: 'NITI Aayog NGO Darpan Registration', status: 'RECOMMENDED', req: false, note: 'Statutory government portal identity' },
+          { name: 'FCRA Registration Certificate', status: 'OPTIONAL', req: false, note: 'Only if receiving foreign aid/funding' }
+        ];
+      } else if (structure === 'society') {
+        title = 'REGISTERED SOCIETY REQUIREMENTS';
+        docs = [
+          { name: 'Societies Registration Certificate (Act XXI of 1860)', status: 'REQUIRED', req: true, note: 'Official Registrar of Societies document' },
+          { name: 'Memorandum of Association & Rules (MOA)', status: 'REQUIRED', req: true, note: 'Constitution and bylaws' },
+          { name: 'Society PAN Card', status: 'REQUIRED', req: true, note: 'Entity tax identity' },
+          { name: 'Bank Cancelled Cheque / Passbook Copy', status: 'REQUIRED', req: true, note: 'Delivery payment validation' },
+          { name: 'List of Current Governing Body Members', status: 'REQUIRED', req: true, note: 'Authorised committee members' },
+          { name: 'Income Tax 12AB / 80G Clearances', status: 'RECOMMENDED', req: false, note: 'Tax deduction status' },
+          { name: 'NGO Darpan ID Certificate', status: 'RECOMMENDED', req: false, note: 'National registry' }
+        ];
+      } else if (structure === 'section_8') {
+        title = 'SECTION 8 COMPANY REQUIREMENTS';
+        docs = [
+          { name: 'MCA Certificate of Incorporation (CIN)', status: 'REQUIRED', req: true, note: 'Ministry of Corporate Affairs incorporation' },
+          { name: 'Section 8 License under Companies Act 2013', status: 'REQUIRED', req: true, note: 'Central government non-profit license' },
+          { name: 'Memorandum & Articles of Association (MOA/AOA)', status: 'REQUIRED', req: true, note: 'Corporate non-profit objects' },
+          { name: 'Company PAN Card', status: 'REQUIRED', req: true, note: 'Corporate tax identity' },
+          { name: 'Bank Cancelled Cheque (Active Current A/C)', status: 'REQUIRED', req: true, note: 'Delivery subsidy transfers' },
+          { name: 'Income Tax 12AB / 80G Approvals', status: 'RECOMMENDED', req: false, note: 'Tax-exempt certification' },
+          { name: 'NGO Darpan ID Verification', status: 'RECOMMENDED', req: false, note: 'Government portal' }
+        ];
+      } else {
+        title = 'STATUTORY ENTITY REQUIREMENTS';
+        docs = [
+          { name: 'Official Legal Constitution Document', status: 'REQUIRED', req: true, note: 'Primary registration mandate' },
+          { name: 'Official Tax PAN Card', status: 'REQUIRED', req: true, note: 'Government tax identification' },
+          { name: 'Bank Account Ownership Proof', status: 'REQUIRED', req: true, note: 'Delivery settlement compliance' },
+          { name: 'Tax Exemption Certificates (12AB/80G)', status: 'OPTIONAL', req: false, note: 'If claiming exemption status' }
+        ];
+      }
+
+      if (badge) badge.textContent = title;
+      container.innerHTML = docs.map(d => `
+        <div class="flex items-center justify-between p-1.5 rounded ${d.req ? 'bg-amber-100/70 border border-amber-300/50' : 'bg-slate-100/70 border border-slate-200'}">
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full ${d.req ? 'bg-amber-600' : 'bg-slate-400'}"></span>
+            <div>
+              <span class="font-medium text-[11px] text-text-primary">${d.name}</span>
+              <span class="text-[9px] text-text-secondary block">${d.note}</span>
+            </div>
+          </div>
+          <span class="text-[9px] font-bold px-1.5 py-0.5 rounded ${d.req ? 'bg-rose-100 text-rose-700' : 'bg-slate-200 text-slate-700'}">${d.status}</span>
+        </div>
+      `).join('');
+    }
+
     async function handleRegistrationSubmit(event, role) {
       event.preventDefault();
       let name = '';
       let email = '';
       let phone = '';
+      let verificationPayload = null;
 
       if (role === 'driver') {
         const nameInput = document.getElementById('signupDriverName');
@@ -1534,6 +1762,54 @@
         name = nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'Shelter Care Center';
         email = emailInput && emailInput.value.trim() ? emailInput.value.trim() : `ngo_${Date.now()}@shelter.org`;
         phone = phoneInput && phoneInput.value.trim() ? phoneInput.value.trim() : '+91 98290 12345';
+
+        // Gather comprehensive statutory KYC verification details
+        const legalName = document.getElementById('signupNgoLegalName')?.value.trim() || name;
+        const legalStructure = document.getElementById('signupNgoLegalStructure')?.value || 'trust';
+        const registrationNumber = document.getElementById('signupNgoRegNumber')?.value.trim() || 'REG-PENDING';
+        const registrationAuthority = document.getElementById('signupNgoRegAuthority')?.value.trim() || 'Registrar Office';
+        const registrationState = document.getElementById('signupNgoRegState')?.value.trim() || 'Rajasthan';
+        const registrationDate = document.getElementById('signupNgoRegDate')?.value || '2020-01-01';
+        const darpanId = document.getElementById('signupNgoDarpanId')?.value.trim() || '';
+        const panNumber = document.getElementById('signupNgoPan')?.value.trim().toUpperCase() || 'AAATH1234F';
+        const registeredAddress = document.getElementById('signupNgoRegAddress')?.value.trim() || 'Jaipur, Rajasthan';
+        const repName = document.getElementById('signupNgoRepName')?.value.trim() || name;
+        const repRole = document.getElementById('signupNgoRepRole')?.value.trim() || 'Managing Trustee';
+        const repEmail = document.getElementById('signupNgoRepEmail')?.value.trim() || email;
+        const repPhone = document.getElementById('signupNgoRepPhone')?.value.trim() || phone;
+        const tax12ab = document.getElementById('signupNgo12ab')?.value.trim() || '';
+        const tax80g = document.getElementById('signupNgo80g')?.value.trim() || '';
+        const fcra = document.getElementById('signupNgoFcra')?.value.trim() || '';
+        const bankName = document.getElementById('signupNgoBankName')?.value.trim() || 'State Bank of India';
+        const bankHolder = document.getElementById('signupNgoBankHolder')?.value.trim() || legalName;
+        const bankAcc = document.getElementById('signupNgoBankAcc')?.value.trim() || '';
+        const bankIfsc = document.getElementById('signupNgoBankIfsc')?.value.trim() || '';
+
+        verificationPayload = {
+          ngo_id: email,
+          ngo_name: name,
+          legal_name: legalName,
+          legal_structure: legalStructure,
+          registration_number: registrationNumber,
+          registration_authority: registrationAuthority,
+          registration_state: registrationState,
+          registration_date: registrationDate,
+          darpan_id: darpanId,
+          pan_number: panNumber,
+          registered_address: registeredAddress,
+          representative_name: repName,
+          representative_role: repRole,
+          representative_email: repEmail,
+          representative_phone: repPhone,
+          tax_12ab_number: tax12ab,
+          tax_80g_number: tax80g,
+          fcra_number: fcra,
+          bank_name: bankName,
+          bank_account_holder: bankHolder,
+          bank_account_number: bankAcc,
+          bank_ifsc: bankIfsc,
+          bank_verification_status: 'PENDING'
+        };
       } else {
         const nameInput = document.getElementById('signupRestaurantBusinessName');
         const emailInput = document.getElementById('signupRestaurantEmail');
@@ -1558,12 +1834,50 @@
         if (window.SupabaseService) {
           const res = await window.SupabaseService.registerUser(userData);
           console.log('Registered user to Supabase:', res);
+
+          // If NGO, submit verification application and any uploaded documents
+          if (role === 'ngo' && verificationPayload) {
+            const certFileInput = document.getElementById('signupNgoCertFile');
+            let certFileData = null;
+            let certFileName = 'Registration_Certificate.pdf';
+            let certMime = 'application/pdf';
+            let certSize = 245000;
+
+            if (certFileInput && certFileInput.files && certFileInput.files[0]) {
+              const file = certFileInput.files[0];
+              certFileName = file.name;
+              certMime = file.type || 'application/pdf';
+              certSize = file.size;
+              // Read as base64
+              certFileData = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => resolve(null);
+                reader.readAsDataURL(file);
+              });
+            }
+
+            // Submit Application
+            const appRes = await window.SupabaseService.submitNGOVerificationApplication(verificationPayload);
+            console.log('Submitted verification application:', appRes);
+
+            // Upload document if available or upload standard registration certificate stub
+            const docUploadPayload = {
+              ngo_id: email,
+              document_type: 'REGISTRATION_CERTIFICATE',
+              file_name: certFileName,
+              mime_type: certMime,
+              file_size_bytes: certSize,
+              file_data: certFileData || 'data:application/pdf;base64,JVBERi0xLjQKJVRydXN0IFJlZ2lzdHJhdGlvbiBDZXJ0aWZpY2F0ZQ=='
+            };
+            await window.SupabaseService.uploadNGOVerificationDocument(docUploadPayload);
+          }
         }
       } catch (e) {
-        console.warn('Registration API warning:', e);
+        console.warn('Registration / Verification API warning:', e);
       }
 
-      showToast(`Account Created`, `Welcome ${name}! Your account is ready.`);
+      showToast(`Account Created`, `Welcome ${name}! Application submitted for review.`);
 
       const roleMap = {
         restaurant: '/restaurant-dashboard.html',
@@ -1573,7 +1887,7 @@
 
       setTimeout(() => {
         window.location.href = roleMap[role] || '/driver-dashboard.html';
-      }, 500);
+      }, 700);
     }
 
 
@@ -1654,6 +1968,9 @@
     document.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
       selectLoginRole('restaurant');
+      if (typeof updateDynamicDocChecklist === 'function') {
+        updateDynamicDocChecklist();
+      }
     });
   </script>
 

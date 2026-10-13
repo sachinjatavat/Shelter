@@ -379,3 +379,133 @@ CREATE POLICY "Allow all access on ngo_verifications" ON public.ngo_verification
 CREATE POLICY "Allow all access on sponsorships" ON public.sponsorships FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all access on advertisements" ON public.advertisements FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all access on subscriptions" ON public.subscriptions FOR ALL USING (true) WITH CHECK (true);
+
+-- ============================================================================
+-- 11. STATUTORY NGO VERIFICATION SYSTEM (APPLICATIONS, DOCUMENTS, REVIEWS & AUDIT)
+-- ============================================================================
+
+-- Applications Table
+CREATE TABLE IF NOT EXISTS public.ngo_verification_applications (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  ngo_id TEXT NOT NULL,
+  legal_name TEXT NOT NULL,
+  legal_structure TEXT NOT NULL CHECK (legal_structure IN ('trust', 'society', 'section_8', 'other')),
+  registration_number TEXT NOT NULL,
+  registration_authority TEXT NOT NULL,
+  registration_state TEXT NOT NULL,
+  registration_date DATE,
+  darpan_id TEXT,
+  pan TEXT NOT NULL,
+  registered_address TEXT NOT NULL,
+  rep_name TEXT NOT NULL,
+  rep_role TEXT NOT NULL,
+  rep_email TEXT NOT NULL,
+  rep_phone TEXT NOT NULL,
+  tax_12ab_number TEXT,
+  tax_12ab_valid_until DATE,
+  tax_80g_number TEXT,
+  tax_80g_valid_until DATE,
+  fcra_number TEXT,
+  fcra_valid_until DATE,
+  bank_account_holder TEXT,
+  bank_name TEXT,
+  bank_account_number TEXT,
+  bank_ifsc TEXT,
+  bank_verification_status TEXT DEFAULT 'PENDING' CHECK (bank_verification_status IN ('PENDING', 'VERIFIED', 'FAILED')),
+  status TEXT NOT NULL DEFAULT 'PENDING_REVIEW' CHECK (status IN ('NOT_SUBMITTED', 'PENDING_REVIEW', 'ADDITIONAL_INFORMATION_REQUIRED', 'VERIFIED', 'REJECTED', 'SUSPENDED')),
+  missing_information TEXT,
+  rejection_reason TEXT,
+  suspension_reason TEXT,
+  reviewer_id TEXT,
+  reviewer_name TEXT,
+  submitted_at TIMESTAMPTZ DEFAULT NOW(),
+  reviewed_at TIMESTAMPTZ,
+  decision_notes TEXT,
+  verification_checklist JSONB DEFAULT '{"legal_name_matched":false,"registration_number_verified":false,"certificate_valid":false,"address_verified":false,"rep_authorized":false,"tax_approvals_verified":false,"bank_account_verified":false,"verification_source":"","verification_date":null,"verification_notes":""}'::jsonb,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_unique_ngo_verification_application ON public.ngo_verification_applications (ngo_id);
+
+-- Verification Documents Table
+CREATE TABLE IF NOT EXISTS public.ngo_verification_documents (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  application_id UUID REFERENCES public.ngo_verification_applications(id) ON DELETE CASCADE,
+  ngo_id TEXT NOT NULL,
+  document_type TEXT NOT NULL,
+  file_name TEXT NOT NULL,
+  file_path TEXT NOT NULL,
+  file_size INT,
+  mime_type TEXT,
+  is_required BOOLEAN DEFAULT FALSE,
+  verification_status TEXT DEFAULT 'PENDING' CHECK (verification_status IN ('PENDING', 'VERIFIED', 'NEEDS_CORRECTION', 'REJECTED')),
+  correction_notes TEXT,
+  uploaded_at TIMESTAMPTZ DEFAULT NOW(),
+  verified_at TIMESTAMPTZ,
+  verified_by TEXT
+);
+
+-- Review History Table
+CREATE TABLE IF NOT EXISTS public.ngo_verification_history (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  application_id UUID REFERENCES public.ngo_verification_applications(id) ON DELETE CASCADE,
+  ngo_id TEXT NOT NULL,
+  previous_status TEXT,
+  new_status TEXT NOT NULL,
+  action TEXT NOT NULL,
+  performed_by TEXT NOT NULL,
+  performer_role TEXT NOT NULL DEFAULT 'admin',
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Admin Notes Table
+CREATE TABLE IF NOT EXISTS public.ngo_verification_notes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  application_id UUID REFERENCES public.ngo_verification_applications(id) ON DELETE CASCADE,
+  author_id TEXT NOT NULL,
+  author_name TEXT NOT NULL,
+  is_internal BOOLEAN DEFAULT TRUE,
+  note TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Audit Events Table
+CREATE TABLE IF NOT EXISTS public.ngo_audit_events (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_type TEXT NOT NULL,
+  entity_type TEXT NOT NULL,
+  entity_id TEXT NOT NULL,
+  actor_id TEXT NOT NULL,
+  actor_role TEXT NOT NULL,
+  ip_address TEXT,
+  details JSONB DEFAULT '{}'::jsonb,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable RLS for New Verification Tables
+ALTER TABLE public.ngo_verification_applications ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.ngo_verification_documents ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.ngo_verification_history ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.ngo_verification_notes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.ngo_audit_events ENABLE ROW LEVEL SECURITY;
+
+-- Clean existing verification policies if they already exist (Idempotent rerun support)
+DROP POLICY IF EXISTS "Allow all access on ngo_verification_applications" ON public.ngo_verification_applications;
+DROP POLICY IF EXISTS "Allow all access on ngo_verification_documents" ON public.ngo_verification_documents;
+DROP POLICY IF EXISTS "Allow all access on ngo_verification_history" ON public.ngo_verification_history;
+DROP POLICY IF EXISTS "Allow all access on ngo_verification_notes" ON public.ngo_verification_notes;
+DROP POLICY IF EXISTS "Allow all access on ngo_audit_events" ON public.ngo_audit_events;
+
+DROP POLICY IF EXISTS "Admins have full access to applications" ON public.ngo_verification_applications;
+DROP POLICY IF EXISTS "Admins have full access to documents" ON public.ngo_verification_documents;
+DROP POLICY IF EXISTS "Admins and NGOs view history" ON public.ngo_verification_history;
+DROP POLICY IF EXISTS "Admins have full access to notes" ON public.ngo_verification_notes;
+DROP POLICY IF EXISTS "Admins have access to audit events" ON public.ngo_audit_events;
+
+CREATE POLICY "Allow all access on ngo_verification_applications" ON public.ngo_verification_applications FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow all access on ngo_verification_documents" ON public.ngo_verification_documents FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow all access on ngo_verification_history" ON public.ngo_verification_history FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow all access on ngo_verification_notes" ON public.ngo_verification_notes FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow all access on ngo_audit_events" ON public.ngo_audit_events FOR ALL USING (true) WITH CHECK (true);
+

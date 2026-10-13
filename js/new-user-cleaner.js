@@ -40,8 +40,10 @@
     if (path.includes('ngo')) {
       const activeShelter = info.ngoName;
       if (activeShelter) {
-        document.querySelectorAll('header span').forEach(el => {
-          if (el.textContent.includes('Hope Shelter') || el.classList.contains('text-brand-dark')) {
+        const topbarEl = document.getElementById('ngo-topbar-name');
+        if (topbarEl) topbarEl.textContent = activeShelter;
+        document.querySelectorAll('header span, .user-name-display').forEach(el => {
+          if (!el.closest('#platform-brand-logo, .brand-logo, header a') && (el.textContent.includes('Hope Shelter') || el.id === 'ngo-topbar-name')) {
             el.textContent = activeShelter;
           }
         });

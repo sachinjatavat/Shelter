@@ -477,7 +477,7 @@
       let merged = [...localList];
       if (window.SupabaseService) {
         try {
-          const remote = await window.SupabaseService.getDonations();
+          const remote = await window.SupabaseService.getDonations({ userHistoryOnly: true });
           if (Array.isArray(remote) && remote.length > 0) {
             // Keep remote entries that aren't already locally present
             remote.forEach(r => {

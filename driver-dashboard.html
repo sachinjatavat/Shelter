@@ -119,61 +119,239 @@
 <span>Remaining Payload: 32 kg available</span>
 </div>
 </div>
-<!-- 4 Summary Metric Cards (Exact Shelter Dashboard Aesthetic) -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-<!-- Card 1 -->
-<div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm flex flex-col justify-between">
-<div class="flex items-start justify-between">
-<span class="font-label-md text-label-md text-on-surface-variant">Active Pickup</span>
-<div class="w-8 h-8 rounded-lg bg-on-tertiary-container flex items-center justify-center text-primary-container">
-<span class="material-symbols-outlined text-[18px]">local_shipping</span>
+<!-- Interactive Courier Mission & Fleet Dispatch Analytics Hub -->
+<div class="my-6 bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-5 sm:p-6 shadow-sm hover:border-outline-variant/60 transition-all">
+  <!-- Hub Header with View Switcher -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-outline-variant/20">
+    <div class="flex items-center gap-2.5">
+      <div class="w-9 h-9 rounded-xl bg-on-tertiary-container text-primary-container flex items-center justify-center font-bold text-base shadow-2xs border border-primary-container/20">
+        <span class="material-symbols-outlined text-[20px]">donut_large</span>
+      </div>
+      <div>
+        <h2 class="text-sm sm:text-base font-bold text-on-surface flex items-center gap-2">
+          <span>Courier Mission &amp; Fleet Dispatch Analytics</span>
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-secondary-container text-on-secondary-container border border-secondary/30">Active Shift Live</span>
+        </h2>
+        <p class="text-xs text-outline">Real-time driver dispatch telemetry across active pickups, nearby donor alerts &amp; delivered relief cargo</p>
+      </div>
+    </div>
+    
+    <!-- View Switcher Tabs -->
+    <div class="inline-flex p-1 bg-surface-container-low rounded-xl border border-outline-variant/30 self-start sm:self-auto text-xs font-semibold">
+      <button type="button" id="driver-btn-pie" onclick="switchDriverChart('pie')" class="px-3 py-1.5 rounded-lg bg-white text-primary-container font-bold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer">
+        <span class="material-symbols-outlined text-[15px]">donut_large</span>
+        <span>Pie / Donut</span>
+      </button>
+      <button type="button" id="driver-btn-bar" onclick="switchDriverChart('bar')" class="px-3 py-1.5 rounded-lg text-outline hover:text-on-surface transition-all flex items-center gap-1.5 cursor-pointer">
+        <span class="material-symbols-outlined text-[15px]">bar_chart</span>
+        <span>Activity Bar</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Visual Body: Chart Visualization + Metric Breakdown Panel -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-5 items-center">
+    <!-- Visual Chart Stage (Left: 5 cols) -->
+    <div class="lg:col-span-5 flex flex-col items-center justify-center p-3 relative">
+      <!-- Tooltip Container -->
+      <div id="driver-chart-tooltip" class="absolute -top-2 bg-slate-900 text-white text-[11px] font-semibold py-1 px-2.5 rounded-lg shadow-lg pointer-events-none opacity-0 transition-opacity z-20 whitespace-nowrap">
+        Available Pickups: 4 Waiting (45%)
+      </div>
+
+      <!-- Donut / Pie View -->
+      <div id="driver-pie-view" class="relative w-56 h-56 sm:w-60 sm:h-60 flex items-center justify-center">
+        <svg viewBox="0 0 200 200" class="w-full h-full transform -rotate-90 filter drop-shadow-sm">
+          <!-- Background track -->
+          <circle cx="100" cy="100" r="70" fill="transparent" stroke="#f1f5f9" stroke-width="26" />
+          
+          <!-- Slice 1: Available Pickups (45% -> 198 of 440) -->
+          <circle id="driver-slice-1" cx="100" cy="100" r="70" fill="transparent" stroke="#2563EB" stroke-width="26"
+            stroke-dasharray="198 440" stroke-dashoffset="0"
+            class="transition-all duration-300 hover:opacity-85 cursor-pointer"
+            onmouseenter="showDriverTip('📦 Available Pickups: 4 Waiting (45%)', event)" onmouseleave="hideDriverTip()" />
+
+          <!-- Slice 2: Completed Today (25% -> 110 of 440) -->
+          <circle id="driver-slice-2" cx="100" cy="100" r="70" fill="transparent" stroke="#059669" stroke-width="26"
+            stroke-dasharray="110 440" stroke-dashoffset="-198"
+            class="transition-all duration-300 hover:opacity-85 cursor-pointer"
+            onmouseenter="showDriverTip('✅ Completed Runs: 3 Delivered (25%)', event)" onmouseleave="hideDriverTip()" />
+
+          <!-- Slice 3: Active En Route (15% -> 66 of 440) -->
+          <circle id="driver-slice-3" cx="100" cy="100" r="70" fill="transparent" stroke="#15803D" stroke-width="26"
+            stroke-dasharray="66 440" stroke-dashoffset="-308"
+            class="transition-all duration-300 hover:opacity-85 cursor-pointer"
+            onmouseenter="showDriverTip('🚚 Active Pickup: 1 En Route (15%)', event)" onmouseleave="hideDriverTip()" />
+
+          <!-- Slice 4: Relief Cargo Weight (15% -> 66 of 440) -->
+          <circle id="driver-slice-4" cx="100" cy="100" r="70" fill="transparent" stroke="#D97706" stroke-width="26"
+            stroke-dasharray="66 440" stroke-dashoffset="-374"
+            class="transition-all duration-300 hover:opacity-85 cursor-pointer"
+            onmouseenter="showDriverTip('⚖️ Relief Cargo: 48 kg Delivered (15%)', event)" onmouseleave="hideDriverTip()" />
+        </svg>
+
+        <!-- Center Badge Metric inside Donut -->
+        <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
+          <span class="text-[10px] uppercase font-bold text-outline tracking-wider">Shift Stats</span>
+          <span class="text-xl sm:text-2xl font-black text-on-surface tracking-tight" id="driver-center-metric">8 Tasks</span>
+          <span class="text-[10px] font-bold text-primary-container bg-on-tertiary-container px-2 py-0.5 rounded-full border border-primary-container/20 mt-0.5">48 kg Cargo</span>
+        </div>
+      </div>
+
+      <!-- Activity Bar View (Hidden by default, shown on toggle) -->
+      <div id="driver-bar-view" class="hidden w-full space-y-3 px-2 py-2">
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs font-semibold">
+            <span class="text-slate-700 flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#2563EB]"></span> Available Pickups</span>
+            <span class="font-bold text-slate-900">4 Waiting (45%)</span>
+          </div>
+          <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+            <div class="h-full bg-[#2563EB] rounded-full transition-all duration-500" style="width: 45%"></div>
+          </div>
+        </div>
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs font-semibold">
+            <span class="text-slate-700 flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#059669]"></span> Completed Missions</span>
+            <span class="font-bold text-slate-900">3 Delivered (25%)</span>
+          </div>
+          <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+            <div class="h-full bg-[#059669] rounded-full transition-all duration-500" style="width: 25%"></div>
+          </div>
+        </div>
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs font-semibold">
+            <span class="text-slate-700 flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#15803D]"></span> Active In-Transit</span>
+            <span class="font-bold text-slate-900">1 Mission (15%)</span>
+          </div>
+          <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+            <div class="h-full bg-[#15803D] rounded-full transition-all duration-500" style="width: 15%"></div>
+          </div>
+        </div>
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs font-semibold">
+            <span class="text-slate-700 flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#D97706]"></span> Cargo Relieved</span>
+            <span class="font-bold text-slate-900">48 kg/units (15%)</span>
+          </div>
+          <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+            <div class="h-full bg-[#D97706] rounded-full transition-all duration-500" style="width: 15%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Metric Breakdown Cards (Right: 7 cols) -->
+    <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <!-- Card 1: Active Pickup -->
+      <div class="p-3.5 rounded-xl bg-surface-container-low/70 border border-outline-variant/30 hover:bg-surface-container-low transition-all">
+        <div class="flex items-center justify-between">
+          <span class="font-label-md text-label-md text-on-surface-variant">Active Pickup</span>
+          <div class="w-7 h-7 rounded-lg bg-on-tertiary-container flex items-center justify-center text-primary-container">
+            <span class="material-symbols-outlined text-[16px]">local_shipping</span>
+          </div>
+        </div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span class="font-metric-val text-metric-val text-on-surface">1</span>
+          <span class="text-[11px] font-semibold text-primary-container">En route</span>
+        </div>
+        <div class="mt-2 text-[11px] text-on-surface-variant flex items-center gap-1 truncate">
+          <span class="material-symbols-outlined text-[13px] text-primary-container">navigation</span>
+          <span>Green Leaf Restaurant</span>
+        </div>
+      </div>
+
+      <!-- Card 2: Available Pickups -->
+      <div class="p-3.5 rounded-xl bg-surface-container-low/70 border border-outline-variant/30 hover:bg-surface-container-low transition-all">
+        <div class="flex items-center justify-between">
+          <span class="font-label-md text-label-md text-on-surface-variant">Available Pickups</span>
+          <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center">
+            <span class="material-symbols-outlined text-[16px]">inventory_2</span>
+          </div>
+        </div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span class="font-metric-val text-metric-val text-on-surface">4</span>
+          <span class="text-[11px] font-semibold text-error">2 urgent</span>
+        </div>
+        <div class="mt-2 text-[11px] text-error font-medium flex items-center gap-1">
+          <span class="material-symbols-outlined text-[13px]">alarm</span>
+          <span>Expiring donors near you</span>
+        </div>
+      </div>
+
+      <!-- Card 3: Completed Today -->
+      <div class="p-3.5 rounded-xl bg-surface-container-low/70 border border-outline-variant/30 hover:bg-surface-container-low transition-all">
+        <div class="flex items-center justify-between">
+          <span class="font-label-md text-label-md text-on-surface-variant">Completed Today</span>
+          <div class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center">
+            <span class="material-symbols-outlined text-[16px]">task_alt</span>
+          </div>
+        </div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span class="font-metric-val text-metric-val text-on-surface">3</span>
+          <span class="text-[11px] font-semibold text-emerald-800">+1 today</span>
+        </div>
+        <div class="mt-2 text-[11px] text-outline flex items-center gap-1">
+          <span class="material-symbols-outlined text-[13px] text-emerald-700">verified</span>
+          <span>Delivered to registered shelters</span>
+        </div>
+      </div>
+
+      <!-- Card 4: Relief Goods Delivered -->
+      <div class="p-3.5 rounded-xl bg-surface-container-low/70 border border-outline-variant/30 hover:bg-surface-container-low transition-all">
+        <div class="flex items-center justify-between">
+          <span class="font-label-md text-label-md text-on-surface-variant">Relief Goods Delivered</span>
+          <div class="w-7 h-7 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center">
+            <span class="material-symbols-outlined text-[16px]">scale</span>
+          </div>
+        </div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span class="font-metric-val text-metric-val text-on-surface">48 kg/units</span>
+        </div>
+        <div class="mt-2 text-[11px] text-amber-800 font-medium flex items-center gap-1">
+          <span class="material-symbols-outlined text-[13px]">volunteer_activism</span>
+          <span>~96 meals &amp; warmth items</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-</div>
-<div class="mt-2">
-<span class="font-metric-val text-metric-val text-on-surface">1</span>
-<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 truncate">En route to Green Leaf Rest.</p>
-</div>
-</div>
-<!-- Card 2 -->
-<div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm flex flex-col justify-between">
-<div class="flex items-start justify-between">
-<span class="font-label-md text-label-md text-on-surface-variant">Available Pickups</span>
-<div class="w-8 h-8 rounded-lg bg-on-tertiary-container flex items-center justify-center text-primary-container">
-<span class="material-symbols-outlined text-[18px]">inventory_2</span>
-</div>
-</div>
-<div class="mt-2">
-<span class="font-metric-val text-metric-val text-on-surface">4</span>
-<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 text-error font-medium">2 urgent near you</p>
-</div>
-</div>
-<!-- Card 3 -->
-<div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm flex flex-col justify-between">
-<div class="flex items-start justify-between">
-<span class="font-label-md text-label-md text-on-surface-variant">Completed Today</span>
-<div class="w-8 h-8 rounded-lg bg-on-tertiary-container flex items-center justify-center text-primary-container">
-<span class="material-symbols-outlined text-[18px]">task_alt</span>
-</div>
-</div>
-<div class="mt-2">
-<span class="font-metric-val text-metric-val text-on-surface">3</span>
-<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">+1 from yesterday</p>
-</div>
-</div>
-<!-- Card 4 -->
-<div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm flex flex-col justify-between">
-<div class="flex items-start justify-between">
-<span class="font-label-md text-label-md text-on-surface-variant">Relief Goods Delivered</span>
-<div class="w-8 h-8 rounded-lg bg-on-tertiary-container flex items-center justify-center text-primary-container">
-<span class="material-symbols-outlined text-[18px]">scale</span>
-</div>
-</div>
-<div class="mt-2">
-<span class="font-metric-val text-metric-val text-on-surface">48 kg/units</span>
-<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 font-medium text-secondary">~96 meals & warmth items</p>
-</div>
-</div>
-</div>
+
+<script>
+  function switchDriverChart(mode) {
+    const pieView = document.getElementById('driver-pie-view');
+    const barView = document.getElementById('driver-bar-view');
+    const btnPie = document.getElementById('driver-btn-pie');
+    const btnBar = document.getElementById('driver-btn-bar');
+    if (!pieView || !barView || !btnPie || !btnBar) return;
+
+    if (mode === 'pie') {
+      pieView.classList.remove('hidden');
+      barView.classList.add('hidden');
+      btnPie.className = 'px-3 py-1.5 rounded-lg bg-white text-primary-container font-bold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer';
+      btnBar.className = 'px-3 py-1.5 rounded-lg text-outline hover:text-on-surface transition-all flex items-center gap-1.5 cursor-pointer';
+    } else {
+      pieView.classList.add('hidden');
+      barView.classList.remove('hidden');
+      btnBar.className = 'px-3 py-1.5 rounded-lg bg-white text-primary-container font-bold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer';
+      btnPie.className = 'px-3 py-1.5 rounded-lg text-outline hover:text-on-surface transition-all flex items-center gap-1.5 cursor-pointer';
+    }
+  }
+
+  function showDriverTip(text, evt) {
+    const tip = document.getElementById('driver-chart-tooltip');
+    if (tip) {
+      tip.textContent = text;
+      tip.classList.remove('opacity-0');
+      tip.classList.add('opacity-100');
+    }
+  }
+
+  function hideDriverTip() {
+    const tip = document.getElementById('driver-chart-tooltip');
+    if (tip) {
+      tip.classList.remove('opacity-100');
+      tip.classList.add('opacity-0');
+    }
+  }
+</script>
 <!-- URGENT RESCUE MISSIONS SECTION -->
 <div class="mb-8">
 <div class="flex items-center justify-between mb-4">

@@ -2,3 +2,8 @@ node_modules/
 dist/
 .DS_Store
 *.log
+uploads/verification_docs/*
+!uploads/verification_docs/.gitkeep
+.env
+.env.*
+scratch/

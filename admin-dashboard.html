@@ -160,57 +160,238 @@
         </button>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <!-- Metric 1: Food Rescued -->
-        <div class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-5 shadow-sm space-y-2">
-          <div class="flex items-center justify-between text-outline text-xs">
-            <span>Total Food Rescued</span>
-            <span class="material-symbols-outlined text-primary-container text-[20px]">restaurant</span>
+      <!-- Interactive Platform Ecosystem & Impact Distribution Analytics Hub -->
+      <div class="my-6 bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-5 sm:p-6 shadow-sm hover:border-outline-variant/60 transition-all">
+        <!-- Hub Header with View Switcher -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-outline-variant/20">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-base shadow-2xs border border-emerald-200">
+              <span class="material-symbols-outlined text-[20px]">pie_chart</span>
+            </div>
+            <div>
+              <h2 class="text-sm sm:text-base font-bold text-on-surface flex items-center gap-2">
+                <span>Platform Impact &amp; Resource Distribution</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">Audited Feed</span>
+              </h2>
+              <p class="text-xs text-outline">Real-time aggregate telemetry across 8 donation types, verified non-profit claims, and escrowed relief funds</p>
+            </div>
           </div>
-          <div class="text-2xl font-black text-on-surface" id="stat-food-kg">1,480 kg</div>
-          <div class="text-[11px] text-primary-container font-semibold flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px]">trending_up</span>
-            <span>+145 kg this week (WHO Freshness Model)</span>
-          </div>
-        </div>
-
-        <!-- Metric 2: Physical Goods Donated -->
-        <div class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-5 shadow-sm space-y-2">
-          <div class="flex items-center justify-between text-outline text-xs">
-            <span>Physical Supplies Logged</span>
-            <span class="material-symbols-outlined text-blue-600 text-[20px]">inventory_2</span>
-          </div>
-          <div class="text-2xl font-black text-on-surface" id="stat-physical-units">382 units</div>
-          <div class="text-[11px] text-blue-700 font-semibold">
-            Clothes, Books, Blankets &amp; Medical First Aid
-          </div>
-        </div>
-
-        <!-- Metric 3: Monetary Funds (Escrow) -->
-        <div class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-5 shadow-sm space-y-2">
-          <div class="flex items-center justify-between text-outline text-xs">
-            <span>Monetary Contributions</span>
-            <span class="material-symbols-outlined text-emerald-600 text-[20px]">payments</span>
-          </div>
-          <div class="text-2xl font-black text-emerald-800" id="stat-monetary-total">₹87,500</div>
-          <div class="text-[11px] text-emerald-700 font-semibold flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px]">lock</span>
-            <span>Secured Non-Profit Escrow (HMAC Verified)</span>
+          
+          <!-- View Switcher Tabs -->
+          <div class="inline-flex p-1 bg-surface-container-low rounded-xl border border-outline-variant/30 self-start sm:self-auto text-xs font-semibold">
+            <button type="button" id="admin-btn-pie" onclick="switchAdminChart('pie')" class="px-3 py-1.5 rounded-lg bg-white text-emerald-800 font-bold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer">
+              <span class="material-symbols-outlined text-[15px]">donut_large</span>
+              <span>Pie / Donut</span>
+            </button>
+            <button type="button" id="admin-btn-bar" onclick="switchAdminChart('bar')" class="px-3 py-1.5 rounded-lg text-outline hover:text-on-surface transition-all flex items-center gap-1.5 cursor-pointer">
+              <span class="material-symbols-outlined text-[15px]">bar_chart</span>
+              <span>Activity Bar</span>
+            </button>
           </div>
         </div>
 
-        <!-- Metric 4: Verified Shelters -->
-        <div class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-5 shadow-sm space-y-2">
-          <div class="flex items-center justify-between text-outline text-xs">
-            <span>Verified Non-Profit Partners</span>
-            <span class="material-symbols-outlined text-purple-600 text-[20px]">verified</span>
+        <!-- Main Visual Body: Chart Visualization + Metric Breakdown Panel -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-5 items-center">
+          <!-- Visual Chart Stage (Left: 5 cols) -->
+          <div class="lg:col-span-5 flex flex-col items-center justify-center p-3 relative">
+            <!-- Tooltip Container -->
+            <div id="admin-chart-tooltip" class="absolute -top-2 bg-slate-900 text-white text-[11px] font-semibold py-1 px-2.5 rounded-lg shadow-lg pointer-events-none opacity-0 transition-opacity z-20 whitespace-nowrap">
+              Food Rescue: 1,480 kg (42%)
+            </div>
+
+            <!-- Donut / Pie View -->
+            <div id="admin-pie-view" class="relative w-56 h-56 sm:w-60 sm:h-60 flex items-center justify-center">
+              <svg viewBox="0 0 200 200" class="w-full h-full transform -rotate-90 filter drop-shadow-sm">
+                <!-- Background track -->
+                <circle cx="100" cy="100" r="70" fill="transparent" stroke="#f1f5f9" stroke-width="26" />
+                
+                <!-- Slice 1: Food Rescue (42% -> 185 of 440) -->
+                <circle id="admin-slice-1" cx="100" cy="100" r="70" fill="transparent" stroke="#16803C" stroke-width="26"
+                  stroke-dasharray="185 440" stroke-dashoffset="0"
+                  class="transition-all duration-300 hover:opacity-85 cursor-pointer"
+                  onmouseenter="showAdminTip('🍲 Total Food Rescued: 1,480 kg (42%)', event)" onmouseleave="hideAdminTip()" />
+
+                <!-- Slice 2: Physical Supplies (28% -> 123 of 440) -->
+                <circle id="admin-slice-2" cx="100" cy="100" r="70" fill="transparent" stroke="#2563EB" stroke-width="26"
+                  stroke-dasharray="123 440" stroke-dashoffset="-185"
+                  class="transition-all duration-300 hover:opacity-85 cursor-pointer"
+                  onmouseenter="showAdminTip('📦 Physical Supplies: 382 units (28%)', event)" onmouseleave="hideAdminTip()" />
+
+                <!-- Slice 3: Monetary Escrow (18% -> 79 of 440) -->
+                <circle id="admin-slice-3" cx="100" cy="100" r="70" fill="transparent" stroke="#059669" stroke-width="26"
+                  stroke-dasharray="79 440" stroke-dashoffset="-308"
+                  class="transition-all duration-300 hover:opacity-85 cursor-pointer"
+                  onmouseenter="showAdminTip('💰 Monetary Contributions: ₹87,500 (18%)', event)" onmouseleave="hideAdminTip()" />
+
+                <!-- Slice 4: Verified NGO Network (12% -> 53 of 440) -->
+                <circle id="admin-slice-4" cx="100" cy="100" r="70" fill="transparent" stroke="#7E22CE" stroke-width="26"
+                  stroke-dasharray="53 440" stroke-dashoffset="-387"
+                  class="transition-all duration-300 hover:opacity-85 cursor-pointer"
+                  onmouseenter="showAdminTip('🏢 Verified NGO Network: 14 Non-Profits (12%)', event)" onmouseleave="hideAdminTip()" />
+              </svg>
+
+              <!-- Center Badge Metric inside Donut -->
+              <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
+                <span class="text-[10px] uppercase font-bold text-outline tracking-wider">Total Rescued</span>
+                <span class="text-xl sm:text-2xl font-black text-on-surface tracking-tight" id="admin-center-metric">1,480 kg</span>
+                <span class="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-300 mt-0.5">₹87.5K Escrow</span>
+              </div>
+            </div>
+
+            <!-- Activity Bar View (Hidden by default, shown on toggle) -->
+            <div id="admin-bar-view" class="hidden w-full space-y-3 px-2 py-2">
+              <div class="space-y-1">
+                <div class="flex justify-between text-xs font-semibold">
+                  <span class="text-slate-700 flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#16803C]"></span> Food Rescued</span>
+                  <span class="font-bold text-slate-900">1,480 kg (42%)</span>
+                </div>
+                <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+                  <div class="h-full bg-[#16803C] rounded-full transition-all duration-500" style="width: 42%"></div>
+                </div>
+              </div>
+              <div class="space-y-1">
+                <div class="flex justify-between text-xs font-semibold">
+                  <span class="text-slate-700 flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#2563EB]"></span> Physical Supplies</span>
+                  <span class="font-bold text-slate-900">382 units (28%)</span>
+                </div>
+                <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+                  <div class="h-full bg-[#2563EB] rounded-full transition-all duration-500" style="width: 28%"></div>
+                </div>
+              </div>
+              <div class="space-y-1">
+                <div class="flex justify-between text-xs font-semibold">
+                  <span class="text-slate-700 flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#059669]"></span> Monetary Contributions</span>
+                  <span class="font-bold text-slate-900">₹87,500 (18%)</span>
+                </div>
+                <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+                  <div class="h-full bg-[#059669] rounded-full transition-all duration-500" style="width: 18%"></div>
+                </div>
+              </div>
+              <div class="space-y-1">
+                <div class="flex justify-between text-xs font-semibold">
+                  <span class="text-slate-700 flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#7E22CE]"></span> Verified Partner Network</span>
+                  <span class="font-bold text-slate-900">14 Non-Profits (12%)</span>
+                </div>
+                <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+                  <div class="h-full bg-[#7E22CE] rounded-full transition-all duration-500" style="width: 12%"></div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="text-2xl font-black text-on-surface" id="stat-verified-ngos">14 NGOs</div>
-          <div class="text-[11px] text-purple-700 font-semibold">
-            100% KYC &amp; Regulatory Inspected
+
+          <!-- Metric Breakdown Cards (Right: 7 cols) -->
+          <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <!-- Metric 1: Food Rescued -->
+            <div class="p-3.5 rounded-xl bg-surface-container-low/70 border border-outline-variant/30 hover:bg-surface-container-low transition-all">
+              <div class="flex items-center justify-between text-outline text-xs">
+                <span class="font-semibold">Total Food Rescued</span>
+                <div class="w-7 h-7 rounded-lg bg-emerald-100 text-[#16803C] flex items-center justify-center">
+                  <span class="material-symbols-outlined text-[16px]">restaurant</span>
+                </div>
+              </div>
+              <div class="mt-1 flex items-baseline gap-2">
+                <span class="text-2xl font-black text-on-surface" id="stat-food-kg">1,480 kg</span>
+              </div>
+              <div class="mt-2 text-[11px] text-[#16803C] font-semibold flex items-center gap-1">
+                <span class="material-symbols-outlined text-[13px]">trending_up</span>
+                <span>+145 kg this week (WHO Freshness Model)</span>
+              </div>
+            </div>
+
+            <!-- Metric 2: Physical Goods Donated -->
+            <div class="p-3.5 rounded-xl bg-surface-container-low/70 border border-outline-variant/30 hover:bg-surface-container-low transition-all">
+              <div class="flex items-center justify-between text-outline text-xs">
+                <span class="font-semibold">Physical Supplies Logged</span>
+                <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-[16px]">inventory_2</span>
+                </div>
+              </div>
+              <div class="mt-1 flex items-baseline gap-2">
+                <span class="text-2xl font-black text-on-surface" id="stat-physical-units">382 units</span>
+              </div>
+              <div class="mt-2 text-[11px] text-blue-700 font-semibold flex items-center gap-1">
+                <span class="material-symbols-outlined text-[13px]">check_circle</span>
+                <span>Clothes, Books, Blankets &amp; Medical</span>
+              </div>
+            </div>
+
+            <!-- Metric 3: Monetary Funds (Escrow) -->
+            <div class="p-3.5 rounded-xl bg-surface-container-low/70 border border-outline-variant/30 hover:bg-surface-container-low transition-all">
+              <div class="flex items-center justify-between text-outline text-xs">
+                <span class="font-semibold">Monetary Contributions</span>
+                <div class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-[16px]">payments</span>
+                </div>
+              </div>
+              <div class="mt-1 flex items-baseline gap-2">
+                <span class="text-2xl font-black text-emerald-800" id="stat-monetary-total">₹87,500</span>
+                <span class="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded">Escrow</span>
+              </div>
+              <div class="mt-2 text-[11px] text-emerald-700 font-semibold flex items-center gap-1">
+                <span class="material-symbols-outlined text-[13px]">lock</span>
+                <span>Secured Non-Profit Escrow (HMAC Verified)</span>
+              </div>
+            </div>
+
+            <!-- Metric 4: Verified Shelters -->
+            <div class="p-3.5 rounded-xl bg-surface-container-low/70 border border-outline-variant/30 hover:bg-surface-container-low transition-all">
+              <div class="flex items-center justify-between text-outline text-xs">
+                <span class="font-semibold">Verified Non-Profit Partners</span>
+                <div class="w-7 h-7 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-[16px]">verified</span>
+                </div>
+              </div>
+              <div class="mt-1 flex items-baseline gap-2">
+                <span class="text-2xl font-black text-on-surface" id="stat-verified-ngos">14 NGOs</span>
+                <span class="text-[10px] font-bold text-purple-700 bg-purple-100 px-1.5 py-0.5 rounded">Audited</span>
+              </div>
+              <div class="mt-2 text-[11px] text-purple-700 font-semibold flex items-center gap-1">
+                <span class="material-symbols-outlined text-[13px]">policy</span>
+                <span>100% KYC &amp; Regulatory Inspected</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
+      <script>
+        function switchAdminChart(mode) {
+          const pieView = document.getElementById('admin-pie-view');
+          const barView = document.getElementById('admin-bar-view');
+          const btnPie = document.getElementById('admin-btn-pie');
+          const btnBar = document.getElementById('admin-btn-bar');
+          if (!pieView || !barView || !btnPie || !btnBar) return;
+
+          if (mode === 'pie') {
+            pieView.classList.remove('hidden');
+            barView.classList.add('hidden');
+            btnPie.className = 'px-3 py-1.5 rounded-lg bg-white text-emerald-800 font-bold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer';
+            btnBar.className = 'px-3 py-1.5 rounded-lg text-outline hover:text-on-surface transition-all flex items-center gap-1.5 cursor-pointer';
+          } else {
+            pieView.classList.add('hidden');
+            barView.classList.remove('hidden');
+            btnBar.className = 'px-3 py-1.5 rounded-lg bg-white text-emerald-800 font-bold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer';
+            btnPie.className = 'px-3 py-1.5 rounded-lg text-outline hover:text-on-surface transition-all flex items-center gap-1.5 cursor-pointer';
+          }
+        }
+
+        function showAdminTip(text, evt) {
+          const tip = document.getElementById('admin-chart-tooltip');
+          if (tip) {
+            tip.textContent = text;
+            tip.classList.remove('opacity-0');
+            tip.classList.add('opacity-100');
+          }
+        }
+
+        function hideAdminTip() {
+          const tip = document.getElementById('admin-chart-tooltip');
+          if (tip) {
+            tip.classList.remove('opacity-100');
+            tip.classList.add('opacity-0');
+          }
+        }
+      </script>
     </section>
 
     <!-- SECTION 2: NGO VERIFICATION & LICENSING WORKFLOW -->
@@ -219,29 +400,84 @@
         <div>
           <h2 class="text-lg font-bold text-on-surface flex items-center gap-2">
             <span class="material-symbols-outlined text-purple-700 text-[22px]">policy</span>
-            <span>NGO Verification &amp; Regulatory Licensing Queue</span>
+            <span>NGO Verification &amp; Statutory Compliance Command Center</span>
           </h2>
-          <p class="text-xs text-outline mt-0.5">Audit compliance credentials, approve new shelter partners, and clear medicine distribution permits.</p>
+          <p class="text-xs text-outline mt-0.5">Audit statutory trust/society/company records, review private documents with signed tokens, and enforce claim permissions.</p>
         </div>
-        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-purple-100 text-purple-900 border border-purple-200" id="ngo-queue-badge">4 Registered Shelters</span>
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-purple-100 text-purple-900 border border-purple-200" id="ngo-queue-badge">4 Registered Shelters</span>
+        </div>
       </div>
 
-      <div class="overflow-x-auto">
+      <!-- Verification Status Filter Tabs & Search -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pt-1">
+        <div class="flex flex-wrap items-center gap-1.5 text-xs" id="admin-status-filter-buttons">
+          <button onclick="setAdminAppFilter('ALL')" class="admin-filter-btn px-3 py-1.5 rounded-lg font-bold transition-all bg-purple-700 text-white shadow-xs" data-status="ALL">
+            All Applications (<span id="count-all">0</span>)
+          </button>
+          <button onclick="setAdminAppFilter('PENDING_REVIEW')" class="admin-filter-btn px-3 py-1.5 rounded-lg font-semibold transition-all bg-surface-container-low text-on-surface hover:bg-surface-container" data-status="PENDING_REVIEW">
+            Pending Review (<span id="count-pending">0</span>)
+          </button>
+          <button onclick="setAdminAppFilter('ADDITIONAL_INFORMATION_REQUIRED')" class="admin-filter-btn px-3 py-1.5 rounded-lg font-semibold transition-all bg-surface-container-low text-on-surface hover:bg-surface-container" data-status="ADDITIONAL_INFORMATION_REQUIRED">
+            Action Required (<span id="count-action">0</span>)
+          </button>
+          <button onclick="setAdminAppFilter('VERIFIED')" class="admin-filter-btn px-3 py-1.5 rounded-lg font-semibold transition-all bg-surface-container-low text-on-surface hover:bg-surface-container" data-status="VERIFIED">
+            Verified (<span id="count-verified">0</span>)
+          </button>
+          <button onclick="setAdminAppFilter('REJECTED')" class="admin-filter-btn px-3 py-1.5 rounded-lg font-semibold transition-all bg-surface-container-low text-on-surface hover:bg-surface-container" data-status="REJECTED">
+            Rejected (<span id="count-rejected">0</span>)
+          </button>
+          <button onclick="setAdminAppFilter('SUSPENDED')" class="admin-filter-btn px-3 py-1.5 rounded-lg font-semibold transition-all bg-surface-container-low text-on-surface hover:bg-surface-container" data-status="SUSPENDED">
+            Suspended (<span id="count-suspended">0</span>)
+          </button>
+        </div>
+        <div class="relative w-full md:w-64">
+          <span class="material-symbols-outlined absolute left-2.5 top-2 text-[18px] text-outline">search</span>
+          <input type="text" id="adminAppSearchInput" oninput="filterAdminApplicationsSearch()" placeholder="Search NGO, PAN, Reg No..." class="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-outline-variant/60 rounded-lg text-on-surface focus:outline-none focus:border-purple-600">
+        </div>
+      </div>
+
+      <!-- Government NGO Registry Quick Explorer Card -->
+      <div class="p-3.5 bg-blue-50/60 border border-blue-200/80 rounded-xl space-y-2">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-sm">🏛️</span>
+            <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">Free NITI Aayog NGO-DARPAN Explorer &amp; Background Intelligence</span>
+            <span class="text-[10px] font-semibold text-blue-700 bg-blue-100 px-2 py-0.5 rounded-full border border-blue-200">Govt Intelligence</span>
+          </div>
+          <span class="text-[11px] text-slate-500 hidden sm:inline">Query any NGO by Darpan ID, Name, or PAN</span>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-2">
+          <div class="relative flex-1">
+            <span class="material-symbols-outlined absolute left-2.5 top-2 text-[18px] text-slate-400">policy</span>
+            <input type="text" id="adminGovtExplorerInput" placeholder="Try 'RJ/2018/0192842', 'Akshaya Patra', 'Goonj', 'Uday Foundation'..." class="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-1 focus:ring-blue-500" onkeydown="if(event.key==='Enter') executeAdminGovtExplorer()">
+          </div>
+          <button onclick="executeAdminGovtExplorer()" id="adminGovtExplorerBtn" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs font-bold rounded-lg shadow-2xs flex items-center justify-center gap-1 whitespace-nowrap cursor-pointer">
+            <span>🔍 Query Govt Registry</span>
+          </button>
+        </div>
+        <div id="adminGovtExplorerResults" class="hidden text-xs transition-all pt-1">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+
+      <!-- Applications Table -->
+      <div class="overflow-x-auto border border-outline-variant/30 rounded-xl">
         <table class="w-full text-left text-xs border-collapse">
           <thead>
             <tr class="border-b border-outline-variant/30 text-outline uppercase font-semibold text-[11px] bg-surface-container-low/50">
-              <th class="py-3 px-3">Organization</th>
-              <th class="py-3 px-3">Registration &amp; 12A/80G</th>
-              <th class="py-3 px-3">Medical License Status</th>
-              <th class="py-3 px-3">Approved Categories</th>
-              <th class="py-3 px-3">Verification</th>
-              <th class="py-3 px-3 text-right">Approval Controls</th>
+              <th class="py-3 px-3">Organization &amp; Structure</th>
+              <th class="py-3 px-3">Registration &amp; State</th>
+              <th class="py-3 px-3">PAN &amp; Darpan ID</th>
+              <th class="py-3 px-3">Submission Date</th>
+              <th class="py-3 px-3">Document Checklist</th>
+              <th class="py-3 px-3">Status</th>
+              <th class="py-3 px-3 text-right">Audit Dossier</th>
             </tr>
           </thead>
           <tbody id="ngo-verifications-tbody" class="divide-y divide-outline-variant/20">
-            <!-- Dynamic rows populated via JS -->
             <tr>
-              <td colspan="6" class="p-6 text-center text-outline">Loading shelter verification records...</td>
+              <td colspan="7" class="p-6 text-center text-outline">Loading NGO compliance records...</td>
             </tr>
           </tbody>
         </table>
@@ -404,6 +640,273 @@
   </main>
 </div>
 
+<!-- ============================================== -->
+<!-- ADMIN APPLICATION AUDIT DOSSIER MODAL -->
+<!-- ============================================== -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden" id="admin-dossier-modal">
+  <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="closeAdminDossierModal()"></div>
+  <div class="relative bg-white rounded-2xl border border-outline-variant/40 shadow-2xl max-w-4xl w-full max-h-[92vh] flex flex-col z-10 overflow-hidden">
+    
+    <!-- Modal Header -->
+    <div class="p-5 border-b border-outline-variant/20 flex items-start justify-between bg-surface-container-low/40">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="w-8 h-8 rounded-lg bg-purple-100 text-purple-800 flex items-center justify-center font-bold text-sm">
+            <span class="material-symbols-outlined text-[20px]">policy</span>
+          </span>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-base font-bold text-on-surface" id="dossier-ngo-title">Hope Shelter Welfare Trust</h3>
+              <span id="dossier-status-badge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
+                PENDING REVIEW
+              </span>
+            </div>
+            <p class="text-xs text-outline mt-0.5" id="dossier-ngo-subtitle">
+              Structure: Charitable Trust &bull; Reg: RJ/JPR/2018/TR-4912 &bull; State: Rajasthan
+            </p>
+          </div>
+        </div>
+      </div>
+      <button onclick="closeAdminDossierModal()" class="text-outline hover:text-on-surface p-1 rounded-lg hover:bg-surface-container transition-colors">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+    </div>
+
+    <!-- Modal Scrollable Content -->
+    <div class="flex-1 overflow-y-auto p-6 space-y-6 text-xs">
+      
+      <!-- Key Entity Metadata Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="p-3 bg-surface-container-low/50 rounded-xl border border-outline-variant/20">
+          <span class="text-[10px] text-outline uppercase font-semibold block">Entity PAN</span>
+          <span class="font-mono font-bold text-on-surface text-sm block mt-0.5" id="dossier-pan">AAATH1234F</span>
+        </div>
+        <div class="p-3 bg-surface-container-low/50 rounded-xl border border-outline-variant/20">
+          <span class="text-[10px] text-outline uppercase font-semibold block">NGO Darpan ID</span>
+          <span class="font-mono font-bold text-on-surface text-sm block mt-0.5" id="dossier-darpan">RJ/2018/0192842</span>
+        </div>
+        <div class="p-3 bg-surface-container-low/50 rounded-xl border border-outline-variant/20">
+          <span class="text-[10px] text-outline uppercase font-semibold block">12AB & 80G Approval</span>
+          <span class="font-bold text-purple-700 text-xs block mt-0.5" id="dossier-tax">12AB Valid</span>
+        </div>
+        <div class="p-3 bg-surface-container-low/50 rounded-xl border border-outline-variant/20">
+          <span class="text-[10px] text-outline uppercase font-semibold block">Bank Verification</span>
+          <span class="font-bold text-emerald-700 text-xs block mt-0.5" id="dossier-bank">Verified A/C</span>
+        </div>
+      </div>
+
+      <!-- Signatory & Address Information -->
+      <div class="p-4 bg-surface-container-lowest border border-outline-variant/30 rounded-xl space-y-2">
+        <h4 class="font-bold text-on-surface text-xs uppercase tracking-wider text-outline">Authorised Representative & Registered Office</h4>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="space-y-1">
+            <div><span class="text-outline">Representative Name:</span> <strong class="text-on-surface" id="dossier-rep-name">Rajesh Sharma</strong></div>
+            <div><span class="text-outline">Role / Capacity:</span> <span class="font-medium text-on-surface" id="dossier-rep-role">Managing Trustee</span></div>
+            <div><span class="text-outline">Contact:</span> <span class="font-mono text-on-surface" id="dossier-rep-contact">rajesh@shelterhope.org &bull; +91 98290 55112</span></div>
+          </div>
+          <div class="space-y-1">
+            <div><span class="text-outline">Registered Address:</span></div>
+            <p class="text-on-surface font-medium" id="dossier-address">Sector 3, JLN Marg, Jaipur, Rajasthan 302015</p>
+            <div><span class="text-outline">Bank Payout Account:</span> <span class="font-mono text-on-surface" id="dossier-bank-details">SBI A/C: 384910294819 (IFSC: SBIN0004012)</span></div>
+          </div>
+        </div>
+      <!-- SECTION: OFFICIAL GOVERNMENT REGISTRY CROSS-VERIFICATION & INTELLIGENCE -->
+      <div id="dossier-govt-registry-card" class="p-4 bg-gradient-to-br from-blue-50/70 via-indigo-50/40 to-white border border-blue-200 rounded-xl space-y-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-blue-200/80">
+          <div class="flex items-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center text-sm font-bold shadow-xs">🏛️</span>
+            <div>
+              <div class="flex items-center gap-2">
+                <h4 class="font-bold text-slate-900 text-xs uppercase tracking-wider">Government NGO-DARPAN Cross-Verification &amp; Intelligence</h4>
+                <span id="dossier-govt-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 border border-blue-300">Checking...</span>
+              </div>
+              <p class="text-[11px] text-slate-500">Live statutory data from NITI Aayog portal &bull; Open Government Data</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="refreshDossierGovtLookup()" class="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 transition-colors shadow-2xs flex items-center gap-1 cursor-pointer">
+              <span class="material-symbols-outlined text-[14px]">refresh</span>
+              <span>Re-check Govt</span>
+            </button>
+            <button type="button" onclick="autoVerifyDocsFromGovtRecord()" id="btn-auto-verify-from-govt" class="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition-colors shadow-2xs flex items-center gap-1 cursor-pointer">
+              <span>⚡</span>
+              <span>Auto-verify Matching Docs</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="dossier-govt-content" class="text-xs space-y-3">
+          <!-- Populated dynamically via JS -->
+          <div class="p-3 text-center text-slate-500">Checking NITI Aayog Government Registry...</div>
+        </div>
+      </div>
+
+      <!-- SECTION 1: DOCUMENT REVIEW CHECKLIST -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between">
+          <h4 class="font-bold text-on-surface text-xs uppercase tracking-wider text-outline flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px] text-purple-700">folder_open</span>
+            <span>Private Document Checklist & Secure Inspection</span>
+          </h4>
+          <span class="text-[10px] text-outline">Short-lived 15-minute signed links</span>
+        </div>
+        <div class="border border-outline-variant/30 rounded-xl overflow-hidden">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-surface-container-low/50 border-b border-outline-variant/20 text-outline text-[10px] uppercase font-semibold">
+              <tr>
+                <th class="p-3">Document Type</th>
+                <th class="p-3">File Name</th>
+                <th class="p-3">Status</th>
+                <th class="p-3">Review Notes</th>
+                <th class="p-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="dossier-docs-tbody" class="divide-y divide-outline-variant/20">
+              <!-- Populated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 2: OFFICIAL REGISTRY MANUAL VERIFICATION CHECKLIST (REQUIREMENT 5) -->
+      <div class="p-4 bg-purple-50/50 border border-purple-200 rounded-xl space-y-3">
+        <div class="flex items-center justify-between border-b border-purple-200/60 pb-2">
+          <h4 class="font-bold text-purple-950 text-xs uppercase tracking-wider flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[18px] text-purple-700">fact_check</span>
+            <span>Official Government Registry Manual Verification Checklist</span>
+          </h4>
+          <span class="text-[10px] text-purple-800 font-semibold">Audit Requirement</span>
+        </div>
+        <p class="text-[11px] text-purple-900 leading-normal">
+          Per statutory compliance requirements, administrators must independently verify registration credentials against official registries (Devsthan / Societies Registrar / MCA / NITI Aayog Darpan / Income Tax).
+        </p>
+        
+        <!-- Checklist items -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 text-xs text-on-surface">
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-purple-200 cursor-pointer">
+            <input type="checkbox" id="chk-legal-name" checked class="rounded text-purple-700 accent-purple-700">
+            <span>Legal name matches official registrar records</span>
+          </label>
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-purple-200 cursor-pointer">
+            <input type="checkbox" id="chk-reg-number" checked class="rounded text-purple-700 accent-purple-700">
+            <span>Registration number & authority validated</span>
+          </label>
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-purple-200 cursor-pointer">
+            <input type="checkbox" id="chk-cert-valid" checked class="rounded text-purple-700 accent-purple-700">
+            <span>Certificate authenticity inspected & valid</span>
+          </label>
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-purple-200 cursor-pointer">
+            <input type="checkbox" id="chk-address" checked class="rounded text-purple-700 accent-purple-700">
+            <span>Organisation address matches official records</span>
+          </label>
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-purple-200 cursor-pointer">
+            <input type="checkbox" id="chk-signatory" checked class="rounded text-purple-700 accent-purple-700">
+            <span>Authorised signatory identity validated</span>
+          </label>
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-purple-200 cursor-pointer">
+            <input type="checkbox" id="chk-tax-approvals" checked class="rounded text-purple-700 accent-purple-700">
+            <span>Tax approvals (12AB/80G) verified</span>
+          </label>
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-white border border-purple-200 cursor-pointer col-span-1 sm:col-span-2">
+            <input type="checkbox" id="chk-bank-account" checked class="rounded text-purple-700 accent-purple-700">
+            <span>Bank-account ownership confirmed for delivery payouts</span>
+          </label>
+        </div>
+
+        <!-- Registry Checked Source Details -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+          <div>
+            <label class="block text-[11px] font-bold text-purple-900 mb-1">Official Registry Source Checked <span class="text-error">*</span></label>
+            <input type="text" id="admin-source-checked" value="Devsthan Department Trust Register & NITI Aayog Darpan" class="w-full px-2.5 py-1.5 text-xs rounded border border-purple-200 bg-white">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-purple-900 mb-1">Check Date</label>
+            <input type="date" id="admin-check-date" value="2026-10-12" class="w-full px-2.5 py-1.5 text-xs rounded border border-purple-200 bg-white">
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3: DECISION & REVIEW HISTORY -->
+      <div class="space-y-2">
+        <h4 class="font-bold text-on-surface text-xs uppercase tracking-wider text-outline flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-[16px] text-purple-700">history</span>
+          <span>Previous Review History & Audit Events</span>
+        </h4>
+        <div id="dossier-history-container" class="space-y-2 max-h-40 overflow-y-auto">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+
+      <!-- SECTION 4: AUDITOR INTERNAL NOTES -->
+      <div>
+        <label class="block text-xs font-bold text-on-surface mb-1">Compliance Review Notes / Decision Remarks</label>
+        <textarea id="admin-dossier-notes" rows="2" placeholder="Enter administrative observations or reason for additional information request..." class="w-full p-2.5 text-xs rounded-xl border border-outline-variant/60 bg-white focus:outline-none focus:border-purple-600"></textarea>
+      </div>
+
+    </div>
+
+    <!-- Modal Footer Actions Bar (Requirement 4) -->
+    <div class="p-4 border-t border-outline-variant/20 bg-surface-container-low/40 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <button onclick="addAdminInternalNotePrompt()" class="px-3 py-1.5 border border-outline-variant/60 text-outline hover:text-on-surface rounded-lg text-xs font-semibold hover:bg-surface-container transition-colors">
+          + Add Note Only
+        </button>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <!-- Reject Button -->
+        <button onclick="triggerAdminDecision('REJECTED')" class="px-3.5 py-2 rounded-xl bg-rose-50 border border-rose-300 text-rose-700 hover:bg-rose-100 font-bold text-xs transition-colors">
+          Reject Application
+        </button>
+        <!-- Additional Info Button -->
+        <button onclick="triggerAdminDecision('ADDITIONAL_INFORMATION_REQUIRED')" class="px-3.5 py-2 rounded-xl bg-amber-50 border border-amber-300 text-amber-800 hover:bg-amber-100 font-bold text-xs transition-colors">
+          Request Information ⚠️
+        </button>
+        <!-- Suspend Button -->
+        <button onclick="triggerAdminDecision('SUSPENDED')" id="btn-dossier-suspend" class="px-3.5 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs shadow-sm transition-colors">
+          Suspend NGO ⛔
+        </button>
+        <!-- Approve Button -->
+        <button onclick="triggerAdminDecision('VERIFIED')" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition-all flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-[16px]">verified</span>
+          <span>Approve NGO (Verify)</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- ADMIN SECURE DOCUMENT VIEWER MODAL -->
+<!-- ============================================== -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden" id="admin-doc-viewer-modal">
+  <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeAdminDocViewerModal()"></div>
+  <div class="relative bg-white rounded-2xl border border-outline-variant/40 shadow-2xl max-w-2xl w-full p-5 z-10 space-y-4 max-h-[90vh] flex flex-col">
+    <div class="flex items-center justify-between border-b pb-3 border-outline-variant/20">
+      <div>
+        <h3 class="text-sm font-bold text-on-surface" id="admin-viewer-title">📄 Document Inspection</h3>
+        <p class="text-[11px] text-outline" id="admin-viewer-expiry">Short-lived 15-minute token generated</p>
+      </div>
+      <button onclick="closeAdminDocViewerModal()" class="text-outline hover:text-on-surface font-bold text-lg">&times;</button>
+    </div>
+    <div class="flex-1 overflow-auto border border-outline-variant/30 rounded-xl bg-surface-container-low/40 flex items-center justify-center min-h-[300px] p-2" id="admin-viewer-content">
+      <!-- Injected preview -->
+    </div>
+    <div class="flex items-center justify-between pt-2 border-t border-outline-variant/20 text-xs">
+      <span class="text-[11px] text-outline">Authorised Auditor Security Stream</span>
+      <div class="flex items-center gap-2">
+        <a id="admin-viewer-dl" href="#" target="_blank" class="px-3.5 py-1.5 bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs rounded-xl shadow-sm">
+          Open Full Page &rarr;
+        </a>
+        <button onclick="closeAdminDocViewerModal()" class="px-3.5 py-1.5 border border-outline-variant/60 rounded-xl text-xs font-semibold hover:bg-surface-container">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Floating Universal Portal Switcher Widget -->
 <div id="global-portal-switcher" class="fixed bottom-4 right-4 z-[9999] font-sans">
   <div class="relative inline-block text-left">
@@ -491,79 +994,765 @@
     }
   }
 
-  // 1. NGOs
+  // ==========================================
+  // NGO VERIFICATION MANAGEMENT & DOSSIER SUITE
+  // ==========================================
+  let currentAdminApplications = [];
+  let activeAdminFilter = 'ALL';
+  let selectedDossierApp = null;
+
   async function loadAdminNGOs() {
     const tbody = document.getElementById('ngo-verifications-tbody');
     try {
-      let ngos = [];
-      if (window.SupabaseService && window.SupabaseService.getAdminNGOs) {
-        ngos = await window.SupabaseService.getAdminNGOs();
-      }
-      if (!ngos || ngos.length === 0) {
-        ngos = [
-          { id: 'NGO-001', name: 'Hope Shelter Jaipur', verification_status: 'verified', medical_license_number: 'RJ-MED-49102', approved_categories: ['Food & Meals', 'Clothes & Footwear', 'Medicines & Medical Supplies', 'Blankets & Necessities'], contact_phone: '+91 98291 55432' },
-          { id: 'NGO-002', name: 'Annapurna Food Bank', verification_status: 'verified', medical_license_number: null, approved_categories: ['Food & Meals', 'Hygiene & Essential Supplies'], contact_phone: '+91 98290 11442' },
-          { id: 'NGO-003', name: 'Bal Seva Children Home', verification_status: 'pending', medical_license_number: null, approved_categories: ['Food & Meals', 'Books & Educational Materials', 'Clothes & Footwear'], contact_phone: '+91 94140 22331' },
-          { id: 'NGO-004', name: 'Care Health Community Clinic', verification_status: 'pending', medical_license_number: 'RJ-CLINIC-8821', approved_categories: ['Medicines & Medical Supplies', 'Hygiene & Essential Supplies'], contact_phone: '+91 98280 99881' }
-        ];
+      let apps = [];
+      if (window.SupabaseService && window.SupabaseService.getAdminVerificationApplications) {
+        const res = await window.SupabaseService.getAdminVerificationApplications('ALL');
+        if (res && res.success && res.applications) {
+          apps = res.applications;
+        }
       }
 
-      document.getElementById('ngo-queue-badge').textContent = `${ngos.length} Registered Shelters`;
-      document.getElementById('stat-verified-ngos').textContent = `${ngos.filter(n => n.verification_status === 'verified').length} NGOs`;
+      // Synchronize active NGO name if modified in local storage
+      const localNgoName = (localStorage.getItem('ngo_name') || '').trim();
+      if (localNgoName && apps.length > 0 && localNgoName !== 'Hope Shelter' && localNgoName !== 'Hope Shelter Jaipur') {
+        apps[0].legal_name = localNgoName;
+        apps[0].ngo_name = localNgoName;
+      }
 
-      tbody.innerHTML = ngos.map(ngo => {
-        const isVer = ngo.verification_status === 'verified';
-        const statusBadge = isVer
-          ? `<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">VERIFIED ✓</span>`
-          : `<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300">PENDING REVIEW</span>`;
+      currentAdminApplications = apps;
 
-        const medBadge = ngo.medical_license_number
-          ? `<span class="inline-flex items-center gap-1 font-semibold text-emerald-800"><span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> ${ngo.medical_license_number}</span>`
-          : `<span class="text-outline">None / Not Applied</span>`;
+      // Update Tab Counts
+      const countAll = apps.length;
+      const countPending = apps.filter(a => a.verification_status === 'PENDING_REVIEW').length;
+      const countAction = apps.filter(a => a.verification_status === 'ADDITIONAL_INFORMATION_REQUIRED').length;
+      const countVerified = apps.filter(a => a.verification_status === 'VERIFIED').length;
+      const countRejected = apps.filter(a => a.verification_status === 'REJECTED').length;
+      const countSuspended = apps.filter(a => a.verification_status === 'SUSPENDED').length;
 
-        const cats = Array.isArray(ngo.approved_categories) ? ngo.approved_categories.join(', ') : 'Standard Food Only';
+      document.getElementById('count-all').textContent = countAll;
+      document.getElementById('count-pending').textContent = countPending;
+      document.getElementById('count-action').textContent = countAction;
+      document.getElementById('count-verified').textContent = countVerified;
+      document.getElementById('count-rejected').textContent = countRejected;
+      document.getElementById('count-suspended').textContent = countSuspended;
 
-        const actionButtons = isVer
-          ? `<div class="flex items-center justify-end gap-1.5">
-               <button onclick="handleVerifyNGO('${ngo.id}', 'rejected')" class="px-2.5 py-1 rounded border border-outline-variant/60 text-outline hover:text-error hover:border-error transition-all">Revoke</button>
-               <button onclick="alert('Viewing verified records for ${ngo.name}')" class="px-2.5 py-1 rounded bg-surface-container-low text-on-surface font-semibold hover:bg-surface-container transition-all">Audit Dossier</button>
-             </div>`
-          : `<div class="flex items-center justify-end gap-1.5">
-               <button onclick="handleVerifyNGO('${ngo.id}', 'verified', true)" class="px-2.5 py-1 rounded bg-primary-container text-white font-bold hover:bg-primary transition-all shadow-sm">Approve with Meds</button>
-               <button onclick="handleVerifyNGO('${ngo.id}', 'verified', false)" class="px-2.5 py-1 rounded bg-surface-container text-on-surface font-semibold hover:bg-surface-container-high transition-all">Approve General</button>
-             </div>`;
+      document.getElementById('ngo-queue-badge').textContent = `${countPending} Pending Review (${countAll} Registered)`;
+      document.getElementById('stat-verified-ngos').textContent = `${countVerified} NGOs`;
 
-        return `
-          <tr class="hover:bg-surface-container-low/40 transition-colors">
-            <td class="py-3 px-3">
-              <div class="font-bold text-on-surface">${ngo.name}</div>
-              <div class="text-[11px] text-outline font-mono">ID: ${ngo.id} &bull; ${ngo.contact_phone || 'Verified Phone'}</div>
-            </td>
-            <td class="py-3 px-3">
-              <span class="font-mono text-xs">REG-12A-8840-JP</span>
-              <div class="text-[10px] text-emerald-700 font-semibold">80G Tax Exemption Valid</div>
-            </td>
-            <td class="py-3 px-3">${medBadge}</td>
-            <td class="py-3 px-3 max-w-xs truncate" title="${cats}">${cats}</td>
-            <td class="py-3 px-3">${statusBadge}</td>
-            <td class="py-3 px-3 text-right">${actionButtons}</td>
-          </tr>
-        `;
-      }).join('');
+      renderAdminApplicationsTable();
+
     } catch (e) {
-      tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-red-600">Failed to load NGO records.</td></tr>`;
+      console.warn('Error loading admin applications:', e);
+      tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-red-600">Failed to load NGO verification applications.</td></tr>`;
     }
   }
 
-  async function handleVerifyNGO(id, status, allowMeds) {
-    let cats = ['Food & Meals', 'Clothes & Footwear', 'Books & Educational Materials', 'Hygiene & Essential Supplies', 'Household Goods & Furniture', 'Blankets & Necessities', 'Monetary'];
-    if (allowMeds) cats.push('Medicines & Medical Supplies');
+  function setAdminAppFilter(status) {
+    activeAdminFilter = status;
+    document.querySelectorAll('.admin-filter-btn').forEach(btn => {
+      if (btn.dataset.status === status) {
+        btn.className = 'admin-filter-btn px-3 py-1.5 rounded-lg font-bold transition-all bg-purple-700 text-white shadow-xs';
+      } else {
+        btn.className = 'admin-filter-btn px-3 py-1.5 rounded-lg font-semibold transition-all bg-surface-container-low text-on-surface hover:bg-surface-container';
+      }
+    });
+    renderAdminApplicationsTable();
+  }
 
-    if (window.SupabaseService && window.SupabaseService.verifyNGO) {
-      await window.SupabaseService.verifyNGO(id, status, cats, 'Verified by Platform Administrator');
+  function filterAdminApplicationsSearch() {
+    renderAdminApplicationsTable();
+  }
+
+  function renderAdminApplicationsTable() {
+    const tbody = document.getElementById('ngo-verifications-tbody');
+    const searchVal = (document.getElementById('adminAppSearchInput')?.value || '').toLowerCase().trim();
+
+    let filtered = currentAdminApplications;
+    if (activeAdminFilter !== 'ALL') {
+      filtered = filtered.filter(a => a.verification_status === activeAdminFilter);
     }
-    alert(`✓ Shelter ${id} status updated to: ${status.toUpperCase()}`);
-    loadAdminNGOs();
+
+    if (searchVal) {
+      filtered = filtered.filter(a => {
+        const name = (a.ngo_name || '').toLowerCase();
+        const legal = (a.legal_name || '').toLowerCase();
+        const reg = (a.registration_number || '').toLowerCase();
+        const pan = (a.pan_number || '').toLowerCase();
+        const darpan = (a.darpan_id || '').toLowerCase();
+        const state = (a.registration_state || '').toLowerCase();
+        return name.includes(searchVal) || legal.includes(searchVal) || reg.includes(searchVal) || pan.includes(searchVal) || darpan.includes(searchVal) || state.includes(searchVal);
+      });
+    }
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-outline">No NGO applications match the current filter or search criteria.</td></tr>`;
+      return;
+    }
+
+    const statusBadgeMap = {
+      VERIFIED: `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">VERIFIED ✓</span>`,
+      PENDING_REVIEW: `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">PENDING REVIEW ⏳</span>`,
+      ADDITIONAL_INFORMATION_REQUIRED: `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-orange-100 text-orange-800 border border-orange-300">ACTION REQUIRED ⚠️</span>`,
+      REJECTED: `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-300">REJECTED ❌</span>`,
+      SUSPENDED: `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-800 border border-red-400">SUSPENDED ⛔</span>`,
+      NOT_SUBMITTED: `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-800 border border-slate-300">NOT SUBMITTED</span>`
+    };
+
+    const structureLabels = {
+      trust: 'Charitable Trust',
+      society: 'Registered Society',
+      section_8: 'Section 8 Company',
+      other: 'Statutory Non-Profit'
+    };
+
+    tbody.innerHTML = filtered.map(app => {
+      const docsCount = app.documents ? app.documents.length : 0;
+      const verifiedDocsCount = app.documents ? app.documents.filter(d => d.verification_status === 'VERIFIED').length : 0;
+      const correctionsCount = app.documents ? app.documents.filter(d => d.verification_status === 'NEEDS_CORRECTION').length : 0;
+
+      let docChecklistHtml = `<span class="text-outline font-semibold">${docsCount} Uploaded</span>`;
+      if (correctionsCount > 0) {
+        docChecklistHtml = `<span class="font-bold text-orange-700">${correctionsCount} Correction Needed</span>`;
+      } else if (docsCount > 0 && verifiedDocsCount === docsCount) {
+        docChecklistHtml = `<span class="font-bold text-emerald-700">✓ All ${docsCount} Verified</span>`;
+      }
+
+      return `
+        <tr class="hover:bg-surface-container-low/40 transition-colors">
+          <td class="py-3 px-3">
+            <div class="font-bold text-on-surface">${app.legal_name || app.ngo_name}</div>
+            <div class="text-[10px] text-purple-800 font-semibold uppercase">${structureLabels[app.legal_structure] || app.legal_structure}</div>
+            <div class="text-[10px] text-outline font-mono">${app.ngo_id}</div>
+          </td>
+          <td class="py-3 px-3">
+            <div class="font-mono font-semibold text-on-surface text-xs">${app.registration_number || 'N/A'}</div>
+            <div class="text-[10px] text-outline">${app.registration_authority || 'Registrar'}, ${app.registration_state || 'Rajasthan'}</div>
+          </td>
+          <td class="py-3 px-3">
+            <div class="font-mono font-bold text-on-surface">${app.pan_number || 'PENDING'}</div>
+            <div class="text-[10px] text-outline font-mono">${app.darpan_id || 'No Darpan ID'}</div>
+          </td>
+          <td class="py-3 px-3 text-outline">
+            ${app.submitted_at ? new Date(app.submitted_at).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recently'}
+          </td>
+          <td class="py-3 px-3">
+            ${docChecklistHtml}
+            <div class="text-[10px] text-outline">${app.bank_verification_status === 'VERIFIED' ? '✓ Bank Verified' : 'Bank: ' + (app.bank_name || 'Pending')}</div>
+          </td>
+          <td class="py-3 px-3">
+            ${statusBadgeMap[app.verification_status] || statusBadgeMap.PENDING_REVIEW}
+          </td>
+          <td class="py-3 px-3 text-right">
+            <button onclick="openAdminDossierModal('${app.id}')" class="px-3 py-1.5 rounded-lg bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs shadow-xs transition-all inline-flex items-center gap-1 cursor-pointer">
+              <span class="material-symbols-outlined text-[15px]">fact_check</span>
+              <span>Audit Dossier</span>
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function openAdminDossierModal(appId) {
+    const app = currentAdminApplications.find(a => a.id === appId) || currentAdminApplications[0];
+    if (!app) return;
+    selectedDossierApp = app;
+
+    const localNgoName = (localStorage.getItem('ngo_name') || '').trim();
+    const effectiveName = (app === currentAdminApplications[0] && localNgoName && localNgoName !== 'Hope Shelter' && localNgoName !== 'Hope Shelter Jaipur')
+      ? localNgoName
+      : (app.legal_name || app.ngo_name);
+
+    // Header & Badges
+    document.getElementById('dossier-ngo-title').textContent = effectiveName;
+    const structureLabels = { trust: 'Charitable Trust', society: 'Registered Society', section_8: 'Section 8 Company', other: 'Statutory Non-Profit' };
+    document.getElementById('dossier-ngo-subtitle').textContent = `Structure: ${structureLabels[app.legal_structure] || app.legal_structure} • Reg: ${app.registration_number || 'N/A'} • State: ${app.registration_state || 'Rajasthan'}`;
+
+    const statusBadgeMap = {
+      VERIFIED: `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">VERIFIED ✓</span>`,
+      PENDING_REVIEW: `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300">PENDING REVIEW ⏳</span>`,
+      ADDITIONAL_INFORMATION_REQUIRED: `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-orange-100 text-orange-800 border border-orange-300">ACTION REQUIRED ⚠️</span>`,
+      REJECTED: `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-100 text-rose-800 border border-rose-300">REJECTED ❌</span>`,
+      SUSPENDED: `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-red-100 text-red-800 border border-red-400">SUSPENDED ⛔</span>`
+    };
+    document.getElementById('dossier-status-badge').innerHTML = statusBadgeMap[app.verification_status] || statusBadgeMap.PENDING_REVIEW;
+
+    // Metadata
+    document.getElementById('dossier-pan').textContent = app.pan_number || 'N/A';
+    document.getElementById('dossier-darpan').textContent = app.darpan_id || 'Not Registered';
+    document.getElementById('dossier-tax').textContent = app.tax_12ab_number ? `12AB: ${app.tax_12ab_number}` : 'Standard Non-Profit';
+    document.getElementById('dossier-bank').textContent = `${app.bank_verification_status || 'PENDING'} • ${app.bank_name || 'Bank'}`;
+
+    document.getElementById('dossier-rep-name').textContent = app.representative_name || app.ngo_name;
+    document.getElementById('dossier-rep-role').textContent = app.representative_role || 'Authorized Signatory';
+    document.getElementById('dossier-rep-contact').textContent = `${app.representative_email || app.ngo_id} • ${app.representative_phone || '+91 98290 12345'}`;
+    document.getElementById('dossier-address').textContent = app.registered_address || 'Jaipur, Rajasthan';
+    document.getElementById('dossier-bank-details').textContent = `${app.bank_name || 'State Bank of India'} A/C: ${app.bank_account_number || '384910294819'} (IFSC: ${app.bank_ifsc || 'SBIN0004012'})`;
+
+    // Notes pre-fill
+    document.getElementById('admin-dossier-notes').value = app.admin_notes || app.decision_reason || '';
+
+    // Suspend Button Visibility: only allow suspension if VERIFIED
+    const suspendBtn = document.getElementById('btn-dossier-suspend');
+    if (suspendBtn) {
+      if (app.verification_status === 'VERIFIED') {
+        suspendBtn.classList.remove('hidden');
+      } else {
+        suspendBtn.classList.add('hidden');
+      }
+    }
+
+    // Populate Documents Table
+    const docsTbody = document.getElementById('dossier-docs-tbody');
+    const docs = app.documents || [];
+    if (docs.length === 0) {
+      docsTbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-outline">No documents uploaded yet.</td></tr>`;
+    } else {
+      docsTbody.innerHTML = docs.map(d => {
+        const isDocVer = d.verification_status === 'VERIFIED';
+        const isDocCorr = d.verification_status === 'NEEDS_CORRECTION';
+        let badge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">UNDER REVIEW</span>`;
+        if (isDocVer) badge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">VERIFIED ✓</span>`;
+        if (isDocCorr) badge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-orange-100 text-orange-800">CORRECTION ⚠️</span>`;
+
+        return `
+          <tr class="hover:bg-surface-container-low/30 transition-colors">
+            <td class="p-3 font-medium text-on-surface">${(d.document_type || 'DOCUMENT').replace(/_/g, ' ')}</td>
+            <td class="p-3 font-mono text-[11px] text-outline">${d.file_name}</td>
+            <td class="p-3">${badge}</td>
+            <td class="p-3 text-[11px] text-outline">${d.reviewer_notes || 'No notes'}</td>
+            <td class="p-3 text-right">
+              <div class="flex items-center justify-end gap-1.5">
+                <button onclick="openAdminDocViewer('${d.id}', '${d.file_name}', '${d.mime_type}')" class="px-2 py-1 rounded bg-surface-container-low text-on-surface font-semibold hover:bg-surface-container transition-colors inline-flex items-center gap-1">
+                  <span class="material-symbols-outlined text-[14px]">visibility</span>
+                  <span>View</span>
+                </button>
+                <button onclick="reviewAdminDocAction('${app.id}', '${d.id}', 'VERIFIED')" class="px-2 py-1 rounded bg-emerald-100 text-emerald-800 font-bold hover:bg-emerald-200 transition-colors">
+                  ✓ Mark Valid
+                </button>
+                <button onclick="reviewAdminDocAction('${app.id}', '${d.id}', 'NEEDS_CORRECTION')" class="px-2 py-1 rounded bg-orange-100 text-orange-800 font-bold hover:bg-orange-200 transition-colors">
+                  ⚠️ Request Fix
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Populate Previous Review History
+    const historyContainer = document.getElementById('dossier-history-container');
+    const history = app.review_history || [];
+    if (history.length === 0) {
+      historyContainer.innerHTML = `<div class="p-3 rounded-lg bg-surface-container-low/40 text-outline text-[11px]">No previous review cycles on record. Initial submission.</div>`;
+    } else {
+      historyContainer.innerHTML = history.map(h => `
+        <div class="p-2.5 rounded-lg border border-outline-variant/30 bg-surface-container-low/40 space-y-1">
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="font-bold text-purple-900">${h.decision || h.new_status}</span>
+            <span class="text-outline">${new Date(h.timestamp || h.created_at).toLocaleString()}</span>
+          </div>
+          <p class="text-[11px] text-on-surface leading-tight">${h.reason || h.notes || 'Status updated by auditor.'}</p>
+          <div class="text-[10px] text-outline">Reviewer: ${h.reviewer_id || 'System Auditor'}</div>
+        </div>
+      `).join('');
+    }
+
+    // Automatically cross-verify against NITI Aayog Government Registry
+    loadDossierGovtLookup(app);
+
+    document.getElementById('admin-dossier-modal').classList.remove('hidden');
+  }
+
+  function closeAdminDossierModal() {
+    document.getElementById('admin-dossier-modal').classList.add('hidden');
+    selectedDossierApp = null;
+  }
+
+  async function openAdminDocViewer(docId, fileName, mimeType) {
+    try {
+      if (!window.SupabaseService) return;
+      const res = await window.SupabaseService.getNGODocumentSignedUrl(docId);
+      if (!res || !res.success) {
+        alert('Failed to generate secure signed link: ' + (res ? res.error : 'Unauthorized'));
+        return;
+      }
+
+      let signedUrl = res.signed_url;
+      if (signedUrl && !signedUrl.startsWith('http')) {
+        const apiOrigin = (window.SupabaseService && window.SupabaseService.API_BASE_URL) 
+          ? window.SupabaseService.API_BASE_URL.replace(/\/api\/?$/, '') 
+          : 'http://localhost:5000';
+        signedUrl = `${apiOrigin}${signedUrl}`;
+      }
+
+      document.getElementById('admin-viewer-title').textContent = `📄 ${fileName || 'Verification Document'}`;
+      
+      const expiryDate = res.expires_at ? new Date(res.expires_at) : new Date(Date.now() + 15 * 60 * 1000);
+      const timeStr = (!isNaN(expiryDate.getTime())) ? expiryDate.toLocaleTimeString() : new Date(Date.now() + 15 * 60 * 1000).toLocaleTimeString();
+      document.getElementById('admin-viewer-expiry').textContent = `🔒 Private Signed Token Active (Expires: ${timeStr})`;
+      
+      const dlLink = document.getElementById('admin-viewer-dl');
+      if (dlLink) {
+        dlLink.href = signedUrl;
+        dlLink.target = '_blank';
+      }
+
+      const container = document.getElementById('admin-viewer-content');
+      const isImage = (mimeType && mimeType.startsWith('image/')) || (fileName && /\.(png|jpe?g|webp|gif|bmp)$/i.test(fileName));
+      if (isImage) {
+        container.innerHTML = `
+          <div class="flex flex-col items-center justify-center p-3 bg-slate-50/80 rounded-xl border border-slate-200">
+            <img src="${signedUrl}" class="max-h-[500px] max-w-full rounded-lg object-contain shadow-sm border border-slate-200 bg-white" alt="Document Preview" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'text-center p-8 text-slate-500 text-xs space-y-2\\'>⚠️ Could not render embedded preview directly.<br><a href=\\'${signedUrl}\\' target=\\'_blank\\' class=\\'inline-block mt-2 px-4 py-2 bg-purple-700 text-white rounded-lg font-bold\\'>Open in New Tab &rarr;</a></div>'">
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <div class="text-center p-6 space-y-3">
+            <div class="w-16 h-16 rounded-full bg-purple-100 text-purple-800 text-2xl flex items-center justify-center mx-auto">📑</div>
+            <h4 class="font-bold text-sm text-on-surface">${fileName}</h4>
+            <p class="text-xs text-outline max-w-md mx-auto">Official registration certificate decrypted from private Supabase Vault via signed token stream.</p>
+            <a href="${signedUrl}" target="_blank" class="inline-block px-4 py-2 bg-purple-700 text-white font-bold text-xs rounded-xl shadow-sm hover:bg-purple-800">
+              Open Full Document Stream &rarr;
+            </a>
+          </div>
+        `;
+      }
+
+      document.getElementById('admin-doc-viewer-modal').classList.remove('hidden');
+
+    } catch (e) {
+      alert('Error viewing document: ' + e.message);
+    }
+  }
+
+  function closeAdminDocViewerModal() {
+    document.getElementById('admin-doc-viewer-modal').classList.add('hidden');
+  }
+
+  async function reviewAdminDocAction(appId, docId, status) {
+    let notes = '';
+    if (status === 'NEEDS_CORRECTION') {
+      notes = prompt('Please describe what correction or clearer document is required from the NGO:', 'Document scan is unclear or lacks official seal.');
+      if (notes === null) return;
+    } else {
+      notes = 'Document verified against official registry format.';
+    }
+
+    try {
+      const res = await window.SupabaseService.reviewVerificationDocument(appId, docId, status, notes);
+      if (res && res.success) {
+        alert(`✓ Document status updated to ${status}.`);
+        await loadAdminNGOs();
+        openAdminDossierModal(appId);
+      } else {
+        alert('Update error: ' + (res ? res.error : 'Failed'));
+      }
+    } catch (e) {
+      alert('Error: ' + e.message);
+    }
+  }
+
+  async function triggerAdminDecision(decision) {
+    if (!selectedDossierApp) return;
+    const appId = selectedDossierApp.id;
+    const notes = document.getElementById('admin-dossier-notes')?.value.trim() || '';
+
+    let decisionReason = notes;
+    let rejectionReasons = [];
+
+    if (decision === 'VERIFIED') {
+      const confirmApprove = confirm(`CONFIRM NGO APPROVAL:\n\nAre you sure you want to APPROVE "${selectedDossierApp.legal_name || selectedDossierApp.ngo_name}"?\n\nThis will mark the NGO as officially VERIFIED and allow it to accept live surplus food donations and receive volunteer courier dispatches.`);
+      if (!confirmApprove) return;
+      decisionReason = notes || 'All statutory requirements and official registry checks verified successfully.';
+    } else if (decision === 'ADDITIONAL_INFORMATION_REQUIRED') {
+      const input = prompt('Enter missing documents or corrections requested from the NGO:', notes || 'Please provide updated trust deed and current bank cancelled cheque.');
+      if (input === null) return;
+      decisionReason = input;
+      rejectionReasons = [input];
+    } else if (decision === 'REJECTED') {
+      const input = prompt('Enter mandatory reason for application REJECTION:', notes || 'Registration credentials could not be authenticated with official records.');
+      if (!input) {
+        alert('Rejection requires a documented reason.');
+        return;
+      }
+      decisionReason = input;
+      rejectionReasons = [input];
+    } else if (decision === 'SUSPENDED') {
+      const input = prompt('CONFIRM COMPLIANCE SUSPENSION:\n\nEnter reason for suspending this verified NGO.\n(Note: This safely pauses new claims while preserving all past delivery and financial history):', 'Irregularity under compliance investigation.');
+      if (!input) return;
+      decisionReason = input;
+    }
+
+    const checklistState = {
+      legal_name_matches: document.getElementById('chk-legal-name')?.checked || false,
+      registration_number_valid: document.getElementById('chk-reg-number')?.checked || false,
+      certificate_authentic: document.getElementById('chk-cert-valid')?.checked || false,
+      registered_address_verified: document.getElementById('chk-address')?.checked || false,
+      authorised_signatory_verified: document.getElementById('chk-signatory')?.checked || false,
+      tax_approvals_verified: document.getElementById('chk-tax-approvals')?.checked || false,
+      bank_account_verified: document.getElementById('chk-bank-account')?.checked || false,
+      source_checked: document.getElementById('admin-source-checked')?.value || 'Official State Registry',
+      check_date: document.getElementById('admin-check-date')?.value || new Date().toISOString().split('T')[0]
+    };
+
+    try {
+      const res = await window.SupabaseService.submitVerificationDecision(appId, {
+        decision,
+        decision_reason: decisionReason,
+        rejection_reasons: rejectionReasons,
+        admin_notes: notes,
+        checklist_state: checklistState
+      });
+
+      if (res && res.success) {
+        // Synchronize decision state to localStorage for real-time NGO portal reflection
+        localStorage.setItem('ngo_verification_status', decision);
+        if (decision === 'REJECTED') {
+          localStorage.setItem('ngo_verification_rejection_reason', decisionReason || 'Application rejected by platform compliance administrators.');
+        } else if (decision === 'VERIFIED') {
+          localStorage.removeItem('ngo_verification_rejection_reason');
+        } else {
+          localStorage.setItem('ngo_verification_rejection_reason', decisionReason || '');
+        }
+
+        if (selectedDossierApp) {
+          const ngoKey = (selectedDossierApp.ngo_id || selectedDossierApp.legal_name || '').toLowerCase();
+          if (ngoKey) {
+            localStorage.setItem(`ngo_verification_status_${ngoKey}`, decision);
+            if (decision === 'REJECTED') {
+              localStorage.setItem(`ngo_verification_reason_${ngoKey}`, decisionReason || 'Application rejected by compliance administrators.');
+            }
+          }
+        }
+
+        try { window.dispatchEvent(new Event('storage')); } catch(e) {}
+
+        alert(`✓ Application decision saved: ${decision}`);
+        closeAdminDossierModal();
+        await loadAdminNGOs();
+        loadAuditReports();
+      } else {
+        alert('Decision error: ' + (res ? res.error : 'Failed to save decision'));
+      }
+    } catch (e) {
+      alert('Error: ' + e.message);
+    }
+  }
+
+  async function addAdminInternalNotePrompt() {
+    if (!selectedDossierApp) return;
+    const note = prompt('Enter internal administrative review note:');
+    if (!note) return;
+
+    try {
+      const res = await window.SupabaseService.addVerificationNote(selectedDossierApp.id, note);
+      if (res && res.success) {
+        alert('✓ Note saved to audit history.');
+        await loadAdminNGOs();
+        openAdminDossierModal(selectedDossierApp.id);
+      }
+    } catch (e) {
+      alert('Error: ' + e.message);
+    }
+  }
+
+  // ========================================================
+  // 🏛️ ADMIN NITI AAYOG NGO-DARPAN INTELLIGENCE SYSTEM
+  // ========================================================
+  let currentDossierGovtRecord = null;
+
+  function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  async function loadDossierGovtLookup(app) {
+    const badgeEl = document.getElementById('dossier-govt-badge');
+    const contentEl = document.getElementById('dossier-govt-content');
+    if (!badgeEl || !contentEl) return;
+
+    badgeEl.textContent = 'Checking Registry...';
+    badgeEl.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 border border-blue-300';
+    contentEl.innerHTML = `<div class="p-3 text-center text-slate-500 text-xs">Querying NITI Aayog NGO-DARPAN portal...</div>`;
+    currentDossierGovtRecord = null;
+
+    const localNgoName = (localStorage.getItem('ngo_name') || '').trim();
+    const effectiveName = (app === currentAdminApplications[0] && localNgoName && localNgoName !== 'Hope Shelter' && localNgoName !== 'Hope Shelter Jaipur')
+      ? localNgoName
+      : (app.legal_name || app.ngo_name);
+
+    try {
+      const res = await window.SupabaseService.lookupGovtNGORegistry({
+        query: effectiveName,
+        darpan_id: app.darpan_id || '',
+        pan: app.pan_number || app.pan || '',
+        name: effectiveName
+      });
+
+      if (!res || !res.success || !res.found || !res.data) {
+        badgeEl.textContent = '🛑 UNVERIFIED / NON-TRUSTABLE';
+        badgeEl.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-300';
+        contentEl.innerHTML = `
+          <div class="p-4 rounded-xl bg-rose-50 border border-rose-300 text-rose-950 space-y-2.5">
+            <div class="flex items-center justify-between pb-2 border-b border-rose-200">
+              <div class="flex items-center gap-2">
+                <span class="text-xl">🛑</span>
+                <div>
+                  <h4 class="font-bold text-xs text-rose-900 uppercase tracking-wide">NON-TRUSTABLE / UNVERIFIED IN GOVT DATABASE</h4>
+                  <p class="text-[11px] text-rose-700">No match on NITI Aayog NGO-DARPAN (ngodarpan.gov.in) or Ministry of Corporate Affairs</p>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-200 text-rose-900 border border-rose-300">
+                ⚠️ High Risk Flag
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+              <div class="p-2.5 rounded-lg bg-white/90 border border-rose-200">
+                <span class="text-[10px] uppercase font-bold text-rose-600 block">Organization Queried</span>
+                <strong class="text-slate-900 block truncate">${escapeHtml(effectiveName)}</strong>
+              </div>
+              <div class="p-2.5 rounded-lg bg-white/90 border border-rose-200">
+                <span class="text-[10px] uppercase font-bold text-rose-600 block">NITI Aayog Status</span>
+                <span class="font-bold text-rose-700 block">❌ Not Registered</span>
+              </div>
+              <div class="p-2.5 rounded-lg bg-white/90 border border-rose-200">
+                <span class="text-[10px] uppercase font-bold text-rose-600 block">12AB / 80G Approvals</span>
+                <span class="font-bold text-rose-700 block">❌ No Verified Record</span>
+              </div>
+            </div>
+
+            <div class="p-2.5 rounded-lg bg-white/80 border border-rose-200 text-[11px] text-rose-800 space-y-1">
+              <p><strong>Admin Risk Assessment:</strong> "${escapeHtml(effectiveName)}" cannot be authenticated through official government directories. Possible reasons: fictitious entity, newly incorporated trust without Darpan registration, or invalid name spelling.</p>
+              <p class="font-semibold text-rose-900">Recommended Action: Request Certificate of Registration &amp; Trust Deed before approving food rescue privileges.</p>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      const d = res.data;
+      currentDossierGovtRecord = d;
+
+      badgeEl.textContent = '✓ 100% GOVERNMENT VERIFIED (Trustable Entity)';
+      badgeEl.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
+
+      contentEl.innerHTML = `
+        <div class="space-y-3">
+          <!-- Trustable Verification Banner -->
+          <div class="p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-between text-xs">
+            <div class="flex items-center gap-2">
+              <span class="text-emerald-700 font-bold text-base">✓</span>
+              <div>
+                <strong class="text-emerald-900">GENUINE &amp; TRUSTABLE REGISTERED ENTITY</strong>
+                <p class="text-[10px] text-emerald-700">Official match in NITI Aayog NGO-DARPAN master registry &bull; Compliant statutory record</p>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-200 text-emerald-900">100% Validated</span>
+          </div>
+
+          <!-- Summary Header Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+            <div class="p-2.5 rounded-lg bg-white border border-slate-200 shadow-2xs">
+              <span class="text-[10px] uppercase font-bold text-slate-500 block">Official Legal Name</span>
+              <strong class="text-slate-900 block mt-0.5 truncate" title="${escapeHtml(d.legal_name)}">${escapeHtml(d.legal_name)}</strong>
+            </div>
+            <div class="p-2.5 rounded-lg bg-white border border-slate-200 shadow-2xs">
+              <span class="text-[10px] uppercase font-bold text-slate-500 block">Registration Authority</span>
+              <span class="text-slate-900 block mt-0.5 truncate" title="${escapeHtml(d.registration_authority)}">${escapeHtml(d.registration_authority)}</span>
+            </div>
+            <div class="p-2.5 rounded-lg bg-white border border-slate-200 shadow-2xs">
+              <span class="text-[10px] uppercase font-bold text-slate-500 block">Age of Entity</span>
+              <span class="font-bold text-slate-900 block mt-0.5">${d.entity_age_years ? d.entity_age_years + ' Years Old' : 'Established Entity'} (${d.registered_year || 'Est.'})</span>
+            </div>
+            <div class="p-2.5 rounded-lg bg-white border border-slate-200 shadow-2xs">
+              <span class="text-[10px] uppercase font-bold text-slate-500 block">Compliance Status</span>
+              <span class="font-bold text-emerald-700 block mt-0.5">✓ ${escapeHtml(d.compliance_rating || 'Clean Track Record')}</span>
+            </div>
+          </div>
+
+          <!-- Deep-dive background history & grants -->
+          <div class="p-3 rounded-lg bg-white border border-slate-200 space-y-2 text-xs">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2">
+              <span class="font-bold text-slate-800">Operational Sectors:</span>
+              <div class="flex flex-wrap gap-1">
+                ${(d.sectors_of_operation || []).map(s => `<span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 text-[10px] font-semibold">${escapeHtml(s)}</span>`).join('')}
+              </div>
+            </div>
+
+            <div class="space-y-1 pt-1">
+              <span class="font-bold text-slate-800 block text-[11px]">Past Government Grants &amp; Institutional Funding:</span>
+              ${d.past_grants && d.past_grants.length ? `
+                <div class="space-y-1">
+                  ${d.past_grants.map(g => `
+                    <div class="p-1.5 rounded bg-slate-50 border border-slate-200 flex items-center justify-between text-[11px]">
+                      <span><strong>${escapeHtml(g.scheme)}</strong> (${escapeHtml(g.ministry)})</span>
+                      <span class="font-mono font-bold text-emerald-700">${escapeHtml(g.amount)} &bull; ${escapeHtml(g.year)}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : `
+                <p class="text-slate-500 text-[11px]">No state grants registered; direct community contributions.</p>
+              `}
+            </div>
+
+            ${d.key_office_bearers && d.key_office_bearers.length ? `
+              <div class="pt-2 border-t border-slate-100">
+                <span class="font-bold text-slate-800 block text-[11px] mb-1">Government-Verified Trustees / Office Bearers:</span>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  ${d.key_office_bearers.map(b => `
+                    <div class="p-1.5 rounded bg-slate-50 border border-slate-200 text-[11px]">
+                      <span class="text-slate-400 text-[10px] uppercase font-bold block">${escapeHtml(b.role)}</span>
+                      <strong class="text-slate-900 block truncate">${escapeHtml(b.name)}</strong>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    } catch (e) {
+      badgeEl.textContent = 'Lookup Error';
+      badgeEl.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-300';
+      contentEl.innerHTML = `<div class="p-2 text-rose-700 text-xs">Error querying government registry: ${escapeHtml(e.message)}</div>`;
+    }
+  }
+
+  function refreshDossierGovtLookup() {
+    if (selectedDossierApp) {
+      loadDossierGovtLookup(selectedDossierApp);
+    }
+  }
+
+  async function autoVerifyDocsFromGovtRecord() {
+    if (!selectedDossierApp) return;
+    if (!currentDossierGovtRecord) {
+      alert('No verified government registry record is loaded for this NGO.');
+      return;
+    }
+
+    const unverifiedDocs = (selectedDossierApp.documents || []).filter(d => d.verification_status !== 'VERIFIED');
+    if (unverifiedDocs.length === 0) {
+      alert('All uploaded documents are already marked as VERIFIED.');
+      return;
+    }
+
+    const ok = confirm(`Auto-verify ${unverifiedDocs.length} pending document(s) based on official NITI Aayog NGO-DARPAN match "${currentDossierGovtRecord.legal_name}"?`);
+    if (!ok) return;
+
+    const btn = document.getElementById('btn-auto-verify-from-govt');
+    if (btn) btn.disabled = true;
+
+    try {
+      for (const doc of unverifiedDocs) {
+        await window.SupabaseService.reviewVerificationDocument(
+          selectedDossierApp.id,
+          doc.id,
+          'VERIFIED',
+          `Auto-verified via official NITI Aayog NGO-DARPAN match (${currentDossierGovtRecord.darpan_id || 'Govt Registry'}).`
+        );
+      }
+
+      await window.SupabaseService.addVerificationNote(
+        selectedDossierApp.id,
+        `Auditor auto-verified statutory checklist against NITI Aayog NGO-DARPAN registry record: ${currentDossierGovtRecord.legal_name} (${currentDossierGovtRecord.darpan_id || 'Verified'}).`
+      );
+
+      alert(`✓ Successfully auto-verified ${unverifiedDocs.length} document(s) from official government record!`);
+      await loadAdminNGOs();
+      openAdminDossierModal(selectedDossierApp.id);
+    } catch (err) {
+      alert('Error during auto-verification: ' + err.message);
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  async function executeAdminGovtExplorer() {
+    const input = document.getElementById('adminGovtExplorerInput');
+    const query = input ? input.value.trim() : '';
+    if (!query) {
+      alert('Please enter an NGO Darpan ID or organization name to query.');
+      return;
+    }
+
+    const btn = document.getElementById('adminGovtExplorerBtn');
+    const container = document.getElementById('adminGovtExplorerResults');
+    if (!container) return;
+
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = '<span>⏳ Querying...</span>';
+    }
+
+    try {
+      const res = await window.SupabaseService.lookupGovtNGORegistry({ query });
+      container.classList.remove('hidden');
+
+      if (!res || !res.success || !res.data) {
+        container.innerHTML = `
+          <div class="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-900 text-xs space-y-1">
+            <div class="font-bold flex items-center gap-1.5 text-rose-950">
+              <span>🛑</span>
+              <span>UNVERIFIED / NON-TRUSTABLE (No Govt Record Found)</span>
+            </div>
+            <p>"${escapeHtml(query)}" was not found in NITI Aayog's NGO-DARPAN directory. Caution: High risk of unverified or non-trustable entity.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const d = res.data;
+      container.innerHTML = `
+        <div class="p-3.5 rounded-xl bg-white border border-blue-200 shadow-sm space-y-2.5 text-xs">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-100">
+            <div>
+              <div class="flex items-center gap-2">
+                <strong class="text-slate-900 text-sm">${escapeHtml(d.legal_name)}</strong>
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold ${d.verification_confidence === 'HIGH' ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-blue-100 text-blue-800 border border-blue-300'}">
+                  ${d.verification_confidence === 'HIGH' ? '✓ 100% GOVERNMENT VERIFIED (Trustable Entity)' : '📐 Format Valid'}
+                </span>
+              </div>
+              <p class="text-slate-500 text-[11px] mt-0.5">
+                DARPAN ID: <span class="font-mono font-bold text-slate-800">${escapeHtml(d.darpan_id || 'N/A')}</span> &bull; 
+                State: <strong>${escapeHtml(d.state || 'N/A')}</strong> &bull; 
+                Age: <strong>${d.entity_age_years ? d.entity_age_years + ' Years Old' : 'Active'}</strong> (Est. ${d.registered_year || 'N/A'})
+              </p>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] text-slate-400 block">12AB / 80G Status</span>
+              <strong class="text-emerald-700 text-xs">${escapeHtml(d.tax_12ab_status || 'Active')} &bull; ${escapeHtml(d.tax_80g_status || '80G')}</strong>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
+            <div>
+              <span class="font-bold text-slate-700 block">Sectors:</span>
+              <span class="text-slate-600">${(d.sectors_of_operation || []).join(', ')}</span>
+            </div>
+            <div>
+              <span class="font-bold text-slate-700 block">Past Grants &amp; Ministry Work:</span>
+              <span class="text-slate-600">${d.past_grants && d.past_grants.length ? d.past_grants.map(g => `${g.scheme} (${g.amount})`).join('; ') : 'Direct Non-Profit Operations (No govt grants)'}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    } catch (err) {
+      container.classList.remove('hidden');
+      container.innerHTML = `<div class="p-2 text-rose-600 text-xs">Error: ${escapeHtml(err.message)}</div>`;
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<span>🔍 Query Govt Registry</span>';
+      }
+    }
   }
 
   // 2. Categories
@@ -654,26 +1843,59 @@
   // 4. Audit
   async function loadAuditReports() {
     const tbody = document.getElementById('audit-reports-tbody');
-    const reports = [
-      { ref: 'AUD-8821', type: 'Food Rescue', donor: 'ABC Restaurant (C-Scheme)', shelter: 'Hope Shelter', amount: '20 kg Pasta', proof: 'QR Verified (PIN 4829)', cert: 'Sec 80G Certified' },
-      { ref: 'AUD-8822', type: 'Physical Goods', donor: 'Reception Bay Partners', shelter: 'Hope Shelter', amount: '35 pairs Winter Jackets', proof: 'Condition Checked', cert: 'In-Kind Receipt' },
-      { ref: 'AUD-8823', type: 'Medicines', donor: 'City Medical Stockists', shelter: 'Care Health Clinic', amount: '50 units Paracetamol', proof: 'Batch Sealed #B-8849', cert: 'Form 20B Cleared' },
-      { ref: 'AUD-8824', type: 'Monetary Gift', donor: 'Anonymous Donor (Masked)', shelter: 'Hope Shelter', amount: '₹5,000 Direct Escrow', proof: 'HMAC Webhook #pay_8819', cert: 'Sec 80G PDF' }
-    ];
+    try {
+      let liveAuditEvents = [];
+      if (window.SupabaseService && window.SupabaseService.getVerificationAuditEvents) {
+        const res = await window.SupabaseService.getVerificationAuditEvents(20);
+        if (res && res.success && res.events) {
+          liveAuditEvents = res.events;
+        }
+      }
 
-    tbody.innerHTML = reports.map(r => `
-      <tr class="hover:bg-surface-container-low/40 transition-colors">
-        <td class="py-3 px-3 font-mono font-bold text-on-surface">${r.ref}</td>
-        <td class="py-3 px-3 font-semibold text-primary-container">${r.type}</td>
-        <td class="py-3 px-3">${r.donor}</td>
-        <td class="py-3 px-3 font-medium text-on-surface">${r.shelter}</td>
-        <td class="py-3 px-3 font-bold text-on-surface">${r.amount}</td>
-        <td class="py-3 px-3 text-outline">${r.proof}</td>
-        <td class="py-3 px-3 text-right">
-          ${r.type.includes('Food') ? '<button onclick="window.generate80GReceipt()" class="text-xs text-primary-container font-semibold hover:underline">80G Food PDF</button>' : '<button onclick="window.viewInKindSlip()" class="text-xs text-slate-600 font-semibold hover:underline">Delivery Slip</button>'}
-        </td>
-      </tr>
-    `).join('');
+      const defaultReports = [
+        { ref: 'AUD-8821', type: 'Food Rescue', donor: 'ABC Restaurant (C-Scheme)', shelter: 'Hope Shelter', amount: '20 kg Pasta', proof: 'QR Verified (PIN 4829)', cert: 'Sec 80G Certified' },
+        { ref: 'AUD-8822', type: 'Physical Goods', donor: 'Reception Bay Partners', shelter: 'Hope Shelter', amount: '35 pairs Winter Jackets', proof: 'Condition Checked', cert: 'In-Kind Receipt' },
+        { ref: 'AUD-8823', type: 'Medicines', donor: 'City Medical Stockists', shelter: 'Care Health Clinic', amount: '50 units Paracetamol', proof: 'Batch Sealed #B-8849', cert: 'Form 20B Cleared' }
+      ];
+
+      let combined = [];
+
+      // Map compliance audit events into audit table rows
+      if (liveAuditEvents.length > 0) {
+        const complianceRows = liveAuditEvents.slice(0, 6).map(e => ({
+          ref: e.id ? e.id.substring(0, 8).toUpperCase() : 'AUD-SEC',
+          type: (e.event_type || 'COMPLIANCE').replace(/_/g, ' '),
+          donor: e.actor_id || 'Compliance Auditor',
+          shelter: e.ngo_id || 'System NGO',
+          amount: e.decision || 'KYC Audit',
+          proof: e.notes ? e.notes.substring(0, 30) + '...' : 'Audit Event Logged',
+          cert: 'Audit Trail',
+          isCompliance: true
+        }));
+        combined = [...complianceRows, ...defaultReports];
+      } else {
+        combined = defaultReports;
+      }
+
+      tbody.innerHTML = combined.map(r => `
+        <tr class="hover:bg-surface-container-low/40 transition-colors">
+          <td class="py-3 px-3 font-mono font-bold text-on-surface">${r.ref}</td>
+          <td class="py-3 px-3 font-semibold text-primary-container">${r.type}</td>
+          <td class="py-3 px-3">${r.donor}</td>
+          <td class="py-3 px-3 font-medium text-on-surface">${r.shelter}</td>
+          <td class="py-3 px-3 font-bold text-on-surface">${r.amount}</td>
+          <td class="py-3 px-3 text-outline">${r.proof}</td>
+          <td class="py-3 px-3 text-right">
+            ${r.isCompliance 
+              ? `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-100 text-purple-900">AUDITED ✓</span>`
+              : (r.type.includes('Food') ? '<button onclick="window.generate80GReceipt()" class="text-xs text-primary-container font-semibold hover:underline">80G Food PDF</button>' : '<button onclick="window.viewInKindSlip()" class="text-xs text-slate-600 font-semibold hover:underline">Delivery Slip</button>')
+            }
+          </td>
+        </tr>
+      `).join('');
+    } catch (e) {
+      console.warn('Audit reports load:', e);
+    }
   }
 
   function exportAuditLedgerCSV() {

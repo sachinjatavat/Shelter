@@ -3,7 +3,9 @@
  * Features 3-Tier Sync: Supabase PostgreSQL -> Express Backend API -> LocalStorage Sync
  */
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = (typeof window !== 'undefined' && window.location && window.location.origin && window.location.origin.startsWith('http'))
+  ? (window.location.port === '3000' ? `${window.location.origin}/api` : 'http://localhost:5000/api')
+  : 'http://localhost:5000/api';
 const SUPABASE_URL = 'https://juhjxcxbrirzfppjghlj.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable__Q6ZFUUsSS6a28VjJRCL-w_DixWn7_Y';
 
@@ -258,22 +260,36 @@ window.SupabaseService = {
   async updateUserProfile(newName, role) {
     if (!newName || !newName.trim()) return { success: false, error: 'Name cannot be empty' };
     const cleanName = newName.trim();
+    const oldName = localStorage.getItem('user_name') || localStorage.getItem('ngo_name') || '';
+    const email = localStorage.getItem('user_email') || '';
+    const activeRole = role || localStorage.getItem('user_role') || 'ngo';
     
     localStorage.setItem('user_name', cleanName);
-    if (role) {
-      localStorage.setItem(`${role}_name`, cleanName);
+    if (activeRole) {
+      localStorage.setItem(`${activeRole}_name`, cleanName);
+    }
+    if (activeRole === 'ngo') {
+      localStorage.setItem('ngo_name', cleanName);
     }
 
     try {
       await fetch(`${API_BASE_URL}/users/profile`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ old_name: localStorage.getItem('user_name'), new_name: cleanName, role })
+        body: JSON.stringify({
+          old_name: oldName,
+          new_name: cleanName,
+          role: activeRole,
+          email: email,
+          ngo_id: email
+        })
       });
-    } catch (e) {}
+    } catch (e) {
+      console.warn('Update profile fetch error:', e);
+    }
 
     // Dispatch global profile update event
-    window.dispatchEvent(new CustomEvent('profileUpdated', { detail: { name: cleanName } }));
+    window.dispatchEvent(new CustomEvent('profileUpdated', { detail: { name: cleanName, oldName } }));
     if (window.syncProfileHeaderUI) window.syncProfileHeaderUI();
 
     return { success: true, name: cleanName };
@@ -325,6 +341,7 @@ window.SupabaseService = {
     const isNewUser = localStorage.getItem('is_new_user') === 'true';
     const userName = localStorage.getItem('user_name');
     const remoteOnly = options && options.remoteOnly === true;
+    const userHistoryOnly = options && (options.userHistoryOnly === true || options.userOnly === true);
 
     let apiDonations = [];
     try {
@@ -357,7 +374,8 @@ window.SupabaseService = {
 
     const localList = this.clearCorruptedLocalData();
 
-    if (isNewUser && userName) {
+    // Isolated user-history only when caller specifically requests personal history (e.g. restaurant-history.html)
+    if (userHistoryOnly && isNewUser && userName) {
       const userDonations = localList.filter(d => 
         !d.donor_name || d.donor_name === userName || d.recipient_ngo === userName || d.driver_name === userName
       );
@@ -373,9 +391,16 @@ window.SupabaseService = {
         if (!existingIds.has(item.id)) combined.push(item);
       }
 
+      combined.sort((a, b) => {
+        const timeA = a.created_at ? new Date(a.created_at).getTime() : 0;
+        const timeB = b.created_at ? new Date(b.created_at).getTime() : 0;
+        return timeB - timeA;
+      });
+
       return combined.map(d => ({ ...d, expiryInfo: this.getExpiryInfo(d) }));
     }
 
+    // Public / portal donations feed: Merge remote API and local storage so all available items appear
     const combined = [...apiDonations];
     const existingIds = new Set(apiDonations.map(d => d.id));
 
@@ -391,7 +416,7 @@ window.SupabaseService = {
       };
 
       if (!existingIds.has(item.id)) {
-        combined.push(item);
+        combined.unshift(item);
       } else {
         const idx = combined.findIndex(d => d.id === item.id);
         if (idx >= 0 && item.status !== combined[idx].status) {
@@ -399,6 +424,13 @@ window.SupabaseService = {
         }
       }
     }
+
+    // Sort descending by created_at so newest donations are at the top
+    combined.sort((a, b) => {
+      const timeA = a.created_at ? new Date(a.created_at).getTime() : 0;
+      const timeB = b.created_at ? new Date(b.created_at).getTime() : 0;
+      return timeB - timeA;
+    });
 
     return combined.map(d => ({ ...d, expiryInfo: this.getExpiryInfo(d) }));
   },
@@ -452,6 +484,12 @@ window.SupabaseService = {
       const data = await res.json();
       if (data && data.donation) {
         saveLocalDonation(data.donation);
+        try {
+          localStorage.setItem('last_donation_event', JSON.stringify({ donation: data.donation, time: Date.now() }));
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('donationCreated', { detail: data.donation }));
+          }
+        } catch (e) {}
         return { success: true, donation: data.donation, match: data.match, expiryInfo: data.expiryInfo };
       }
     } catch (e) {
@@ -831,6 +869,189 @@ window.SupabaseService = {
     } catch (e) {
       return { success: false, error: e.message };
     }
+  },
+
+  // ==========================================
+  // NGO VERIFICATION & AUDIT SYSTEM (CLIENT)
+  // ==========================================
+  getAuthHeaders() {
+    const email = localStorage.getItem('user_email') || 'hope@shelter.org';
+    const role = localStorage.getItem('user_role') || (email.toLowerCase().includes('admin') ? 'admin' : 'ngo');
+    return {
+      'x-user-email': email,
+      'x-user-role': role
+    };
+  },
+
+  async getNGOVerificationApplication(ngoId) {
+    try {
+      const headers = this.getAuthHeaders();
+      const targetId = ngoId || headers['x-user-email'] || 'coordinator@hopeshelter.org';
+      const activeName = localStorage.getItem('ngo_name') || localStorage.getItem('user_name') || '';
+      const url = `${API_BASE_URL}/ngo/verification/application/${encodeURIComponent(targetId)}?name=${encodeURIComponent(activeName)}`;
+      const res = await fetch(url, {
+        headers: {
+          ...headers,
+          'x-user-name': activeName
+        }
+      });
+      return await res.json();
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  async submitNGOVerificationApplication(payload) {
+    try {
+      const headers = {
+        'Content-Type': 'application/json',
+        ...this.getAuthHeaders()
+      };
+      const res = await fetch(`${API_BASE_URL}/ngo/verification/application`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload)
+      });
+      return await res.json();
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  async uploadNGOVerificationDocument(data) {
+    try {
+      const headers = {
+        'Content-Type': 'application/json',
+        ...this.getAuthHeaders()
+      };
+      const res = await fetch(`${API_BASE_URL}/ngo/verification/upload-document`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(data)
+      });
+      return await res.json();
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  async getNGODocumentSignedUrl(docId) {
+    try {
+      const headers = this.getAuthHeaders();
+      const res = await fetch(`${API_BASE_URL}/ngo/verification/documents/${docId}/signed-url`, {
+        headers
+      });
+      const data = await res.json();
+      if (data && data.success) {
+        const origin = API_BASE_URL.replace(/\/api\/?$/, '');
+        if (data.signed_url && !data.signed_url.startsWith('http')) {
+          data.signed_url = `${origin}${data.signed_url}`;
+        }
+        if (!data.expires_at) {
+          data.expires_at = new Date(Date.now() + (data.expires_in_seconds || 900) * 1000).toISOString();
+        }
+      }
+      return data;
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  async getAdminVerificationApplications(status = 'ALL') {
+    try {
+      const headers = this.getAuthHeaders();
+      const res = await fetch(`${API_BASE_URL}/admin/verification/applications?status=${encodeURIComponent(status)}`, {
+        headers
+      });
+      return await res.json();
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  async reviewVerificationDocument(appId, docId, status, notes) {
+    try {
+      const headers = {
+        'Content-Type': 'application/json',
+        ...this.getAuthHeaders()
+      };
+      const res = await fetch(`${API_BASE_URL}/admin/verification/${appId}/review-document`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ document_id: docId, status, notes })
+      });
+      return await res.json();
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  async submitVerificationDecision(appId, decisionData) {
+    try {
+      const headers = {
+        'Content-Type': 'application/json',
+        ...this.getAuthHeaders()
+      };
+      const res = await fetch(`${API_BASE_URL}/admin/verification/${appId}/decision`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(decisionData)
+      });
+      return await res.json();
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  async addVerificationNote(appId, noteText) {
+    try {
+      const headers = {
+        'Content-Type': 'application/json',
+        ...this.getAuthHeaders()
+      };
+      const res = await fetch(`${API_BASE_URL}/admin/verification/${appId}/notes`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ note_text: noteText })
+      });
+      return await res.json();
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  async getVerificationAuditEvents(limit = 50) {
+    try {
+      const headers = this.getAuthHeaders();
+      const res = await fetch(`${API_BASE_URL}/admin/verification/audit-events?limit=${limit}`, {
+        headers
+      });
+      return await res.json();
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  // 🏛️ Official Government NGO-DARPAN Registry & Background Intelligence Lookup
+  async lookupGovtNGORegistry(params = {}) {
+    try {
+      const q = new URLSearchParams();
+      if (typeof params === 'string') {
+        q.append('query', params);
+      } else {
+        if (params.query) q.append('query', params.query);
+        if (params.darpan_id) q.append('darpan_id', params.darpan_id);
+        if (params.pan) q.append('pan', params.pan);
+        if (params.name) q.append('name', params.name);
+      }
+      const res = await fetch(`${API_BASE_URL}/ngo/verification/lookup-registry?${q.toString()}`, {
+        headers: this.getAuthHeaders ? this.getAuthHeaders() : {}
+      });
+      return await res.json();
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
   }
 };
+
 

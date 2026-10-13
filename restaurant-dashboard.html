@@ -285,65 +285,240 @@
 </button>
 </div>
 </div>
-<!-- Operational Statistics (4 Horizontal KPI Cards) -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
-<!-- Card 1 -->
-<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-5 shadow-sm hover:border-outline-variant/70 transition-colors">
-<div class="flex items-center justify-between">
-<span class="text-body-sm font-label-md text-outline">Total Donations</span>
-<div class="w-8 h-8 rounded-lg bg-secondary-container/60 flex items-center justify-center">
-<span class="material-symbols-outlined text-primary-container text-[18px]">package_2</span>
+<!-- Interactive Donation Impact & Category Distribution Analytics Hub -->
+<div class="my-6 bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-5 sm:p-6 shadow-sm hover:border-outline-variant/60 transition-all">
+  <!-- Hub Header with View Switcher -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-outline-variant/20">
+    <div class="flex items-center gap-2.5">
+      <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-base shadow-2xs border border-emerald-200">
+        <span class="material-symbols-outlined text-[20px]">pie_chart</span>
+      </div>
+      <div>
+        <h2 class="text-sm sm:text-base font-bold text-on-surface flex items-center gap-2">
+          <span>Donation Breakdown &amp; Impact Analytics</span>
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">Live Insights</span>
+        </h2>
+        <p class="text-xs text-outline">Real-time category distribution across food rescue, physical relief goods, courier logistics &amp; monetary grants</p>
+      </div>
+    </div>
+    
+    <!-- View Switcher Tabs -->
+    <div class="inline-flex p-1 bg-surface-container-low rounded-xl border border-outline-variant/30 self-start sm:self-auto text-xs font-semibold">
+      <button type="button" id="donor-btn-pie" onclick="switchDonorChart('pie')" class="px-3 py-1.5 rounded-lg bg-white text-emerald-800 font-bold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer">
+        <span class="material-symbols-outlined text-[15px]">donut_large</span>
+        <span>Pie / Donut</span>
+      </button>
+      <button type="button" id="donor-btn-bar" onclick="switchDonorChart('bar')" class="px-3 py-1.5 rounded-lg text-outline hover:text-on-surface transition-all flex items-center gap-1.5 cursor-pointer">
+        <span class="material-symbols-outlined text-[15px]">bar_chart</span>
+        <span>Activity Bar</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Visual Body: Chart Visualization + Metric Breakdown Panel -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-5 items-center">
+    <!-- Visual Chart Stage (Left: 5 cols) -->
+    <div class="lg:col-span-5 flex flex-col items-center justify-center p-3 relative">
+      <!-- Tooltip Container -->
+      <div id="donor-chart-tooltip" class="absolute -top-2 bg-slate-900 text-white text-[11px] font-semibold py-1 px-2.5 rounded-lg shadow-lg pointer-events-none opacity-0 transition-opacity z-20 whitespace-nowrap">
+        Cooked Meals: 145 kg (50%)
+      </div>
+
+      <!-- Donut / Pie View -->
+      <div id="donor-pie-view" class="relative w-56 h-56 sm:w-60 sm:h-60 flex items-center justify-center">
+        <svg viewBox="0 0 200 200" class="w-full h-full transform -rotate-90 filter drop-shadow-sm">
+          <!-- Background track -->
+          <circle cx="100" cy="100" r="70" fill="transparent" stroke="#f1f5f9" stroke-width="26" />
+          
+          <!-- Segment 1: Cooked Food & Meals (50% -> 220 stroke-dasharray) -->
+          <circle id="donor-slice-1" cx="100" cy="100" r="70" fill="transparent" stroke="#16803C" stroke-width="26"
+            stroke-dasharray="220 440" stroke-dashoffset="0"
+            class="transition-all duration-300 hover:opacity-85 cursor-pointer"
+            onmouseenter="showDonorTip('🍲 Cooked Surplus Food: 145 kg (50%)', event)" onmouseleave="hideDonorTip()" />
+
+          <!-- Segment 2: Packaged Foods & Rations (20% -> 88 stroke-dasharray) -->
+          <circle id="donor-slice-2" cx="100" cy="100" r="70" fill="transparent" stroke="#0D9488" stroke-width="26"
+            stroke-dasharray="88 440" stroke-dashoffset="-220"
+            class="transition-all duration-300 hover:opacity-85 cursor-pointer"
+            onmouseenter="showDonorTip('📦 Physical Relief Goods: 100 items (20%)', event)" onmouseleave="hideDonorTip()" />
+
+          <!-- Segment 3: Monetary Aid Raised (18% -> 79 stroke-dasharray) -->
+          <circle id="donor-slice-3" cx="100" cy="100" r="70" fill="transparent" stroke="#D97706" stroke-width="26"
+            stroke-dasharray="79 440" stroke-dashoffset="-308"
+            class="transition-all duration-300 hover:opacity-85 cursor-pointer"
+            onmouseenter="showDonorTip('💰 Monetary Aid: ₹35,000 (18%)', event)" onmouseleave="hideDonorTip()" />
+
+          <!-- Segment 4: Courier Pickups Dispatched (12% -> 53 stroke-dasharray) -->
+          <circle id="donor-slice-4" cx="100" cy="100" r="70" fill="transparent" stroke="#4F46E5" stroke-width="26"
+            stroke-dasharray="53 440" stroke-dashoffset="-387"
+            class="transition-all duration-300 hover:opacity-85 cursor-pointer"
+            onmouseenter="showDonorTip('🚚 Courier Pickups: 3 Dispatched (12%)', event)" onmouseleave="hideDonorTip()" />
+        </svg>
+
+        <!-- Center Badge Metric inside Donut -->
+        <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
+          <span class="text-[10px] uppercase font-bold text-outline tracking-wider">Total Impact</span>
+          <span class="text-xl sm:text-2xl font-black text-on-surface tracking-tight" id="donor-center-metric">245 kg</span>
+          <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 mt-0.5">₹35K Aid</span>
+        </div>
+      </div>
+
+      <!-- Activity Bar View (Hidden by default, shown on toggle) -->
+      <div id="donor-bar-view" class="hidden w-full space-y-3 px-2 py-2">
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs font-semibold">
+            <span class="text-slate-700 flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#16803C]"></span> Cooked Surplus Meals</span>
+            <span class="font-bold text-slate-900">145 kg (50%)</span>
+          </div>
+          <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+            <div class="h-full bg-[#16803C] rounded-full transition-all duration-500" style="width: 50%"></div>
+          </div>
+        </div>
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs font-semibold">
+            <span class="text-slate-700 flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#0D9488]"></span> Physical Relief Supplies</span>
+            <span class="font-bold text-slate-900">100 items (20%)</span>
+          </div>
+          <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+            <div class="h-full bg-[#0D9488] rounded-full transition-all duration-500" style="width: 20%"></div>
+          </div>
+        </div>
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs font-semibold">
+            <span class="text-slate-700 flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#D97706]"></span> Direct Monetary Grants</span>
+            <span class="font-bold text-slate-900">₹35,000 (18%)</span>
+          </div>
+          <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+            <div class="h-full bg-[#D97706] rounded-full transition-all duration-500" style="width: 18%"></div>
+          </div>
+        </div>
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs font-semibold">
+            <span class="text-slate-700 flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#4F46E5]"></span> Goods Courier Deliveries</span>
+            <span class="font-bold text-slate-900">3 Missions (12%)</span>
+          </div>
+          <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+            <div class="h-full bg-[#4F46E5] rounded-full transition-all duration-500" style="width: 12%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Metric Breakdown Cards (Right: 7 cols) -->
+    <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <!-- Metric 1: Total Donations -->
+      <div class="p-3.5 rounded-xl bg-surface-container-low/70 border border-outline-variant/30 hover:bg-surface-container-low transition-all">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-outline">Total Donations</span>
+          <div class="w-7 h-7 rounded-lg bg-emerald-100 text-[#16803C] flex items-center justify-center">
+            <span class="material-symbols-outlined text-[16px]">package_2</span>
+          </div>
+        </div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span class="text-2xl font-black text-on-surface text-display-lg" id="kpi-donations">12</span>
+          <span class="text-[11px] font-semibold text-[#16803C]">Active log</span>
+        </div>
+        <div class="mt-2 flex items-center gap-1 text-[11px] text-outline">
+          <span class="material-symbols-outlined text-[13px] text-[#16803C]">trending_up</span>
+          <span>Multi-category donor records</span>
+        </div>
+      </div>
+
+      <!-- Metric 2: Food & Goods Donated -->
+      <div class="p-3.5 rounded-xl bg-surface-container-low/70 border border-outline-variant/30 hover:bg-surface-container-low transition-all">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-outline">Food &amp; Goods Donated</span>
+          <div class="w-7 h-7 rounded-lg bg-teal-100 text-teal-700 flex items-center justify-center">
+            <span class="material-symbols-outlined text-[16px]">inventory_2</span>
+          </div>
+        </div>
+        <div class="mt-1 flex items-baseline gap-1.5">
+          <span class="text-2xl font-black text-on-surface text-display-lg">245</span>
+          <span class="text-xs font-normal text-outline">kg / items</span>
+        </div>
+        <div class="mt-2 flex items-center gap-1 text-[11px] text-teal-700 font-medium">
+          <span class="material-symbols-outlined text-[13px]">check_circle</span>
+          <span>Food, clothes &amp; blankets</span>
+        </div>
+      </div>
+
+      <!-- Metric 3: Physical Courier Pickups -->
+      <div class="p-3.5 rounded-xl bg-surface-container-low/70 border border-outline-variant/30 hover:bg-surface-container-low transition-all">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-outline">Physical Courier Pickups</span>
+          <div class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center">
+            <span class="material-symbols-outlined text-[16px]">local_shipping</span>
+          </div>
+        </div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span class="text-2xl font-black text-on-surface text-display-lg">3</span>
+          <span class="text-[11px] font-semibold text-indigo-700">Dispatched</span>
+        </div>
+        <div class="mt-2 flex items-center gap-1 text-[11px] text-outline">
+          <span class="material-symbols-outlined text-[13px] text-indigo-600">near_me</span>
+          <span>Goods couriers dispatched</span>
+        </div>
+      </div>
+
+      <!-- Metric 4: Monetary Aid Raised -->
+      <div class="p-3.5 rounded-xl bg-surface-container-low/70 border border-outline-variant/30 hover:bg-surface-container-low transition-all">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-outline">Monetary Aid Raised</span>
+          <div class="w-7 h-7 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center">
+            <span class="material-symbols-outlined text-[16px]">payments</span>
+          </div>
+        </div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span class="text-2xl font-black text-amber-800 text-display-lg">₹35,000</span>
+          <span class="text-[10px] font-bold text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded">Escrow</span>
+        </div>
+        <div class="mt-2 flex items-center gap-1 text-[11px] text-outline">
+          <span class="material-symbols-outlined text-[13px] text-amber-600">account_balance</span>
+          <span>Direct online to shelters</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-</div>
-<div class="mt-2 text-display-lg font-tabular-numeric text-on-surface font-semibold" id="kpi-donations">12</div>
-<div class="mt-2 flex items-center gap-1.5 text-label-sm font-label-sm text-primary-container">
-<span class="material-symbols-outlined text-[16px]">trending_up</span>
-<span>Active multi-category log</span>
-</div>
-</div>
-<!-- Card 2 -->
-<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-5 shadow-sm hover:border-outline-variant/70 transition-colors">
-<div class="flex items-center justify-between">
-<span class="text-body-sm font-label-md text-outline">Food &amp; Goods Donated</span>
-<div class="w-8 h-8 rounded-lg bg-secondary-container/60 flex items-center justify-center">
-<span class="material-symbols-outlined text-primary-container text-[18px]">inventory_2</span>
-</div>
-</div>
-<div class="mt-2 text-display-lg font-tabular-numeric text-on-surface font-semibold">245 <span class="text-headline-sm font-headline-sm font-normal text-outline">kg / items</span></div>
-<div class="mt-2 flex items-center gap-1.5 text-label-sm font-label-sm text-on-secondary-container">
-<span class="material-symbols-outlined text-[16px]">check_circle</span>
-<span>Food, clothes &amp; blankets</span>
-</div>
-</div>
-<!-- Card 3 -->
-<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-5 shadow-sm hover:border-outline-variant/70 transition-colors">
-<div class="flex items-center justify-between">
-<span class="text-body-sm font-label-md text-outline">Physical Courier Pickups</span>
-<div class="w-8 h-8 rounded-lg bg-secondary-container/60 flex items-center justify-center">
-<span class="material-symbols-outlined text-primary-container text-[18px]">local_shipping</span>
-</div>
-</div>
-<div class="mt-2 text-display-lg font-tabular-numeric text-on-surface font-semibold">3</div>
-<div class="mt-2 flex items-center gap-1.5 text-label-sm font-label-sm text-primary-container">
-<span class="material-symbols-outlined text-[16px]">near_me</span>
-<span>Goods couriers dispatched</span>
-</div>
-</div>
-<!-- Card 4 -->
-<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-5 shadow-sm hover:border-outline-variant/70 transition-colors">
-<div class="flex items-center justify-between">
-<span class="text-body-sm font-label-md text-outline">Monetary Aid Raised</span>
-<div class="w-8 h-8 rounded-lg bg-secondary-container/60 flex items-center justify-center">
-<span class="material-symbols-outlined text-primary-container text-[18px]">payments</span>
-</div>
-</div>
-<div class="mt-2 text-display-lg font-tabular-numeric text-on-surface font-semibold">₹35,000</div>
-<div class="mt-2 flex items-center gap-1.5 text-label-sm font-label-sm text-on-secondary-container">
-<span class="material-symbols-outlined text-[16px]">account_balance</span>
-<span>Direct online to shelters</span>
-</div>
-</div>
-</div>
+
+<script>
+  function switchDonorChart(mode) {
+    const pieView = document.getElementById('donor-pie-view');
+    const barView = document.getElementById('donor-bar-view');
+    const btnPie = document.getElementById('donor-btn-pie');
+    const btnBar = document.getElementById('donor-btn-bar');
+    if (!pieView || !barView || !btnPie || !btnBar) return;
+
+    if (mode === 'pie') {
+      pieView.classList.remove('hidden');
+      barView.classList.add('hidden');
+      btnPie.className = 'px-3 py-1.5 rounded-lg bg-white text-emerald-800 font-bold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer';
+      btnBar.className = 'px-3 py-1.5 rounded-lg text-outline hover:text-on-surface transition-all flex items-center gap-1.5 cursor-pointer';
+    } else {
+      pieView.classList.add('hidden');
+      barView.classList.remove('hidden');
+      btnBar.className = 'px-3 py-1.5 rounded-lg bg-white text-emerald-800 font-bold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer';
+      btnPie.className = 'px-3 py-1.5 rounded-lg text-outline hover:text-on-surface transition-all flex items-center gap-1.5 cursor-pointer';
+    }
+  }
+
+  function showDonorTip(text, evt) {
+    const tip = document.getElementById('donor-chart-tooltip');
+    if (tip) {
+      tip.textContent = text;
+      tip.classList.remove('opacity-0');
+      tip.classList.add('opacity-100');
+    }
+  }
+
+  function hideDonorTip() {
+    const tip = document.getElementById('donor-chart-tooltip');
+    if (tip) {
+      tip.classList.remove('opacity-100');
+      tip.classList.add('opacity-0');
+    }
+  }
+</script>
 <!-- Active Donations Section -->
 <div class="mb-8">
 <div class="flex items-center justify-between mb-3">
