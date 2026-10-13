@@ -300,16 +300,7 @@ Open your browser at **`http://localhost:3000`**.
 
 ---
 
-## 👥 Project Team & Credits
 
-Developed with ❤️ for community welfare, zero-waste logistics, and transparent humanitarian relief:
-
-- 🌟 **Sachin**
-- 🌟 **Krishna**
-- 🌟 **Nitesh**
-- 🌟 **Priyanshi**
-
----
 
 ## 📜 License
 
