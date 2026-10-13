@@ -473,6 +473,43 @@ ALTER TABLE public.impact_logs DISABLE ROW LEVEL SECURITY;
     });
   </script>
 
+  <!-- Floating Universal Portal Switcher Widget -->
+  <div id="global-portal-switcher" class="fixed bottom-4 right-4 z-[99999] font-sans">
+    <div class="relative inline-block text-left">
+      <button onclick="const m=document.getElementById('portalSwitchMenu'); m.classList.toggle('hidden');" 
+        type="button"
+        class="flex items-center gap-2 px-3.5 py-2 rounded-full bg-slate-900 text-white text-xs font-semibold shadow-2xl border border-slate-700 hover:bg-slate-800 transition-all cursor-pointer">
+        <span class="w-2 h-2 rounded-full bg-[#16803C] animate-pulse"></span>
+        <span>Switch Portal / Role</span>
+        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+      </button>
+
+      <div id="portalSwitchMenu" class="hidden absolute right-0 bottom-12 w-64 rounded-xl bg-slate-900 text-white border border-slate-700 shadow-2xl z-[100000] p-2 flex flex-col gap-1 text-xs">
+        <div class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 mb-1">
+          Surplus-To-Shelter Portals
+        </div>
+        <a href="./index.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+          <span class="w-2 h-2 rounded-full bg-slate-400"></span> 🔐 <b>Auth / Login Page</b>
+        </a>
+        <a href="./restaurant-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 🎁 <b>Donor Portal (Food, Clothes, Funds)</b>
+        </a>
+        <a href="./ngo-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+          <span class="w-2 h-2 rounded-full bg-blue-500"></span> 🤝 <b>NGO / Shelter Portal</b>
+        </a>
+        <a href="./admin-dashboard.html" onclick="localStorage.setItem('admin_authenticated','true'); localStorage.setItem('user_role','admin');" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+          <span class="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span> 🛡️ <b>Admin Portal (Command Center)</b>
+        </a>
+        <a href="./db-viewer.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-slate-800 text-cyan-400 font-bold">
+          <span class="w-2 h-2 rounded-full bg-cyan-400"></span> 🗄️ <b>Supabase DB Inspector (Current)</b>
+        </a>
+        <a href="./driver-dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200">
+          <span class="w-2 h-2 rounded-full bg-amber-500"></span> 🚚 <b>Driver Courier Portal</b>
+        </a>
+      </div>
+    </div>
+  </div>
+
   <script src="./js/motion.js"></script>
   <script src="./js/tutorial.js"></script>
   <script src="./js/new-user-cleaner.js"></script>
