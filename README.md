@@ -89,7 +89,7 @@ By integrating **multi-category aid routing**, **instant PhonePe UPI QR Code don
 * **Zero Intermediary Fees**: Routes monetary donations directly to shelter bank accounts without gateway commission cuts.
 * **Universal UPI Compatibility**: Scannable using **PhonePe**, **Google Pay**, **Paytm**, **BHIM**, or any mobile banking app.
 * **Dynamic Modal Flow**: In `restaurant-post.html`, donors choosing monetary contributions are automatically presented with the high-resolution QR modal, dynamic amount display, and 1-click payment confirmation button.
-* **Server Verification Webhook**: Backend API (`server/index.js`) validates orders and generates immutable receipts.
+* **Server Verification Webhook**: Backend API (`backend/index.js`) validates orders and generates immutable receipts.
 
 ### 📈 2. Interactive Charts & Pie Analytics Engine
 * **Modern Lightweight SVG Data Visualizations**: Rendered across all 4 platform portals with smooth gradients and hover cards.
@@ -167,7 +167,7 @@ flowchart TD
     end
 
     subgraph BACKEND["3. Backend API & Persistence Tier"]
-        API["⚙️ Express REST API (:5000)<br/>server/index.js"]
+        API["⚙️ Express REST API (:5000)<br/>backend/index.js"]
         DB[(🗄️ Supabase Cloud PostgreSQL)]
         LS["💾 LocalStorage Sync Cache"]
     end
@@ -189,56 +189,73 @@ flowchart TD
 
 ---
 
-## 📁 Repository Directory Structure
+## 📁 Clean Repository Directory Structure
 
 ```text
 donate/
-├── index.html                     # Central Portal Switcher & Auth Gateway
-├── restaurant-dashboard.html      # Donor Main Dashboard & Analytics Hub (Pie/Bar)
-├── restaurant-post.html           # Multi-Category Posting & PhonePe UPI QR Modal
-├── restaurant-matching.html       # Smart Recipient Matching & Live GPS Radar
-├── restaurant-donations.html      # Active Donation Manifest & UPI Quick Actions
-├── restaurant-history.html        # Donor Past Donation History & 80G Receipts
-├── restaurant-pickups.html        # Live Driver Dispatch & WhatsApp Pass Hub
-├── restaurant-notifications.html  # Alerts & Emergency Crisis Feed
-├── restaurant-impact.html         # ESG Impact Dashboard & 80G Tax Certificates
-├── restaurant-settings.html       # Donor Profile & Pickup Preferences
-├── ngo-dashboard.html             # NGO Intake, Darpan Verification & Appeal Hub
-├── driver-dashboard.html          # Driver Active Missions & Fleet Analytics (Pie/Bar)
-├── driver-available.html          # Driver Open Pickup Market
-├── driver-active.html             # Live Navigation, Animated GPS Van & IoT Telemetry
-├── driver-route.html              # Turn-by-Turn Mission Route Guidance
-├── driver-history.html            # Driver Delivery History & Payout Log
-├── driver-impact.html             # Driver Eco-Points & Community Impact Badges
-├── driver-notifications.html      # Real-Time Pickups & Emergency Alerts Feed
-├── driver-settings.html           # Driver Profile, Vehicle Info & Pay Preferences
-├── admin-dashboard.html           # Admin Command Center, Darpan Audits & Platform Hub
-├── db-viewer.html                 # Supabase & Local Database Inspector
-├── images/
-│   └── donation-upi-qr.jpg        # High-Resolution PhonePe UPI QR Code Asset
-├── css/
-│   └── animations.css             # Universal Button Motion, Radar Pulse & Transitions
-├── js/
-│   ├── app.js                     # Unified Multi-Portal Navigation & State Controller
-│   ├── maps.js                    # Leaflet + OpenStreetMap Live Animated Route Map Engine
-│   ├── search.js                  # Universal Smart Search & Verified NGO Autocomplete
-│   ├── whatsapp-alerts.js         # 1-Click WhatsApp & SMS Dispatch Alerts Module
-│   ├── motion.js                  # Global Interactivity & Emergency Crisis Sync
-│   ├── pdf-generator.js           # 80G Tax Deduction Certificate PDF Generator
-│   ├── supabase.js                # Supabase SDK Client & Local Bridge
-│   ├── tutorial.js                # Interactive Platform Walkthrough & Guidance
-│   └── new-user-cleaner.js        # State Sanitizer for New Test Sessions
-├── server/
-│   └── index.js                   # Express REST API Backend (:5000)
-└── supabase/
-    ├── schema.sql                 # Core PostgreSQL Database Schema
-    └── migrations/
-        └── 20261013_ngo_verification_system.sql  # NGO DARPAN & Appeal Verification
+├── frontend/                      # 🎨 Complete Client-Side Application Tier
+│   ├── index.html                 # Central Portal Switcher & Auth Gateway
+│   ├── restaurant-dashboard.html  # Donor Main Dashboard & Analytics Hub (Pie/Bar)
+│   ├── restaurant-post.html       # Multi-Category Posting & PhonePe UPI QR Modal
+│   ├── restaurant-matching.html   # Smart Recipient Matching & Live GPS Radar
+│   ├── restaurant-donations.html  # Active Donation Manifest & UPI Quick Actions
+│   ├── restaurant-history.html    # Donor Past Donation History & 80G Receipts
+│   ├── restaurant-pickups.html    # Live Driver Dispatch & WhatsApp Pass Hub
+│   ├── restaurant-notifications.html # Alerts & Emergency Crisis Feed
+│   ├── restaurant-impact.html     # ESG Impact Dashboard & 80G Tax Certificates
+│   ├── restaurant-settings.html   # Donor Profile & Pickup Preferences
+│   ├── ngo-dashboard.html         # NGO Intake, Darpan Verification & Appeal Hub
+│   ├── driver-dashboard.html      # Driver Active Missions & Fleet Analytics (Pie/Bar)
+│   ├── driver-available.html      # Driver Open Pickup Market
+│   ├── driver-active.html         # Live Navigation, Animated GPS Van & IoT Telemetry
+│   ├── driver-route.html          # Turn-by-Turn Mission Route Guidance
+│   ├── driver-history.html        # Driver Delivery History & Payout Log
+│   ├── driver-impact.html         # Driver Eco-Points & Community Impact Badges
+│   ├── driver-notifications.html  # Real-Time Pickups & Emergency Alerts Feed
+│   ├── driver-settings.html       # Driver Profile, Vehicle Info & Pay Preferences
+│   ├── admin-dashboard.html       # Admin Command Center, Darpan Audits & Platform Hub
+│   ├── db-viewer.html             # PostgreSQL / Supabase Live Database Inspector
+│   ├── images/
+│   │   └── donation-upi-qr.jpg    # High-Resolution PhonePe UPI QR Code Asset
+│   ├── css/
+│   │   └── animations.css         # Universal Button Motion, Radar Pulse & Transitions
+│   └── js/
+│       ├── app.js                 # Unified Multi-Portal Navigation & State Controller
+│       ├── maps.js                # Leaflet + OpenStreetMap Live Animated Route Map Engine
+│       ├── search.js              # Universal Smart Search & Verified NGO Autocomplete
+│       ├── whatsapp-alerts.js     # 1-Click WhatsApp & SMS Dispatch Alerts Module
+│       ├── motion.js              # Global Interactivity & Emergency Crisis Sync
+│       ├── pdf-generator.js       # 80G Tax Deduction Certificate PDF Generator
+│       ├── supabase.js            # Supabase SDK Client & Local Bridge
+│       ├── tutorial.js            # Interactive Platform Walkthrough & Guidance
+│       └── new-user-cleaner.js    # State Sanitizer for New Test Sessions
+│
+├── backend/                       # ⚙️ Express REST API & Verification Server Tier
+│   ├── index.js                   # Main Backend REST API Server (:5000)
+│   ├── uploads/                   # Secure Verification Document Vault
+│   └── tests/                     # Automated Test Suites
+│       ├── test_all_5_features.js # Master End-to-End Test Suite for Core Features
+│       ├── test_ngo_verification.js # NGO Verification & Darpan Registry Test Suite
+│       ├── test_expiry_protection.js # Spoilage & Freshness Buffer Protection Tests
+│       ├── test_matching.js       # Algorithmic Recipient Matching Engine Tests
+│       └── test_ngo_name_trust_persistence.js # Trust Profile Persistence Tests
+│
+├── database/                      # 🗄️ PostgreSQL Database Schemas & Migrations Tier
+│   ├── schema.sql                 # Core PostgreSQL Database Schema (Users, Donations, Pickups)
+│   └── migrations/
+│       └── 20261013_ngo_verification_system.sql # NGO DARPAN Verification & Appeal Schema
+│
+├── .env                           # Environment Variables (Ports, Supabase Credentials)
+├── .env.example                   # Environment Template
+├── .gitignore                     # Git Ignore Definitions
+├── package.json                   # Root Dependencies & Orchestration Scripts
+├── vite.config.js                 # Vite Bundler & Proxy Configuration (root: frontend)
+└── README.md                      # Comprehensive Platform Documentation
 ```
 
 ---
 
-## 🗄️ Database Schema Summary (`supabase/schema.sql`)
+## 🗄️ Database Schema Summary (`database/schema.sql`)
 
 - **`users`**: User profiles (`id`, `name`, `email`, `role`, `phone`, `address`, `darpan_id`, `verification_status`, `rejection_reason`).
 - **`donations`**: Aid records (`id`, `title`, `category`, `donation_type`, `quantity_kg`, `portions`, `condition`, `donor_id`, `recipient_id`, `status`).
@@ -274,6 +291,9 @@ npm run dev
 
 # Start Express Backend Server (Port 5000)
 npm run server
+
+# Run Automated Test Suites
+npm test
 ```
 
 Open your browser at **`http://localhost:3000`**.

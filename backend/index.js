@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
 
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 dotenv.config();
 
 const app = express();
@@ -13,7 +14,16 @@ app.use(cors());
 app.use(express.json({ limit: '15mb' }));
 app.use(express.urlencoded({ extended: true, limit: '15mb' }));
 
-const UPLOADS_DIR = path.join(__dirname, '../uploads/verification_docs');
+// Serve schema.sql for DB viewer or integrations
+app.get('/api/schema', (req, res) => {
+  const schemaPath = path.join(__dirname, '../database/schema.sql');
+  if (fs.existsSync(schemaPath)) {
+    return res.sendFile(schemaPath);
+  }
+  res.status(404).send('-- schema.sql not found');
+});
+
+const UPLOADS_DIR = path.join(__dirname, 'uploads/verification_docs');
 if (!fs.existsSync(UPLOADS_DIR)) {
   fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 }

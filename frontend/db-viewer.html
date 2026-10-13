@@ -156,7 +156,7 @@
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
           <h3 class="font-bold text-sm text-white flex items-center gap-2">
-            <span class="material-symbols-outlined text-emerald-400">code</span> Supabase PostgreSQL Schema Script (`supabase/schema.sql`)
+            <span class="material-symbols-outlined text-emerald-400">code</span> PostgreSQL Database Schema Script (`database/schema.sql`)
           </h3>
           <p class="text-xs text-slate-400 mt-0.5">Run this script in your Supabase SQL Editor to initialize all tables, RLS permissions &amp; seed data.</p>
         </div>
@@ -187,7 +187,7 @@
 
     async function loadSchemaSql() {
       try {
-        const res = await fetch('./supabase/schema.sql');
+        const res = await fetch('/api/schema');
         if (res.ok) {
           const text = await res.text();
           document.getElementById('sqlSnippet').textContent = text;
@@ -198,7 +198,7 @@ ALTER TABLE public.donations DISABLE ROW LEVEL SECURITY;
 ALTER TABLE public.users DISABLE ROW LEVEL SECURITY;
 ALTER TABLE public.pickups DISABLE ROW LEVEL SECURITY;
 ALTER TABLE public.impact_logs DISABLE ROW LEVEL SECURITY;
--- For complete schema, view supabase/schema.sql`;
+-- For complete schema, view database/schema.sql`;
       }
     }
 
